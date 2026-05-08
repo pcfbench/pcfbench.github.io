@@ -12,7 +12,9 @@
   <meta property="og:description" content="A comprehensive benchmark for evaluating VLMs on physics-aware photonic inverse design.">
   <meta property="og:type" content="website">
 
-  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="website/css/bulma.min.css">
   <link rel="stylesheet" href="website/css/bulma-carousel.min.css">
   <link rel="stylesheet" href="website/css/bulma-slider.min.css">
@@ -37,10 +39,31 @@
   </script>
 
   <style>
+    /* Inter as global body + heading font, JetBrains Mono for code/BibTeX */
+    html, body, h1, h2, h3, h4, h5, h6,
+    .title, .subtitle, .publication-title, .publication-authors,
+    .button, .content, .tabulator,
+    .tabulator .tabulator-header,
+    .tabulator .tabulator-row,
+    .tabulator .tabulator-cell,
+    .footer, .pill {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
+      font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11', 'ss01';
+      letter-spacing: -0.01em;
+    }
+    pre, code, .tabulator .tabulator-cell[tabulator-field^="loss"],
+    .tabulator .tabulator-cell.tabulator-numeric {
+      font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace !important;
+    }
+    body { font-weight: 400; color: #1a1f2e; }
+    h1.title.is-1 { font-weight: 800; letter-spacing: -0.025em; }
+    h2.title.is-3 { font-weight: 700; letter-spacing: -0.015em; }
     .pcfbench {
-      font-variant: small-caps !important;
-      font-weight: bold !important;
+      font-family: 'Inter', sans-serif !important;
+      font-variant: normal !important;
+      font-weight: 800 !important;
       color: #4a5d7a !important;
+      letter-spacing: -0.02em !important;
     }
     .tabulator .tabulator-header .tabulator-col .tabulator-col-content .tabulator-col-title {
       white-space: nowrap !important;
@@ -93,9 +116,6 @@
             </div>
             <div class="is-size-6 publication-authors" style="margin-top:0.4em; color:#666;">
               <span class="author-block"><sup>&#9993;</sup>Corresponding author</span>
-            </div>
-            <div class="is-size-6 publication-authors" style="margin-top:0.6em;">
-              <span class="author-block" style="color:#a33;"><b>NeurIPS 2026 Datasets &amp; Benchmarks Track (under review)</b></span>
             </div>
 
             <!-- Links -->
@@ -301,21 +321,6 @@
     </div>
   </section>
 
-  <!-- BIBTEX -->
-  <section class="section" id="BibTeX" style="padding-top:1.5rem;">
-    <div class="container is-max-desktop content" style="max-width: 80%; margin: 0 auto;">
-      <h2 class="title is-3" style="text-align:center; font-size: 2.3em;">BibTeX</h2>
-      <pre style="font-size: 1.0em;">
-@inproceedings{pcfbench2026,
-  title  = {PCFBench: How Far Can Large Vision-Language Models Go in Physics-aware Photonic Inverse Design?},
-  author = {Anonymous},
-  booktitle = {Advances in Neural Information Processing Systems (NeurIPS 2026), Datasets and Benchmarks Track},
-  year   = {2026}
-}
-      </pre>
-    </div>
-  </section>
-
   <footer class="footer">
     <div class="columns is-centered">
       <div class="column is-9">
@@ -440,9 +445,9 @@
     }
 
     const columns = [
-      { title: "Model",  field: "model", frozen: true, headerFilter: "input", widthGrow: 2,
+      { title: "Model",  field: "model", width: 200, headerSort: true,
         formatter: c => `<b>${c.getValue()}</b><br><span style="font-size:.8em;color:#777">${c.getRow().getData().type}</span>` },
-      { title: "Size",   field: "size",  hozAlign: "center", width: 70 },
+      { title: "Size",   field: "size",  hozAlign: "center", width: 75 },
     ];
     for (const k of METRIC_KEYS) {
       columns.push({
@@ -452,19 +457,35 @@
         sorter: "number",
         sorterParams: { dir: METRIC_HIGHER_BETTER[k] ? "desc" : "asc" },
         formatter: rankFmt(k),
-        width: 92
+        width: 95
       });
     }
 
-    document.addEventListener("DOMContentLoaded", function () {
-      new Tabulator("#pcfbench-leaderboard", {
-        data: rows,
-        columns: columns,
-        layout: "fitDataStretch",
-        height: "640px",
-        initialSort: [{ column: "cl", dir: "desc" }],
-      });
-    });
+    function initLeaderboard() {
+      const el = document.getElementById("pcfbench-leaderboard");
+      if (!el) return;
+      if (typeof Tabulator === "undefined") {
+        el.innerHTML = '<p style="padding:1rem;color:#a33;">Failed to load Tabulator script. Reload the page.</p>';
+        return;
+      }
+      try {
+        new Tabulator(el, {
+          data: rows,
+          columns: columns,
+          layout: "fitData",
+          height: "640px",
+          initialSort: [{ column: "cl", dir: "desc" }],
+        });
+      } catch (e) {
+        el.innerHTML = '<p style="padding:1rem;color:#a33;">Leaderboard failed to render: ' + (e && e.message) + '</p>';
+        console.error(e);
+      }
+    }
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", initLeaderboard);
+    } else {
+      initLeaderboard();
+    }
   </script>
 
 </body>

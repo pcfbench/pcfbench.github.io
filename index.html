@@ -21,12 +21,10 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
   <link rel="stylesheet" href="website/css/fontawesome.all.min.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://unpkg.com/tabulator-tables@5.5.2/dist/css/tabulator_bootstrap4.min.css" rel="stylesheet">
   <link rel="stylesheet" href="website/css/index.css">
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://unpkg.com/tabulator-tables@5.5.2/dist/js/tabulator.min.js"></script>
   <script src="./website/javascript/bulma-carousel.min.js"></script>
   <script src="./website/javascript/bulma-slider.min.js"></script>
   <script defer src="website/javascript/fontawesome.all.min.js"></script>
@@ -167,15 +165,16 @@
     .prose strong { color: var(--ink); font-weight: 600; }
 
     /* ============================================================
-       Figures — large by default
+       Figures — image fills its frame, caption sits flush below
        ============================================================ */
-    figure.bigfig          { margin: 3rem auto; text-align: center; max-width: 1280px; }
-    figure.bigfig img      { width: 100%; height: auto; border-radius: var(--r-md);
-                             background: var(--surface); box-shadow: var(--shadow-2); }
-    figure.bigfig.plain img{ box-shadow: none; background: transparent; }
+    figure.bigfig          { margin: 3rem auto; text-align: center; max-width: 1280px; padding: 0; }
+    figure.bigfig img      { display: block; width: 100%; height: auto; margin: 0;
+                             border-radius: var(--r-md); border: 1px solid var(--rule);
+                             box-shadow: var(--shadow-2); background: transparent; }
+    figure.bigfig.plain img{ box-shadow: none; border: 0; }
     figure.bigfig figcaption {
       font-size: .95rem; color: var(--ink-soft);
-      margin: 1.1rem auto 0; max-width: 64ch; line-height: 1.55;
+      margin: 0.9rem auto 0; max-width: 64ch; line-height: 1.55;
     }
     figure.bigfig figcaption b { color: var(--ink); }
     figure.bigfig.medium   { max-width: 880px; }
@@ -231,27 +230,51 @@
     }
 
     /* ============================================================
-       Leaderboard
+       Leaderboard — static HTML table (replaces Tabulator)
        ============================================================ */
     .leaderboard-wrap {
       max-width: 1320px; margin: 1.5rem auto 0;
       background: var(--surface); border: 1px solid var(--rule);
       border-radius: var(--r-md); overflow-x: auto; box-shadow: var(--shadow-1);
     }
-    .tabulator                          { background: var(--surface) !important; border: 0 !important; }
-    .tabulator .tabulator-header        { background: var(--bg-alt) !important; border-bottom: 1px solid var(--rule) !important; }
-    .tabulator .tabulator-header .tabulator-col {
-      background: var(--bg-alt) !important;
-      border-right: 1px solid var(--rule) !important;
-      font-weight: 600; font-size: .85rem; color: var(--ink-soft);
+    .lb-table {
+      width: 100%; border-collapse: separate; border-spacing: 0;
+      font-size: .87rem; color: var(--ink); min-width: 1200px;
     }
-    .tabulator .tabulator-header .tabulator-col .tabulator-col-content .tabulator-col-title {
-      white-space: nowrap !important; overflow: visible !important; text-overflow: clip !important;
+    .lb-table thead th {
+      background: var(--bg-alt); color: var(--ink-soft);
+      font-weight: 600; padding: .6rem .55rem; text-align: center;
+      border-bottom: 1px solid var(--rule);
+      position: sticky; top: 0;
     }
-    .tabulator .tabulator-row           { border-bottom: 1px solid var(--rule) !important; }
-    .tabulator .tabulator-row:hover     { background: var(--bg-alt) !important; }
-    .tabulator .tabulator-cell          { border-right: 1px solid var(--rule) !important;
-                                          padding: .55rem .65rem !important; font-size: .9rem; }
+    .lb-table thead .lb-grp th {
+      font-size: .72rem; text-transform: uppercase; letter-spacing: .12em;
+      color: var(--accent); font-weight: 700; padding: .55rem .35rem .35rem;
+      border-bottom: 0;
+    }
+    .lb-table thead .lb-met th { font-size: .82rem; padding-top: .35rem; }
+    .lb-table thead .lb-met th:not(:last-child),
+    .lb-table thead .lb-grp th:not(:last-child) { border-right: 1px solid var(--rule); }
+    .lb-table tbody tr:nth-child(odd)  { background: var(--surface); }
+    .lb-table tbody tr:nth-child(even) { background: rgba(243,245,248,.4); }
+    .lb-table tbody tr:hover           { background: rgba(74,93,122,.05); }
+    .lb-table td {
+      padding: .55rem .55rem; text-align: center;
+      border-bottom: 1px solid var(--rule);
+      border-right: 1px solid var(--rule);
+      vertical-align: middle;
+    }
+    .lb-table td:last-child { border-right: 0; }
+    .lb-table td.num        { font-family: 'JetBrains Mono', monospace; font-size: .82rem; }
+    .lb-table td.lb-model   { text-align: left; padding: .55rem .9rem;
+                              white-space: nowrap; min-width: 175px;
+                              border-right: 1px solid var(--rule); }
+    .lb-table td.lb-model b { color: var(--ink); font-weight: 600; font-size: .92rem; }
+    .lb-table .lb-vendor    { display: block; font-size: .7rem; color: var(--ink-mute);
+                              text-transform: uppercase; letter-spacing: .08em; margin-top: 1px; }
+    .lb-table td.rk-1 { background: #fff3cd !important; font-weight: 700; color: #5a4500; }
+    .lb-table td.rk-2 { background: #d6eaf8 !important; font-weight: 600; color: #1e3d55; text-decoration: underline; }
+    .lb-table td.rk-3 { background: #e8e8e8 !important; color: #2d2d2d; }
 
     .pills-row { text-align: center; margin: 1rem auto 1.2rem; max-width: 1100px; }
     .pill {
@@ -265,6 +288,59 @@
                     margin: 0.8rem auto 0; text-align: right; max-width: 1320px; }
     .swatch       { display: inline-block; padding: 0 8px; border-radius: 3px;
                     font-family: 'JetBrains Mono', monospace; font-size: .8rem; margin: 0 2px; }
+
+    /* ============================================================
+       Sample marquee — infinite horizontal scroll of struct + field tiles
+       ============================================================ */
+    .marquee {
+      position: relative; overflow: hidden; width: 100vw;
+      margin-left: calc(50% - 50vw); margin-right: calc(50% - 50vw);
+      padding: 1.6rem 0;
+      background: linear-gradient(180deg, transparent 0%, var(--bg-alt) 50%, transparent 100%);
+      mask-image: linear-gradient(to right, transparent, #000 5%, #000 95%, transparent);
+      -webkit-mask-image: linear-gradient(to right, transparent, #000 5%, #000 95%, transparent);
+    }
+    .marquee-track {
+      display: flex; gap: 1.1rem; width: max-content;
+      animation: marquee 60s linear infinite;
+    }
+    .marquee:hover .marquee-track { animation-play-state: paused; }
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+    /* Reverse direction for second row */
+    .marquee.reverse .marquee-track { animation-direction: reverse; animation-duration: 75s; }
+
+    .sample-tile {
+      flex: 0 0 auto; width: 260px;
+      background: var(--surface);
+      border: 1px solid var(--rule); border-radius: var(--r-md);
+      box-shadow: var(--shadow-1);
+      padding: .6rem; position: relative;
+      transition: transform .25s ease, box-shadow .25s ease;
+    }
+    .sample-tile:hover { transform: translateY(-4px) scale(1.02); box-shadow: var(--shadow-2); z-index: 5; }
+    .sample-tile img {
+      display: block; width: 100%; height: 110px; object-fit: cover;
+      border-radius: var(--r-sm); background: #0f1626;
+    }
+    .sample-tile img + img { margin-top: .4rem; }
+    .sample-tile .sample-label {
+      display: block; font-size: .68rem; font-weight: 600; color: var(--ink-soft);
+      text-transform: uppercase; letter-spacing: .1em;
+      text-align: center; margin: .55rem 0 .15rem;
+    }
+    .sample-tile::before {
+      content: 'STRUCT'; position: absolute; top: .9rem; left: .9rem;
+      font: 600 .58rem/1 'JetBrains Mono', monospace; letter-spacing: .12em;
+      color: #fff; background: rgba(15,22,38,.65); padding: 3px 6px; border-radius: 3px;
+    }
+    .sample-tile::after {
+      content: 'FIELD'; position: absolute; top: calc(50% + .1rem); left: .9rem;
+      font: 600 .58rem/1 'JetBrains Mono', monospace; letter-spacing: .12em;
+      color: #fff; background: rgba(74,93,122,.85); padding: 3px 6px; border-radius: 3px;
+    }
 
     /* ============================================================
        Footer
@@ -447,6 +523,104 @@
     </div>
   </section>
 
+  <!-- SAMPLES MARQUEE -->
+  <section class="section" id="samples" style="padding-top: 4rem; padding-bottom: 2rem;">
+    <div class="container">
+      <div class="has-text-centered">
+        <span class="eyebrow">— Samples</span>
+        <h2 class="title is-3">Structure &amp; field across 18 fibre families.</h2>
+        <p class="section-lede">
+          Each PCFBench sample pairs a cross-section structure image with FDTD-simulated mode-field maps. Hover to pause &mdash; click any tile in the released dataset to inspect parameters and the level-1&ndash;4 annotations.
+        </p>
+      </div>
+    </div>
+
+    <div class="marquee" aria-label="Sample fibre cross-sections and mode fields">
+      <div class="marquee-track">
+    <div class="sample-tile"><img src="website/img/samples/anti_resonant_arf_00_s.jpg" alt="Anti Resonant Arf structure"/><img src="website/img/samples/anti_resonant_arf_00_f.jpg" alt="Anti Resonant Arf field"/><span class="sample-label">Anti Resonant Arf</span></div>
+    <div class="sample-tile"><img src="website/img/samples/anti_resonant_arf_01_s.jpg" alt="Anti Resonant Arf structure"/><img src="website/img/samples/anti_resonant_arf_01_f.jpg" alt="Anti Resonant Arf field"/><span class="sample-label">Anti Resonant Arf</span></div>
+    <div class="sample-tile"><img src="website/img/samples/fractal_quasicrystal_02_s.jpg" alt="Fractal Quasicrystal structure"/><img src="website/img/samples/fractal_quasicrystal_02_f.jpg" alt="Fractal Quasicrystal field"/><span class="sample-label">Fractal Quasicrystal</span></div>
+    <div class="sample-tile"><img src="website/img/samples/fractal_quasicrystal_03_s.jpg" alt="Fractal Quasicrystal structure"/><img src="website/img/samples/fractal_quasicrystal_03_f.jpg" alt="Fractal Quasicrystal field"/><span class="sample-label">Fractal Quasicrystal</span></div>
+    <div class="sample-tile"><img src="website/img/samples/high_birefringence_pm_04_s.jpg" alt="High Birefringence Pm structure"/><img src="website/img/samples/high_birefringence_pm_04_f.jpg" alt="High Birefringence Pm field"/><span class="sample-label">High Birefringence Pm</span></div>
+    <div class="sample-tile"><img src="website/img/samples/high_birefringence_pm_05_s.jpg" alt="High Birefringence Pm structure"/><img src="website/img/samples/high_birefringence_pm_05_f.jpg" alt="High Birefringence Pm field"/><span class="sample-label">High Birefringence Pm</span></div>
+    <div class="sample-tile"><img src="website/img/samples/hollow_core_pbg_06_s.jpg" alt="Hollow Core Pbg structure"/><img src="website/img/samples/hollow_core_pbg_06_f.jpg" alt="Hollow Core Pbg field"/><span class="sample-label">Hollow Core Pbg</span></div>
+    <div class="sample-tile"><img src="website/img/samples/hollow_core_pbg_07_s.jpg" alt="Hollow Core Pbg structure"/><img src="website/img/samples/hollow_core_pbg_07_f.jpg" alt="Hollow Core Pbg field"/><span class="sample-label">Hollow Core Pbg</span></div>
+    <div class="sample-tile"><img src="website/img/samples/multi_core_08_s.jpg" alt="Multi Core structure"/><img src="website/img/samples/multi_core_08_f.jpg" alt="Multi Core field"/><span class="sample-label">Multi Core</span></div>
+    <div class="sample-tile"><img src="website/img/samples/multi_core_09_s.jpg" alt="Multi Core structure"/><img src="website/img/samples/multi_core_09_f.jpg" alt="Multi Core field"/><span class="sample-label">Multi Core</span></div>
+    <div class="sample-tile"><img src="website/img/samples/solid_core_hex_10_s.jpg" alt="Solid Core Hex structure"/><img src="website/img/samples/solid_core_hex_10_f.jpg" alt="Solid Core Hex field"/><span class="sample-label">Solid Core Hex</span></div>
+    <div class="sample-tile"><img src="website/img/samples/solid_core_hex_11_s.jpg" alt="Solid Core Hex structure"/><img src="website/img/samples/solid_core_hex_11_f.jpg" alt="Solid Core Hex field"/><span class="sample-label">Solid Core Hex</span></div>
+    <div class="sample-tile"><img src="website/img/samples/square_rectangular_12_s.jpg" alt="Square Rectangular structure"/><img src="website/img/samples/square_rectangular_12_f.jpg" alt="Square Rectangular field"/><span class="sample-label">Square Rectangular</span></div>
+    <div class="sample-tile"><img src="website/img/samples/square_rectangular_13_s.jpg" alt="Square Rectangular structure"/><img src="website/img/samples/square_rectangular_13_f.jpg" alt="Square Rectangular field"/><span class="sample-label">Square Rectangular</span></div>
+    <div class="sample-tile"><img src="website/img/samples/suspended_cobweb_14_s.jpg" alt="Suspended Cobweb structure"/><img src="website/img/samples/suspended_cobweb_14_f.jpg" alt="Suspended Cobweb field"/><span class="sample-label">Suspended Cobweb</span></div>
+    <div class="sample-tile"><img src="website/img/samples/suspended_cobweb_15_s.jpg" alt="Suspended Cobweb structure"/><img src="website/img/samples/suspended_cobweb_15_f.jpg" alt="Suspended Cobweb field"/><span class="sample-label">Suspended Cobweb</span></div>
+    <div class="sample-tile"><img src="website/img/samples/vortex_ring_core_16_s.jpg" alt="Vortex Ring Core structure"/><img src="website/img/samples/vortex_ring_core_16_f.jpg" alt="Vortex Ring Core field"/><span class="sample-label">Vortex Ring Core</span></div>
+    <div class="sample-tile"><img src="website/img/samples/vortex_ring_core_17_s.jpg" alt="Vortex Ring Core structure"/><img src="website/img/samples/vortex_ring_core_17_f.jpg" alt="Vortex Ring Core field"/><span class="sample-label">Vortex Ring Core</span></div>
+
+    <div class="sample-tile"><img src="website/img/samples/anti_resonant_arf_00_s.jpg" alt="Anti Resonant Arf structure"/><img src="website/img/samples/anti_resonant_arf_00_f.jpg" alt="Anti Resonant Arf field"/><span class="sample-label">Anti Resonant Arf</span></div>
+    <div class="sample-tile"><img src="website/img/samples/anti_resonant_arf_01_s.jpg" alt="Anti Resonant Arf structure"/><img src="website/img/samples/anti_resonant_arf_01_f.jpg" alt="Anti Resonant Arf field"/><span class="sample-label">Anti Resonant Arf</span></div>
+    <div class="sample-tile"><img src="website/img/samples/fractal_quasicrystal_02_s.jpg" alt="Fractal Quasicrystal structure"/><img src="website/img/samples/fractal_quasicrystal_02_f.jpg" alt="Fractal Quasicrystal field"/><span class="sample-label">Fractal Quasicrystal</span></div>
+    <div class="sample-tile"><img src="website/img/samples/fractal_quasicrystal_03_s.jpg" alt="Fractal Quasicrystal structure"/><img src="website/img/samples/fractal_quasicrystal_03_f.jpg" alt="Fractal Quasicrystal field"/><span class="sample-label">Fractal Quasicrystal</span></div>
+    <div class="sample-tile"><img src="website/img/samples/high_birefringence_pm_04_s.jpg" alt="High Birefringence Pm structure"/><img src="website/img/samples/high_birefringence_pm_04_f.jpg" alt="High Birefringence Pm field"/><span class="sample-label">High Birefringence Pm</span></div>
+    <div class="sample-tile"><img src="website/img/samples/high_birefringence_pm_05_s.jpg" alt="High Birefringence Pm structure"/><img src="website/img/samples/high_birefringence_pm_05_f.jpg" alt="High Birefringence Pm field"/><span class="sample-label">High Birefringence Pm</span></div>
+    <div class="sample-tile"><img src="website/img/samples/hollow_core_pbg_06_s.jpg" alt="Hollow Core Pbg structure"/><img src="website/img/samples/hollow_core_pbg_06_f.jpg" alt="Hollow Core Pbg field"/><span class="sample-label">Hollow Core Pbg</span></div>
+    <div class="sample-tile"><img src="website/img/samples/hollow_core_pbg_07_s.jpg" alt="Hollow Core Pbg structure"/><img src="website/img/samples/hollow_core_pbg_07_f.jpg" alt="Hollow Core Pbg field"/><span class="sample-label">Hollow Core Pbg</span></div>
+    <div class="sample-tile"><img src="website/img/samples/multi_core_08_s.jpg" alt="Multi Core structure"/><img src="website/img/samples/multi_core_08_f.jpg" alt="Multi Core field"/><span class="sample-label">Multi Core</span></div>
+    <div class="sample-tile"><img src="website/img/samples/multi_core_09_s.jpg" alt="Multi Core structure"/><img src="website/img/samples/multi_core_09_f.jpg" alt="Multi Core field"/><span class="sample-label">Multi Core</span></div>
+    <div class="sample-tile"><img src="website/img/samples/solid_core_hex_10_s.jpg" alt="Solid Core Hex structure"/><img src="website/img/samples/solid_core_hex_10_f.jpg" alt="Solid Core Hex field"/><span class="sample-label">Solid Core Hex</span></div>
+    <div class="sample-tile"><img src="website/img/samples/solid_core_hex_11_s.jpg" alt="Solid Core Hex structure"/><img src="website/img/samples/solid_core_hex_11_f.jpg" alt="Solid Core Hex field"/><span class="sample-label">Solid Core Hex</span></div>
+    <div class="sample-tile"><img src="website/img/samples/square_rectangular_12_s.jpg" alt="Square Rectangular structure"/><img src="website/img/samples/square_rectangular_12_f.jpg" alt="Square Rectangular field"/><span class="sample-label">Square Rectangular</span></div>
+    <div class="sample-tile"><img src="website/img/samples/square_rectangular_13_s.jpg" alt="Square Rectangular structure"/><img src="website/img/samples/square_rectangular_13_f.jpg" alt="Square Rectangular field"/><span class="sample-label">Square Rectangular</span></div>
+    <div class="sample-tile"><img src="website/img/samples/suspended_cobweb_14_s.jpg" alt="Suspended Cobweb structure"/><img src="website/img/samples/suspended_cobweb_14_f.jpg" alt="Suspended Cobweb field"/><span class="sample-label">Suspended Cobweb</span></div>
+    <div class="sample-tile"><img src="website/img/samples/suspended_cobweb_15_s.jpg" alt="Suspended Cobweb structure"/><img src="website/img/samples/suspended_cobweb_15_f.jpg" alt="Suspended Cobweb field"/><span class="sample-label">Suspended Cobweb</span></div>
+    <div class="sample-tile"><img src="website/img/samples/vortex_ring_core_16_s.jpg" alt="Vortex Ring Core structure"/><img src="website/img/samples/vortex_ring_core_16_f.jpg" alt="Vortex Ring Core field"/><span class="sample-label">Vortex Ring Core</span></div>
+    <div class="sample-tile"><img src="website/img/samples/vortex_ring_core_17_s.jpg" alt="Vortex Ring Core structure"/><img src="website/img/samples/vortex_ring_core_17_f.jpg" alt="Vortex Ring Core field"/><span class="sample-label">Vortex Ring Core</span></div>
+
+      </div>
+    </div>
+    <div class="marquee reverse" aria-hidden="true" style="margin-top:1rem;">
+      <div class="marquee-track">
+    <div class="sample-tile"><img src="website/img/samples/anti_resonant_arf_00_s.jpg" alt="Anti Resonant Arf structure"/><img src="website/img/samples/anti_resonant_arf_00_f.jpg" alt="Anti Resonant Arf field"/><span class="sample-label">Anti Resonant Arf</span></div>
+    <div class="sample-tile"><img src="website/img/samples/anti_resonant_arf_01_s.jpg" alt="Anti Resonant Arf structure"/><img src="website/img/samples/anti_resonant_arf_01_f.jpg" alt="Anti Resonant Arf field"/><span class="sample-label">Anti Resonant Arf</span></div>
+    <div class="sample-tile"><img src="website/img/samples/fractal_quasicrystal_02_s.jpg" alt="Fractal Quasicrystal structure"/><img src="website/img/samples/fractal_quasicrystal_02_f.jpg" alt="Fractal Quasicrystal field"/><span class="sample-label">Fractal Quasicrystal</span></div>
+    <div class="sample-tile"><img src="website/img/samples/fractal_quasicrystal_03_s.jpg" alt="Fractal Quasicrystal structure"/><img src="website/img/samples/fractal_quasicrystal_03_f.jpg" alt="Fractal Quasicrystal field"/><span class="sample-label">Fractal Quasicrystal</span></div>
+    <div class="sample-tile"><img src="website/img/samples/high_birefringence_pm_04_s.jpg" alt="High Birefringence Pm structure"/><img src="website/img/samples/high_birefringence_pm_04_f.jpg" alt="High Birefringence Pm field"/><span class="sample-label">High Birefringence Pm</span></div>
+    <div class="sample-tile"><img src="website/img/samples/high_birefringence_pm_05_s.jpg" alt="High Birefringence Pm structure"/><img src="website/img/samples/high_birefringence_pm_05_f.jpg" alt="High Birefringence Pm field"/><span class="sample-label">High Birefringence Pm</span></div>
+    <div class="sample-tile"><img src="website/img/samples/hollow_core_pbg_06_s.jpg" alt="Hollow Core Pbg structure"/><img src="website/img/samples/hollow_core_pbg_06_f.jpg" alt="Hollow Core Pbg field"/><span class="sample-label">Hollow Core Pbg</span></div>
+    <div class="sample-tile"><img src="website/img/samples/hollow_core_pbg_07_s.jpg" alt="Hollow Core Pbg structure"/><img src="website/img/samples/hollow_core_pbg_07_f.jpg" alt="Hollow Core Pbg field"/><span class="sample-label">Hollow Core Pbg</span></div>
+    <div class="sample-tile"><img src="website/img/samples/multi_core_08_s.jpg" alt="Multi Core structure"/><img src="website/img/samples/multi_core_08_f.jpg" alt="Multi Core field"/><span class="sample-label">Multi Core</span></div>
+    <div class="sample-tile"><img src="website/img/samples/multi_core_09_s.jpg" alt="Multi Core structure"/><img src="website/img/samples/multi_core_09_f.jpg" alt="Multi Core field"/><span class="sample-label">Multi Core</span></div>
+    <div class="sample-tile"><img src="website/img/samples/solid_core_hex_10_s.jpg" alt="Solid Core Hex structure"/><img src="website/img/samples/solid_core_hex_10_f.jpg" alt="Solid Core Hex field"/><span class="sample-label">Solid Core Hex</span></div>
+    <div class="sample-tile"><img src="website/img/samples/solid_core_hex_11_s.jpg" alt="Solid Core Hex structure"/><img src="website/img/samples/solid_core_hex_11_f.jpg" alt="Solid Core Hex field"/><span class="sample-label">Solid Core Hex</span></div>
+    <div class="sample-tile"><img src="website/img/samples/square_rectangular_12_s.jpg" alt="Square Rectangular structure"/><img src="website/img/samples/square_rectangular_12_f.jpg" alt="Square Rectangular field"/><span class="sample-label">Square Rectangular</span></div>
+    <div class="sample-tile"><img src="website/img/samples/square_rectangular_13_s.jpg" alt="Square Rectangular structure"/><img src="website/img/samples/square_rectangular_13_f.jpg" alt="Square Rectangular field"/><span class="sample-label">Square Rectangular</span></div>
+    <div class="sample-tile"><img src="website/img/samples/suspended_cobweb_14_s.jpg" alt="Suspended Cobweb structure"/><img src="website/img/samples/suspended_cobweb_14_f.jpg" alt="Suspended Cobweb field"/><span class="sample-label">Suspended Cobweb</span></div>
+    <div class="sample-tile"><img src="website/img/samples/suspended_cobweb_15_s.jpg" alt="Suspended Cobweb structure"/><img src="website/img/samples/suspended_cobweb_15_f.jpg" alt="Suspended Cobweb field"/><span class="sample-label">Suspended Cobweb</span></div>
+    <div class="sample-tile"><img src="website/img/samples/vortex_ring_core_16_s.jpg" alt="Vortex Ring Core structure"/><img src="website/img/samples/vortex_ring_core_16_f.jpg" alt="Vortex Ring Core field"/><span class="sample-label">Vortex Ring Core</span></div>
+    <div class="sample-tile"><img src="website/img/samples/vortex_ring_core_17_s.jpg" alt="Vortex Ring Core structure"/><img src="website/img/samples/vortex_ring_core_17_f.jpg" alt="Vortex Ring Core field"/><span class="sample-label">Vortex Ring Core</span></div>
+
+    <div class="sample-tile"><img src="website/img/samples/anti_resonant_arf_00_s.jpg" alt="Anti Resonant Arf structure"/><img src="website/img/samples/anti_resonant_arf_00_f.jpg" alt="Anti Resonant Arf field"/><span class="sample-label">Anti Resonant Arf</span></div>
+    <div class="sample-tile"><img src="website/img/samples/anti_resonant_arf_01_s.jpg" alt="Anti Resonant Arf structure"/><img src="website/img/samples/anti_resonant_arf_01_f.jpg" alt="Anti Resonant Arf field"/><span class="sample-label">Anti Resonant Arf</span></div>
+    <div class="sample-tile"><img src="website/img/samples/fractal_quasicrystal_02_s.jpg" alt="Fractal Quasicrystal structure"/><img src="website/img/samples/fractal_quasicrystal_02_f.jpg" alt="Fractal Quasicrystal field"/><span class="sample-label">Fractal Quasicrystal</span></div>
+    <div class="sample-tile"><img src="website/img/samples/fractal_quasicrystal_03_s.jpg" alt="Fractal Quasicrystal structure"/><img src="website/img/samples/fractal_quasicrystal_03_f.jpg" alt="Fractal Quasicrystal field"/><span class="sample-label">Fractal Quasicrystal</span></div>
+    <div class="sample-tile"><img src="website/img/samples/high_birefringence_pm_04_s.jpg" alt="High Birefringence Pm structure"/><img src="website/img/samples/high_birefringence_pm_04_f.jpg" alt="High Birefringence Pm field"/><span class="sample-label">High Birefringence Pm</span></div>
+    <div class="sample-tile"><img src="website/img/samples/high_birefringence_pm_05_s.jpg" alt="High Birefringence Pm structure"/><img src="website/img/samples/high_birefringence_pm_05_f.jpg" alt="High Birefringence Pm field"/><span class="sample-label">High Birefringence Pm</span></div>
+    <div class="sample-tile"><img src="website/img/samples/hollow_core_pbg_06_s.jpg" alt="Hollow Core Pbg structure"/><img src="website/img/samples/hollow_core_pbg_06_f.jpg" alt="Hollow Core Pbg field"/><span class="sample-label">Hollow Core Pbg</span></div>
+    <div class="sample-tile"><img src="website/img/samples/hollow_core_pbg_07_s.jpg" alt="Hollow Core Pbg structure"/><img src="website/img/samples/hollow_core_pbg_07_f.jpg" alt="Hollow Core Pbg field"/><span class="sample-label">Hollow Core Pbg</span></div>
+    <div class="sample-tile"><img src="website/img/samples/multi_core_08_s.jpg" alt="Multi Core structure"/><img src="website/img/samples/multi_core_08_f.jpg" alt="Multi Core field"/><span class="sample-label">Multi Core</span></div>
+    <div class="sample-tile"><img src="website/img/samples/multi_core_09_s.jpg" alt="Multi Core structure"/><img src="website/img/samples/multi_core_09_f.jpg" alt="Multi Core field"/><span class="sample-label">Multi Core</span></div>
+    <div class="sample-tile"><img src="website/img/samples/solid_core_hex_10_s.jpg" alt="Solid Core Hex structure"/><img src="website/img/samples/solid_core_hex_10_f.jpg" alt="Solid Core Hex field"/><span class="sample-label">Solid Core Hex</span></div>
+    <div class="sample-tile"><img src="website/img/samples/solid_core_hex_11_s.jpg" alt="Solid Core Hex structure"/><img src="website/img/samples/solid_core_hex_11_f.jpg" alt="Solid Core Hex field"/><span class="sample-label">Solid Core Hex</span></div>
+    <div class="sample-tile"><img src="website/img/samples/square_rectangular_12_s.jpg" alt="Square Rectangular structure"/><img src="website/img/samples/square_rectangular_12_f.jpg" alt="Square Rectangular field"/><span class="sample-label">Square Rectangular</span></div>
+    <div class="sample-tile"><img src="website/img/samples/square_rectangular_13_s.jpg" alt="Square Rectangular structure"/><img src="website/img/samples/square_rectangular_13_f.jpg" alt="Square Rectangular field"/><span class="sample-label">Square Rectangular</span></div>
+    <div class="sample-tile"><img src="website/img/samples/suspended_cobweb_14_s.jpg" alt="Suspended Cobweb structure"/><img src="website/img/samples/suspended_cobweb_14_f.jpg" alt="Suspended Cobweb field"/><span class="sample-label">Suspended Cobweb</span></div>
+    <div class="sample-tile"><img src="website/img/samples/suspended_cobweb_15_s.jpg" alt="Suspended Cobweb structure"/><img src="website/img/samples/suspended_cobweb_15_f.jpg" alt="Suspended Cobweb field"/><span class="sample-label">Suspended Cobweb</span></div>
+    <div class="sample-tile"><img src="website/img/samples/vortex_ring_core_16_s.jpg" alt="Vortex Ring Core structure"/><img src="website/img/samples/vortex_ring_core_16_f.jpg" alt="Vortex Ring Core field"/><span class="sample-label">Vortex Ring Core</span></div>
+    <div class="sample-tile"><img src="website/img/samples/vortex_ring_core_17_s.jpg" alt="Vortex Ring Core structure"/><img src="website/img/samples/vortex_ring_core_17_f.jpg" alt="Vortex Ring Core field"/><span class="sample-label">Vortex Ring Core</span></div>
+
+      </div>
+    </div>
+  </section>
+
   <!-- LEADERBOARD -->
   <section class="section" id="leaderboard">
     <div class="container is-fluid" style="max-width:1320px;">
@@ -469,7 +643,10 @@
       </div>
 
       <div class="leaderboard-wrap">
-        <div id="pcfbench-leaderboard"></div>
+        <table class="lb-table">
+  <thead><tr class="lb-grp"><th></th><th></th><th colspan="3">Geometry</th><th colspan="3">Physics</th><th colspan="3">Text Gen.</th><th colspan="2">Multi-modal</th><th colspan="5">Inverse Design</th><th colspan="3">Code Gen.</th></tr><tr class="lb-met"><th class="lb-model">Model</th><th>Size</th><th>Fam</th><th>Count</th><th>Topo</th><th>Loss-1550 ↓</th><th>App</th><th>Mech</th><th>GeoD</th><th>QA</th><th>Report</th><th>WC</th><th>MD</th><th>Dir-P</th><th>Dir-D</th><th>P.Sel</th><th>CL</th><th>Human</th><th>SimQ</th><th>ParamMod</th><th>Refactor</th></tr></thead>
+  <tbody><tr><td class="lb-model"><b>Gemma-3-4B</b><br><span class="lb-vendor">Open · Google</span></td><td class="num">4B</td><td class="num ">0.045</td><td class="num ">0.155</td><td class="num ">0.175</td><td class="num ">2.850</td><td class="num ">0.035</td><td class="num ">0.245</td><td class="num ">0.270</td><td class="num ">0.106</td><td class="num ">0.465</td><td class="num ">0.247</td><td class="num ">0.052</td><td class="num ">0.473</td><td class="num ">0.388</td><td class="num rk-2">0.651</td><td class="num ">0.477</td><td class="num ">0.420</td><td class="num ">0.982</td><td class="num rk-1">1.000</td><td class="num ">0.975</td></tr><tr><td class="lb-model"><b>Qwen2.5-VL-7B</b><br><span class="lb-vendor">Open · Qwen</span></td><td class="num">7B</td><td class="num ">0.096</td><td class="num ">0.176</td><td class="num ">0.230</td><td class="num ">2.655</td><td class="num ">0.055</td><td class="num ">0.295</td><td class="num ">0.334</td><td class="num ">0.112</td><td class="num ">0.482</td><td class="num rk-3">0.758</td><td class="num rk-1">0.696</td><td class="num ">0.521</td><td class="num rk-2">0.730</td><td class="num ">0.608</td><td class="num ">0.638</td><td class="num ">0.530</td><td class="num ">0.953</td><td class="num rk-1">1.000</td><td class="num rk-1">1.000</td></tr><tr><td class="lb-model"><b>Qwen3-VL-8B</b><br><span class="lb-vendor">Open · Qwen</span></td><td class="num">8B</td><td class="num ">0.192</td><td class="num ">0.174</td><td class="num ">0.293</td><td class="num ">2.435</td><td class="num ">0.050</td><td class="num ">0.265</td><td class="num ">0.317</td><td class="num ">0.096</td><td class="num ">0.554</td><td class="num ">0.663</td><td class="num rk-2">0.500</td><td class="num ">0.226</td><td class="num ">0.151</td><td class="num ">0.222</td><td class="num ">0.327</td><td class="num ">0.270</td><td class="num ">0.949</td><td class="num rk-1">1.000</td><td class="num ">0.919</td></tr><tr><td class="lb-model"><b>Ministral-8B</b><br><span class="lb-vendor">Open · Mistral</span></td><td class="num">8B</td><td class="num ">0.054</td><td class="num ">0.200</td><td class="num ">0.185</td><td class="num ">2.745</td><td class="num ">0.040</td><td class="num ">0.225</td><td class="num ">0.285</td><td class="num ">0.098</td><td class="num ">0.625</td><td class="num ">0.457</td><td class="num ">0.125</td><td class="num ">0.423</td><td class="num ">0.215</td><td class="num ">0.641</td><td class="num ">0.250</td><td class="num ">0.330</td><td class="num ">0.952</td><td class="num ">0.784</td><td class="num ">0.684</td></tr><tr><td class="lb-model"><b>Molmo-2-8B</b><br><span class="lb-vendor">Open · AI2</span></td><td class="num">8B</td><td class="num ">0.093</td><td class="num ">0.194</td><td class="num ">0.246</td><td class="num ">2.895</td><td class="num ">0.030</td><td class="num ">0.215</td><td class="num ">0.285</td><td class="num ">0.095</td><td class="num ">0.425</td><td class="num ">0.305</td><td class="num ">0.021</td><td class="num ">0.355</td><td class="num ">0.255</td><td class="num ">0.475</td><td class="num ">0.295</td><td class="num ">0.310</td><td class="num ">0.885</td><td class="num ">0.875</td><td class="num ">0.825</td></tr><tr><td class="lb-model"><b>Llama-3.2-11B-V</b><br><span class="lb-vendor">Open · Meta</span></td><td class="num">11B</td><td class="num ">0.031</td><td class="num ">0.248</td><td class="num ">0.020</td><td class="num ">2.491</td><td class="num rk-1">0.245</td><td class="num ">0.300</td><td class="num ">0.339</td><td class="num ">0.165</td><td class="num ">0.503</td><td class="num ">0.690</td><td class="num ">0.031</td><td class="num rk-1">0.750</td><td class="num rk-1">0.771</td><td class="num ">0.110</td><td class="num ">0.061</td><td class="num ">0.320</td><td class="num ">0.820</td><td class="num rk-1">1.000</td><td class="num ">0.989</td></tr><tr><td class="lb-model"><b>Gemma-3-12B</b><br><span class="lb-vendor">Open · Google</span></td><td class="num">12B</td><td class="num ">0.085</td><td class="num ">0.175</td><td class="num ">0.235</td><td class="num ">2.350</td><td class="num ">0.050</td><td class="num ">0.295</td><td class="num ">0.295</td><td class="num ">0.097</td><td class="num ">0.499</td><td class="num ">0.243</td><td class="num ">0.057</td><td class="num ">0.308</td><td class="num ">0.247</td><td class="num ">0.559</td><td class="num ">0.517</td><td class="num ">0.400</td><td class="num ">0.996</td><td class="num ">0.994</td><td class="num ">0.980</td></tr><tr><td class="lb-model"><b>Pixtral-12B</b><br><span class="lb-vendor">Open · Mistral</span></td><td class="num">12B</td><td class="num ">0.133</td><td class="num ">0.143</td><td class="num ">0.339</td><td class="num ">2.485</td><td class="num ">0.055</td><td class="num ">0.305</td><td class="num ">0.305</td><td class="num ">0.105</td><td class="num ">0.535</td><td class="num ">0.425</td><td class="num ">0.125</td><td class="num ">0.325</td><td class="num ">0.245</td><td class="num ">0.485</td><td class="num ">0.305</td><td class="num ">0.330</td><td class="num ">0.945</td><td class="num ">0.975</td><td class="num ">0.915</td></tr><tr><td class="lb-model"><b>Ministral-14B</b><br><span class="lb-vendor">Open · Mistral</span></td><td class="num">14B</td><td class="num ">0.115</td><td class="num ">0.199</td><td class="num ">0.287</td><td class="num ">2.315</td><td class="num ">0.055</td><td class="num ">0.285</td><td class="num ">0.294</td><td class="num ">0.096</td><td class="num ">0.622</td><td class="num ">0.243</td><td class="num ">0.054</td><td class="num ">0.238</td><td class="num ">0.164</td><td class="num ">0.650</td><td class="num ">0.324</td><td class="num ">0.330</td><td class="num ">0.950</td><td class="num ">0.645</td><td class="num ">0.774</td></tr><tr><td class="lb-model"><b>Gemma-3-27B</b><br><span class="lb-vendor">Open · Google</span></td><td class="num">27B</td><td class="num ">0.125</td><td class="num ">0.195</td><td class="num ">0.295</td><td class="num ">1.885</td><td class="num ">0.065</td><td class="num ">0.335</td><td class="num ">0.294</td><td class="num ">0.096</td><td class="num ">0.530</td><td class="num ">0.610</td><td class="num rk-2">0.500</td><td class="num ">0.286</td><td class="num ">0.279</td><td class="num ">0.305</td><td class="num ">0.258</td><td class="num ">0.280</td><td class="num ">0.998</td><td class="num ">0.994</td><td class="num ">0.949</td></tr><tr><td class="lb-model"><b>Qwen3-30B-A3B</b><br><span class="lb-vendor">Open · Qwen</span></td><td class="num">30B</td><td class="num ">0.115</td><td class="num ">0.204</td><td class="num ">0.291</td><td class="num ">1.745</td><td class="num ">0.080</td><td class="num ">0.375</td><td class="num ">0.334</td><td class="num ">0.548</td><td class="num ">0.582</td><td class="num ">0.308</td><td class="num ">0.235</td><td class="num ">0.227</td><td class="num ">0.218</td><td class="num ">0.200</td><td class="num ">0.620</td><td class="num ">0.380</td><td class="num ">0.862</td><td class="num ">0.977</td><td class="num ">0.791</td></tr><tr><td class="lb-model"><b>Qwen2.5-VL-32B</b><br><span class="lb-vendor">Open · Qwen</span></td><td class="num">32B</td><td class="num ">0.180</td><td class="num ">0.113</td><td class="num ">0.260</td><td class="num ">2.671</td><td class="num ">0.065</td><td class="num ">0.352</td><td class="num ">0.285</td><td class="num ">0.103</td><td class="num ">0.525</td><td class="num rk-1">0.780</td><td class="num ">0.065</td><td class="num ">0.239</td><td class="num ">0.156</td><td class="num ">0.130</td><td class="num ">0.183</td><td class="num ">0.220</td><td class="num rk-1">1.000</td><td class="num rk-1">1.000</td><td class="num ">0.989</td></tr><tr><td class="lb-model"><b>Qwen2-VL-72B</b><br><span class="lb-vendor">Open · Qwen</span></td><td class="num">72B</td><td class="num ">0.155</td><td class="num ">0.195</td><td class="num ">0.385</td><td class="num ">2.590</td><td class="num ">0.105</td><td class="num ">0.285</td><td class="num ">0.325</td><td class="num ">0.099</td><td class="num ">0.485</td><td class="num ">0.735</td><td class="num ">0.375</td><td class="num ">0.395</td><td class="num ">0.485</td><td class="num ">0.545</td><td class="num ">0.475</td><td class="num ">0.430</td><td class="num ">0.945</td><td class="num ">0.988</td><td class="num ">0.935</td></tr><tr><td class="lb-model"><b>Qwen2.5-VL-72B</b><br><span class="lb-vendor">Open · Qwen</span></td><td class="num">72B</td><td class="num ">0.185</td><td class="num ">0.234</td><td class="num ">0.430</td><td class="num ">2.448</td><td class="num ">0.135</td><td class="num ">0.304</td><td class="num ">0.338</td><td class="num ">0.108</td><td class="num ">0.514</td><td class="num rk-1">0.780</td><td class="num rk-2">0.500</td><td class="num ">0.433</td><td class="num ">0.661</td><td class="num rk-1">0.670</td><td class="num ">0.589</td><td class="num ">0.510</td><td class="num ">0.993</td><td class="num rk-1">1.000</td><td class="num rk-1">1.000</td></tr><tr><td class="lb-model"><b>Llama-3.2-90B-V</b><br><span class="lb-vendor">Open · Meta</span></td><td class="num">90B</td><td class="num ">0.025</td><td class="num ">0.275</td><td class="num ">0.065</td><td class="num ">2.095</td><td class="num rk-2">0.185</td><td class="num ">0.325</td><td class="num ">0.345</td><td class="num ">0.175</td><td class="num ">0.545</td><td class="num ">0.715</td><td class="num ">0.024</td><td class="num ">0.625</td><td class="num rk-3">0.680</td><td class="num ">0.155</td><td class="num ">0.105</td><td class="num ">0.310</td><td class="num ">0.855</td><td class="num rk-1">1.000</td><td class="num ">0.990</td></tr><tr><td class="lb-model"><b>Llama-4-Scout</b><br><span class="lb-vendor">Open · Meta</span></td><td class="num">109B</td><td class="num ">0.105</td><td class="num ">0.033</td><td class="num ">0.100</td><td class="num ">2.350</td><td class="num ">0.045</td><td class="num ">0.348</td><td class="num ">0.350</td><td class="num ">0.101</td><td class="num ">0.540</td><td class="num ">0.755</td><td class="num ">0.021</td><td class="num ">0.389</td><td class="num ">0.193</td><td class="num ">0.140</td><td class="num ">0.200</td><td class="num ">0.250</td><td class="num ">0.973</td><td class="num ">0.972</td><td class="num ">0.967</td></tr><tr><td class="lb-model"><b>Mistral-Large</b><br><span class="lb-vendor">Open · Mistral</span></td><td class="num">123B</td><td class="num ">0.060</td><td class="num ">0.226</td><td class="num ">0.198</td><td class="num ">1.895</td><td class="num ">0.050</td><td class="num ">0.325</td><td class="num ">0.300</td><td class="num ">0.095</td><td class="num ">0.667</td><td class="num ">0.241</td><td class="num ">0.031</td><td class="num ">0.479</td><td class="num ">0.330</td><td class="num ">0.625</td><td class="num ">0.284</td><td class="num ">0.370</td><td class="num ">0.977</td><td class="num ">0.808</td><td class="num ">0.807</td></tr><tr><td class="lb-model"><b>Qwen3-235B</b><br><span class="lb-vendor">Open · Qwen</span></td><td class="num">235B</td><td class="num ">0.225</td><td class="num ">0.230</td><td class="num rk-2">0.482</td><td class="num ">1.225</td><td class="num ">0.090</td><td class="num ">0.405</td><td class="num ">0.301</td><td class="num ">0.091</td><td class="num ">0.609</td><td class="num ">0.471</td><td class="num ">0.125</td><td class="num ">0.231</td><td class="num ">0.151</td><td class="num ">0.495</td><td class="num ">0.168</td><td class="num ">0.280</td><td class="num ">0.986</td><td class="num ">0.983</td><td class="num ">0.698</td></tr><tr><td class="lb-model"><b>Qwen3.5-9B</b><br><span class="lb-vendor">Open · Qwen</span></td><td class="num">9B</td><td class="num ">0.175</td><td class="num ">0.195</td><td class="num ">0.315</td><td class="num ">2.180</td><td class="num ">0.075</td><td class="num ">0.310</td><td class="num ">0.328</td><td class="num ">0.145</td><td class="num ">0.585</td><td class="num ">0.685</td><td class="num ">0.425</td><td class="num ">0.315</td><td class="num ">0.285</td><td class="num ">0.278</td><td class="num ">0.355</td><td class="num ">0.300</td><td class="num ">0.965</td><td class="num ">0.988</td><td class="num ">0.945</td></tr><tr><td class="lb-model"><b>Qwen3.5-27B</b><br><span class="lb-vendor">Open · Qwen</span></td><td class="num">27B</td><td class="num ">0.205</td><td class="num ">0.218</td><td class="num ">0.355</td><td class="num ">1.580</td><td class="num ">0.115</td><td class="num ">0.395</td><td class="num ">0.346</td><td class="num ">0.478</td><td class="num ">0.605</td><td class="num ">0.525</td><td class="num ">0.315</td><td class="num ">0.350</td><td class="num ">0.305</td><td class="num ">0.305</td><td class="num ">0.402</td><td class="num ">0.380</td><td class="num ">0.978</td><td class="num ">0.992</td><td class="num ">0.912</td></tr><tr><td class="lb-model"><b>Qwen3.5-122B-A10B</b><br><span class="lb-vendor">Open · Qwen</span></td><td class="num">122B</td><td class="num ">0.242</td><td class="num ">0.265</td><td class="num rk-1">0.495</td><td class="num ">1.085</td><td class="num rk-3">0.140</td><td class="num ">0.425</td><td class="num ">0.342</td><td class="num ">0.128</td><td class="num ">0.624</td><td class="num ">0.685</td><td class="num ">0.478</td><td class="num ">0.385</td><td class="num ">0.265</td><td class="num ">0.425</td><td class="num ">0.355</td><td class="num ">0.420</td><td class="num ">0.988</td><td class="num rk-1">1.000</td><td class="num ">0.858</td></tr><tr><td class="lb-model"><b>Llama-4-Maverick</b><br><span class="lb-vendor">Open · Meta</span></td><td class="num">400B</td><td class="num ">0.190</td><td class="num ">0.128</td><td class="num ">0.370</td><td class="num ">2.577</td><td class="num ">0.065</td><td class="num ">0.234</td><td class="num rk-1">0.358</td><td class="num ">0.104</td><td class="num ">0.499</td><td class="num ">0.715</td><td class="num ">0.045</td><td class="num ">0.172</td><td class="num ">0.138</td><td class="num ">0.105</td><td class="num ">0.061</td><td class="num ">0.160</td><td class="num rk-1">1.000</td><td class="num rk-1">1.000</td><td class="num ">0.956</td></tr><tr><td class="lb-model"><b>Qwen-VL-Max</b><br><span class="lb-vendor">Open · Qwen</span></td><td class="num">—</td><td class="num ">0.210</td><td class="num ">0.220</td><td class="num ">0.372</td><td class="num ">1.420</td><td class="num ">0.085</td><td class="num ">0.385</td><td class="num ">0.335</td><td class="num ">0.092</td><td class="num ">0.587</td><td class="num ">0.293</td><td class="num ">0.235</td><td class="num ">0.247</td><td class="num ">0.161</td><td class="num ">0.171</td><td class="num ">0.352</td><td class="num ">0.280</td><td class="num ">0.996</td><td class="num ">0.994</td><td class="num ">0.960</td></tr><tr><td class="lb-model"><b>GPT-4o-mini</b><br><span class="lb-vendor">Proprietary · OpenAI</span></td><td class="num">—</td><td class="num ">0.130</td><td class="num ">0.228</td><td class="num ">0.348</td><td class="num ">0.895</td><td class="num ">0.060</td><td class="num ">0.395</td><td class="num ">0.337</td><td class="num ">0.139</td><td class="num ">0.529</td><td class="num ">0.241</td><td class="num ">0.021</td><td class="num ">0.548</td><td class="num ">0.578</td><td class="num rk-2">0.651</td><td class="num rk-1">0.800</td><td class="num rk-1">0.590</td><td class="num ">0.999</td><td class="num rk-1">1.000</td><td class="num ">0.994</td></tr><tr><td class="lb-model"><b>GPT-4o</b><br><span class="lb-vendor">Proprietary · OpenAI</span></td><td class="num">—</td><td class="num ">0.185</td><td class="num ">0.205</td><td class="num ">0.461</td><td class="num ">1.339</td><td class="num ">0.083</td><td class="num ">0.310</td><td class="num ">0.346</td><td class="num ">0.148</td><td class="num ">0.581</td><td class="num ">0.241</td><td class="num ">0.030</td><td class="num ">0.226</td><td class="num ">0.151</td><td class="num ">0.227</td><td class="num ">0.396</td><td class="num ">0.300</td><td class="num ">0.999</td><td class="num rk-1">1.000</td><td class="num ">0.924</td></tr><tr><td class="lb-model"><b>GPT-4.1-mini</b><br><span class="lb-vendor">Proprietary · OpenAI</span></td><td class="num">—</td><td class="num ">0.305</td><td class="num ">0.397</td><td class="num ">0.370</td><td class="num ">0.676</td><td class="num ">0.055</td><td class="num ">0.376</td><td class="num ">0.342</td><td class="num rk-2">0.594</td><td class="num ">0.591</td><td class="num ">0.220</td><td class="num ">0.052</td><td class="num ">0.228</td><td class="num ">0.156</td><td class="num ">0.060</td><td class="num ">0.450</td><td class="num ">0.300</td><td class="num rk-1">1.000</td><td class="num rk-1">1.000</td><td class="num ">0.956</td></tr><tr><td class="lb-model"><b>GPT-4.1</b><br><span class="lb-vendor">Proprietary · OpenAI</span></td><td class="num">—</td><td class="num ">0.360</td><td class="num ">0.440</td><td class="num ">0.420</td><td class="num ">0.520</td><td class="num ">0.075</td><td class="num ">0.410</td><td class="num ">0.343</td><td class="num rk-1">0.610</td><td class="num ">0.610</td><td class="num ">0.270</td><td class="num ">0.047</td><td class="num ">0.300</td><td class="num ">0.210</td><td class="num ">0.250</td><td class="num ">0.500</td><td class="num ">0.370</td><td class="num rk-1">1.000</td><td class="num rk-1">1.000</td><td class="num ">0.965</td></tr><tr><td class="lb-model"><b>GPT-5-mini</b><br><span class="lb-vendor">Proprietary · OpenAI</span></td><td class="num">—</td><td class="num ">0.385</td><td class="num ">0.405</td><td class="num ">0.425</td><td class="num ">0.355</td><td class="num ">0.090</td><td class="num ">0.440</td><td class="num ">0.344</td><td class="num ">0.570</td><td class="num ">0.605</td><td class="num ">0.480</td><td class="num ">0.060</td><td class="num ">0.490</td><td class="num ">0.545</td><td class="num ">0.320</td><td class="num ">0.540</td><td class="num ">0.460</td><td class="num rk-1">1.000</td><td class="num rk-1">1.000</td><td class="num ">0.970</td></tr><tr><td class="lb-model"><b>GPT-5</b><br><span class="lb-vendor">Proprietary · OpenAI</span></td><td class="num">—</td><td class="num rk-2">0.455</td><td class="num rk-2">0.480</td><td class="num ">0.470</td><td class="num ">0.225</td><td class="num ">0.110</td><td class="num ">0.500</td><td class="num ">0.348</td><td class="num ">0.585</td><td class="num ">0.625</td><td class="num ">0.740</td><td class="num ">0.125</td><td class="num ">0.570</td><td class="num ">0.620</td><td class="num ">0.420</td><td class="num ">0.620</td><td class="num ">0.530</td><td class="num rk-1">1.000</td><td class="num rk-1">1.000</td><td class="num ">0.975</td></tr><tr><td class="lb-model"><b>o4-mini</b><br><span class="lb-vendor">Proprietary · OpenAI</span></td><td class="num">—</td><td class="num ">0.335</td><td class="num ">0.390</td><td class="num ">0.415</td><td class="num ">0.385</td><td class="num ">0.085</td><td class="num ">0.420</td><td class="num ">0.328</td><td class="num ">0.395</td><td class="num ">0.580</td><td class="num ">0.555</td><td class="num ">0.085</td><td class="num ">0.510</td><td class="num ">0.485</td><td class="num ">0.280</td><td class="num ">0.555</td><td class="num ">0.450</td><td class="num ">0.995</td><td class="num rk-1">1.000</td><td class="num ">0.940</td></tr><tr><td class="lb-model"><b>o3</b><br><span class="lb-vendor">Proprietary · OpenAI</span></td><td class="num">—</td><td class="num ">0.420</td><td class="num ">0.450</td><td class="num rk-3">0.475</td><td class="num rk-1">0.170</td><td class="num ">0.115</td><td class="num rk-2">0.505</td><td class="num ">0.332</td><td class="num ">0.445</td><td class="num ">0.645</td><td class="num ">0.690</td><td class="num ">0.185</td><td class="num ">0.615</td><td class="num ">0.650</td><td class="num ">0.475</td><td class="num rk-2">0.695</td><td class="num ">0.560</td><td class="num rk-1">1.000</td><td class="num rk-1">1.000</td><td class="num ">0.985</td></tr><tr><td class="lb-model"><b>Claude-3.5-Sonnet</b><br><span class="lb-vendor">Proprietary · Anthropic</span></td><td class="num">—</td><td class="num ">0.065</td><td class="num ">0.199</td><td class="num ">0.210</td><td class="num ">0.832</td><td class="num ">0.045</td><td class="num ">0.377</td><td class="num ">0.325</td><td class="num ">0.199</td><td class="num ">0.485</td><td class="num ">0.220</td><td class="num ">0.031</td><td class="num ">0.383</td><td class="num ">0.239</td><td class="num ">0.295</td><td class="num ">0.206</td><td class="num ">0.280</td><td class="num ">0.982</td><td class="num rk-1">1.000</td><td class="num rk-1">1.000</td></tr><tr><td class="lb-model"><b>Claude-Sonnet-4.5</b><br><span class="lb-vendor">Proprietary · Anthropic</span></td><td class="num">—</td><td class="num ">0.265</td><td class="num ">0.295</td><td class="num ">0.380</td><td class="num ">0.485</td><td class="num ">0.065</td><td class="num ">0.445</td><td class="num ">0.345</td><td class="num ">0.315</td><td class="num ">0.620</td><td class="num ">0.545</td><td class="num ">0.125</td><td class="num ">0.530</td><td class="num ">0.395</td><td class="num ">0.490</td><td class="num ">0.455</td><td class="num ">0.450</td><td class="num ">0.993</td><td class="num rk-1">1.000</td><td class="num ">0.975</td></tr><tr><td class="lb-model"><b>Claude-Opus-4.5</b><br><span class="lb-vendor">Proprietary · Anthropic</span></td><td class="num">—</td><td class="num ">0.395</td><td class="num ">0.415</td><td class="num ">0.455</td><td class="num ">0.275</td><td class="num ">0.095</td><td class="num ">0.485</td><td class="num ">0.350</td><td class="num ">0.525</td><td class="num ">0.660</td><td class="num ">0.710</td><td class="num ">0.265</td><td class="num ">0.620</td><td class="num ">0.545</td><td class="num ">0.580</td><td class="num ">0.625</td><td class="num ">0.550</td><td class="num rk-1">1.000</td><td class="num rk-1">1.000</td><td class="num ">0.985</td></tr><tr><td class="lb-model"><b>Claude-Sonnet-4.5-T</b><br><span class="lb-vendor">Proprietary · Anthropic</span></td><td class="num">—</td><td class="num ">0.305</td><td class="num ">0.335</td><td class="num ">0.410</td><td class="num ">0.395</td><td class="num ">0.070</td><td class="num ">0.470</td><td class="num ">0.346</td><td class="num ">0.340</td><td class="num ">0.635</td><td class="num ">0.575</td><td class="num ">0.195</td><td class="num ">0.595</td><td class="num ">0.465</td><td class="num ">0.535</td><td class="num ">0.545</td><td class="num ">0.500</td><td class="num ">0.995</td><td class="num rk-1">1.000</td><td class="num ">0.980</td></tr><tr><td class="lb-model"><b>Claude-Opus-4.5-T</b><br><span class="lb-vendor">Proprietary · Anthropic</span></td><td class="num">—</td><td class="num rk-3">0.445</td><td class="num rk-3">0.455</td><td class="num rk-3">0.475</td><td class="num ">0.205</td><td class="num ">0.105</td><td class="num ">0.500</td><td class="num rk-2">0.352</td><td class="num ">0.565</td><td class="num ">0.665</td><td class="num ">0.745</td><td class="num ">0.345</td><td class="num rk-2">0.660</td><td class="num ">0.605</td><td class="num ">0.625</td><td class="num rk-3">0.690</td><td class="num rk-1">0.590</td><td class="num rk-1">1.000</td><td class="num rk-1">1.000</td><td class="num ">0.990</td></tr><tr><td class="lb-model"><b>Gemini-3-Flash</b><br><span class="lb-vendor">Proprietary · Google</span></td><td class="num">—</td><td class="num rk-1">0.668</td><td class="num rk-1">0.757</td><td class="num ">0.425</td><td class="num rk-2">0.175</td><td class="num ">0.110</td><td class="num rk-2">0.505</td><td class="num rk-2">0.352</td><td class="num rk-3">0.590</td><td class="num rk-3">0.680</td><td class="num ">0.755</td><td class="num ">0.285</td><td class="num rk-3">0.645</td><td class="num ">0.585</td><td class="num ">0.605</td><td class="num ">0.680</td><td class="num rk-3">0.570</td><td class="num rk-1">1.000</td><td class="num rk-1">1.000</td><td class="num ">0.985</td></tr><tr><td class="lb-model"><b>Gemini-2.5-Flash-Lite</b><br><span class="lb-vendor">Proprietary · Google</span></td><td class="num">—</td><td class="num ">0.264</td><td class="num ">0.176</td><td class="num ">0.434</td><td class="num rk-3">0.202</td><td class="num ">0.065</td><td class="num ">0.194</td><td class="num ">0.346</td><td class="num ">0.101</td><td class="num ">0.553</td><td class="num ">0.264</td><td class="num ">0.049</td><td class="num ">0.258</td><td class="num ">0.170</td><td class="num ">0.422</td><td class="num ">0.609</td><td class="num ">0.380</td><td class="num ">0.799</td><td class="num ">0.746</td><td class="num ">0.598</td></tr><tr><td class="lb-model"><b>Grok-4</b><br><span class="lb-vendor">Proprietary · xAI</span></td><td class="num">—</td><td class="num ">0.215</td><td class="num ">0.220</td><td class="num ">0.405</td><td class="num ">0.203</td><td class="num ">0.025</td><td class="num rk-1">0.510</td><td class="num ">0.299</td><td class="num ">0.089</td><td class="num rk-1">0.710</td><td class="num ">0.295</td><td class="num ">0.060</td><td class="num ">0.233</td><td class="num ">0.193</td><td class="num ">0.020</td><td class="num ">0.128</td><td class="num ">0.220</td><td class="num ">0.978</td><td class="num rk-1">1.000</td><td class="num ">0.800</td></tr><tr><td class="lb-model"><b>Grok-4.1</b><br><span class="lb-vendor">Proprietary · xAI</span></td><td class="num">—</td><td class="num ">0.240</td><td class="num ">0.184</td><td class="num ">0.385</td><td class="num ">0.203</td><td class="num ">0.020</td><td class="num ">0.452</td><td class="num ">0.295</td><td class="num ">0.087</td><td class="num rk-2">0.694</td><td class="num ">0.265</td><td class="num ">0.020</td><td class="num ">0.222</td><td class="num ">0.165</td><td class="num ">0.080</td><td class="num ">0.139</td><td class="num ">0.220</td><td class="num ">0.961</td><td class="num rk-1">1.000</td><td class="num ">0.933</td></tr><tr><td class="lb-model"><b>GLM-4.6v</b><br><span class="lb-vendor">Proprietary · Zhipu</span></td><td class="num">—</td><td class="num ">0.145</td><td class="num ">0.210</td><td class="num ">0.325</td><td class="num ">1.925</td><td class="num ">0.085</td><td class="num ">0.295</td><td class="num ">0.315</td><td class="num ">0.205</td><td class="num ">0.555</td><td class="num ">0.415</td><td class="num ">0.125</td><td class="num ">0.335</td><td class="num ">0.285</td><td class="num ">0.385</td><td class="num ">0.355</td><td class="num ">0.330</td><td class="num ">0.925</td><td class="num ">0.965</td><td class="num ">0.895</td></tr></tbody>
+</table>
       </div>
       <p class="legend">
         Best per column <span class="swatch" style="background:#fff3cd;">gold</span>
@@ -526,155 +703,6 @@
       </p>
     </div>
   </footer>
-
-  <!-- ───────────────────────────────────────────── -->
-  <!-- Leaderboard data + Tabulator init             -->
-  <!-- ───────────────────────────────────────────── -->
-  <script>
-    // Columns: [Fam, Count, Topo, Loss1550(↓), App, Mech, GeoD, QA, Report, WC, MD, DirP, DirD, PSel, CL, Human, SimQ, ParamMod, Refactor]
-    const PCF_DATA = [
-      // Open-source small (≤11B)
-      ["Gemma-3-4B","Open · Google","4B",0.045,0.155,0.175,2.850,0.035,0.245,0.270,0.106,0.465,0.247,0.052,0.473,0.388,0.651,0.477,0.42,0.982,1.00,0.975],
-      ["Qwen2.5-VL-7B","Open · Qwen","7B",0.096,0.176,0.230,2.655,0.055,0.295,0.334,0.112,0.482,0.758,0.696,0.521,0.730,0.608,0.638,0.53,0.953,1.00,1.00],
-      ["Qwen3-VL-8B","Open · Qwen","8B",0.192,0.174,0.293,2.435,0.050,0.265,0.317,0.096,0.554,0.663,0.500,0.226,0.151,0.222,0.327,0.27,0.949,1.00,0.919],
-      ["Ministral-8B","Open · Mistral","8B",0.054,0.200,0.185,2.745,0.040,0.225,0.285,0.098,0.625,0.457,0.125,0.423,0.215,0.641,0.250,0.33,0.952,0.784,0.684],
-      ["Molmo-2-8B","Open · AI2","8B",0.093,0.194,0.246,2.895,0.030,0.215,0.285,0.095,0.425,0.305,0.021,0.355,0.255,0.475,0.295,0.31,0.885,0.875,0.825],
-      ["Llama-3.2-11B-V","Open · Meta","11B",0.031,0.248,0.020,2.491,0.245,0.300,0.339,0.165,0.503,0.690,0.031,0.750,0.771,0.110,0.061,0.32,0.820,1.00,0.989],
-      // Open-source medium (12–32B)
-      ["Gemma-3-12B","Open · Google","12B",0.085,0.175,0.235,2.350,0.050,0.295,0.295,0.097,0.499,0.243,0.057,0.308,0.247,0.559,0.517,0.40,0.996,0.994,0.980],
-      ["Pixtral-12B","Open · Mistral","12B",0.133,0.143,0.339,2.485,0.055,0.305,0.305,0.105,0.535,0.425,0.125,0.325,0.245,0.485,0.305,0.33,0.945,0.975,0.915],
-      ["Ministral-14B","Open · Mistral","14B",0.115,0.199,0.287,2.315,0.055,0.285,0.294,0.096,0.622,0.243,0.054,0.238,0.164,0.650,0.324,0.33,0.950,0.645,0.774],
-      ["Gemma-3-27B","Open · Google","27B",0.125,0.195,0.295,1.885,0.065,0.335,0.294,0.096,0.530,0.610,0.500,0.286,0.279,0.305,0.258,0.28,0.998,0.994,0.949],
-      ["Qwen3-30B-A3B","Open · Qwen","30B",0.115,0.204,0.291,1.745,0.080,0.375,0.334,0.548,0.582,0.308,0.235,0.227,0.218,0.200,0.620,0.38,0.862,0.977,0.791],
-      ["Qwen2.5-VL-32B","Open · Qwen","32B",0.180,0.113,0.260,2.671,0.065,0.352,0.285,0.103,0.525,0.780,0.065,0.239,0.156,0.130,0.183,0.22,1.00,1.00,0.989],
-      // Open-source large (≥72B)
-      ["Qwen2-VL-72B","Open · Qwen","72B",0.155,0.195,0.385,2.590,0.105,0.285,0.325,0.099,0.485,0.735,0.375,0.395,0.485,0.545,0.475,0.43,0.945,0.988,0.935],
-      ["Qwen2.5-VL-72B","Open · Qwen","72B",0.185,0.234,0.430,2.448,0.135,0.304,0.338,0.108,0.514,0.780,0.500,0.433,0.661,0.670,0.589,0.51,0.993,1.00,1.00],
-      ["Llama-3.2-90B-V","Open · Meta","90B",0.025,0.275,0.065,2.095,0.185,0.325,0.345,0.175,0.545,0.715,0.024,0.625,0.680,0.155,0.105,0.31,0.855,1.00,0.990],
-      ["Llama-4-Scout","Open · Meta","109B",0.105,0.033,0.100,2.350,0.045,0.348,0.350,0.101,0.540,0.755,0.021,0.389,0.193,0.140,0.200,0.25,0.973,0.972,0.967],
-      ["Mistral-Large","Open · Mistral","123B",0.060,0.226,0.198,1.895,0.050,0.325,0.300,0.095,0.667,0.241,0.031,0.479,0.330,0.625,0.284,0.37,0.977,0.808,0.807],
-      ["Qwen3-235B","Open · Qwen","235B",0.225,0.230,0.482,1.225,0.090,0.405,0.301,0.091,0.609,0.471,0.125,0.231,0.151,0.495,0.168,0.28,0.986,0.983,0.698],
-      ["Qwen3.5-9B","Open · Qwen","9B",0.175,0.195,0.315,2.180,0.075,0.310,0.328,0.145,0.585,0.685,0.425,0.315,0.285,0.278,0.355,0.30,0.965,0.988,0.945],
-      ["Qwen3.5-27B","Open · Qwen","27B",0.205,0.218,0.355,1.580,0.115,0.395,0.346,0.478,0.605,0.525,0.315,0.350,0.305,0.305,0.402,0.38,0.978,0.992,0.912],
-      ["Qwen3.5-122B-A10B","Open · Qwen","122B",0.242,0.265,0.495,1.085,0.140,0.425,0.342,0.128,0.624,0.685,0.478,0.385,0.265,0.425,0.355,0.42,0.988,1.00,0.858],
-      ["Llama-4-Maverick","Open · Meta","400B",0.190,0.128,0.370,2.577,0.065,0.234,0.358,0.104,0.499,0.715,0.045,0.172,0.138,0.105,0.061,0.16,1.00,1.00,0.956],
-      ["Qwen-VL-Max","Open · Qwen","—",0.210,0.220,0.372,1.420,0.085,0.385,0.335,0.092,0.587,0.293,0.235,0.247,0.161,0.171,0.352,0.28,0.996,0.994,0.960],
-      // Proprietary — OpenAI
-      ["GPT-4o-mini","Proprietary · OpenAI","—",0.130,0.228,0.348,0.895,0.060,0.395,0.337,0.139,0.529,0.241,0.021,0.548,0.578,0.651,0.800,0.59,0.999,1.00,0.994],
-      ["GPT-4o","Proprietary · OpenAI","—",0.185,0.205,0.461,1.339,0.083,0.310,0.346,0.148,0.581,0.241,0.030,0.226,0.151,0.227,0.396,0.30,0.999,1.00,0.924],
-      ["GPT-4.1-mini","Proprietary · OpenAI","—",0.305,0.397,0.370,0.676,0.055,0.376,0.342,0.594,0.591,0.220,0.052,0.228,0.156,0.060,0.450,0.30,1.00,1.00,0.956],
-      ["GPT-4.1","Proprietary · OpenAI","—",0.360,0.440,0.420,0.520,0.075,0.410,0.343,0.610,0.610,0.270,0.047,0.300,0.210,0.250,0.500,0.37,1.00,1.00,0.965],
-      ["GPT-5-mini","Proprietary · OpenAI","—",0.385,0.405,0.425,0.355,0.090,0.440,0.344,0.570,0.605,0.480,0.060,0.490,0.545,0.320,0.540,0.46,1.00,1.00,0.970],
-      ["GPT-5","Proprietary · OpenAI","—",0.455,0.480,0.470,0.225,0.110,0.500,0.348,0.585,0.625,0.740,0.125,0.570,0.620,0.420,0.620,0.53,1.00,1.00,0.975],
-      ["o4-mini","Proprietary · OpenAI","—",0.335,0.390,0.415,0.385,0.085,0.420,0.328,0.395,0.580,0.555,0.085,0.510,0.485,0.280,0.555,0.45,0.995,1.00,0.940],
-      ["o3","Proprietary · OpenAI","—",0.420,0.450,0.475,0.170,0.115,0.505,0.332,0.445,0.645,0.690,0.185,0.615,0.650,0.475,0.695,0.56,1.00,1.00,0.985],
-      // Proprietary — Anthropic
-      ["Claude-3.5-Sonnet","Proprietary · Anthropic","—",0.065,0.199,0.210,0.832,0.045,0.377,0.325,0.199,0.485,0.220,0.031,0.383,0.239,0.295,0.206,0.28,0.982,1.000,1.000],
-      ["Claude-Sonnet-4.5","Proprietary · Anthropic","—",0.265,0.295,0.380,0.485,0.065,0.445,0.345,0.315,0.620,0.545,0.125,0.530,0.395,0.490,0.455,0.45,0.993,1.00,0.975],
-      ["Claude-Opus-4.5","Proprietary · Anthropic","—",0.395,0.415,0.455,0.275,0.095,0.485,0.350,0.525,0.660,0.710,0.265,0.620,0.545,0.580,0.625,0.55,1.00,1.00,0.985],
-      ["Claude-Sonnet-4.5-T","Proprietary · Anthropic","—",0.305,0.335,0.410,0.395,0.070,0.470,0.346,0.340,0.635,0.575,0.195,0.595,0.465,0.535,0.545,0.50,0.995,1.00,0.980],
-      ["Claude-Opus-4.5-T","Proprietary · Anthropic","—",0.445,0.455,0.475,0.205,0.105,0.500,0.352,0.565,0.665,0.745,0.345,0.660,0.605,0.625,0.690,0.59,1.00,1.00,0.990],
-      // Proprietary — Google / xAI / Zhipu
-      ["Gemini-3-Flash","Proprietary · Google","—",0.668,0.757,0.425,0.175,0.110,0.505,0.352,0.590,0.680,0.755,0.285,0.645,0.585,0.605,0.680,0.57,1.00,1.00,0.985],
-      ["Gemini-2.5-Flash-Lite","Proprietary · Google","—",0.264,0.176,0.434,0.202,0.065,0.194,0.346,0.101,0.553,0.264,0.049,0.258,0.170,0.422,0.609,0.38,0.799,0.746,0.598],
-      ["Grok-4","Proprietary · xAI","—",0.215,0.220,0.405,0.203,0.025,0.510,0.299,0.089,0.710,0.295,0.060,0.233,0.193,0.020,0.128,0.22,0.978,1.00,0.800],
-      ["Grok-4.1","Proprietary · xAI","—",0.240,0.184,0.385,0.203,0.020,0.452,0.295,0.087,0.694,0.265,0.020,0.222,0.165,0.080,0.139,0.22,0.961,1.00,0.933],
-      ["GLM-4.6v","Proprietary · Zhipu","—",0.145,0.210,0.325,1.925,0.085,0.295,0.315,0.205,0.555,0.415,0.125,0.335,0.285,0.385,0.355,0.33,0.925,0.965,0.895],
-    ];
-
-    const METRIC_KEYS = [
-      "fam","cnt","topo","loss1550","app","mech",
-      "geod","qa","report","wc","md",
-      "dirp","dird","psel","cl","human",
-      "simq","parammod","refactor"
-    ];
-    const METRIC_HIGHER_BETTER = {
-      fam:1, cnt:1, topo:1, loss1550:0, app:1, mech:1,
-      geod:1, qa:1, report:1, wc:1, md:1,
-      dirp:1, dird:1, psel:1, cl:1, human:1,
-      simq:1, parammod:1, refactor:1
-    };
-    const METRIC_TITLES = {
-      fam:"Fam", cnt:"Count", topo:"Topo",
-      loss1550:"Loss-1550 ↓", app:"App", mech:"Mech",
-      geod:"GeoD", qa:"QA", report:"Report",
-      wc:"WC", md:"MD",
-      dirp:"Dir-P", dird:"Dir-D", psel:"P.Sel", cl:"CL", human:"Human",
-      simq:"SimQ", parammod:"ParamMod", refactor:"Refactor"
-    };
-
-    // Build row objects
-    const rows = PCF_DATA.map(r => {
-      const o = { model: r[0], type: r[1], size: r[2] };
-      for (let i = 0; i < METRIC_KEYS.length; i++) o[METRIC_KEYS[i]] = r[3 + i];
-      return o;
-    });
-
-    // Compute top-3 per metric across all rows
-    const top = {};
-    for (const k of METRIC_KEYS) {
-      const vals = rows.map(r => r[k]).filter(v => typeof v === "number");
-      const sorted = [...vals].sort((a,b) => METRIC_HIGHER_BETTER[k] ? b-a : a-b);
-      top[k] = { gold: sorted[0], silver: sorted[1], bronze: sorted[2] };
-    }
-
-    function rankFmt(key) {
-      return function(cell) {
-        const v = cell.getValue();
-        if (typeof v !== "number") return "";
-        const t = top[key];
-        let bg = "";
-        if (Math.abs(v - t.gold)   < 1e-9) bg = "background:#fff3cd; font-weight:700;";
-        else if (Math.abs(v - t.silver) < 1e-9) bg = "background:#d6eaf8; text-decoration:underline;";
-        else if (Math.abs(v - t.bronze) < 1e-9) bg = "background:#e8e8e8;";
-        const text = key === "loss1550" ? v.toFixed(3) : v.toFixed(3);
-        return `<span style="${bg} display:block; padding:2px 6px; border-radius:3px;">${text}</span>`;
-      };
-    }
-
-    const columns = [
-      { title: "Model",  field: "model", width: 200, headerSort: true,
-        formatter: c => `<b>${c.getValue()}</b><br><span style="font-size:.8em;color:#777">${c.getRow().getData().type}</span>` },
-      { title: "Size",   field: "size",  hozAlign: "center", width: 75 },
-    ];
-    for (const k of METRIC_KEYS) {
-      columns.push({
-        title: METRIC_TITLES[k],
-        field: k,
-        hozAlign: "right",
-        sorter: "number",
-        sorterParams: { dir: METRIC_HIGHER_BETTER[k] ? "desc" : "asc" },
-        formatter: rankFmt(k),
-        width: 95
-      });
-    }
-
-    function initLeaderboard() {
-      const el = document.getElementById("pcfbench-leaderboard");
-      if (!el) return;
-      if (typeof Tabulator === "undefined") {
-        el.innerHTML = '<p style="padding:1rem;color:#a33;">Failed to load Tabulator script. Reload the page.</p>';
-        return;
-      }
-      try {
-        new Tabulator(el, {
-          data: rows,
-          columns: columns,
-          layout: "fitData",
-          height: "640px",
-          initialSort: [{ column: "cl", dir: "desc" }],
-        });
-      } catch (e) {
-        el.innerHTML = '<p style="padding:1rem;color:#a33;">Leaderboard failed to render: ' + (e && e.message) + '</p>';
-        console.error(e);
-      }
-    }
-    if (document.readyState === "loading") {
-      document.addEventListener("DOMContentLoaded", initLeaderboard);
-    } else {
-      initLeaderboard();
-    }
-  </script>
 
 </body>
 </html>

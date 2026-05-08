@@ -45,7 +45,8 @@
        Tokens > typography > components, all driven by Inter + steel blue.
        ============================================================ */
     :root {
-      --bg: #fafbfc;
+      /* Page bg matches the figure whites — eliminates the visible seam */
+      --bg: #ffffff;
       --bg-alt: #f3f5f8;
       --surface: #ffffff;
       --ink: #0f1626;
@@ -53,7 +54,7 @@
       --ink-mute: #8a93a6;
       --accent: #4a5d7a;
       --accent-strong: #2d3a4f;
-      --rule: #e3e8ef;
+      --rule: #e6ebf2;
       --shadow-1: 0 1px 2px rgba(15,22,38,.04), 0 8px 24px rgba(15,22,38,.05);
       --shadow-2: 0 2px 4px rgba(15,22,38,.06), 0 24px 60px -20px rgba(15,22,38,.18);
       --r-sm: 6px; --r-md: 10px; --r-lg: 16px;
@@ -90,13 +91,25 @@
     }
 
     /* ============================================================
+       Global container — fluid, wide, breathes at large viewports
+       ============================================================ */
+    .container,
+    .container.is-max-desktop,
+    .container.is-fluid {
+      max-width: min(1480px, 92vw) !important;
+      width: 100%;
+      margin-left: auto !important;
+      margin-right: auto !important;
+    }
+
+    /* ============================================================
        Hero
        ============================================================ */
     .hero {
       padding: 5.5rem 1.5rem 3.5rem;
       background:
         radial-gradient(1100px 520px at 50% -120px, rgba(74,93,122,.10), transparent 60%),
-        linear-gradient(180deg, var(--bg) 0%, var(--bg) 70%, var(--surface) 100%);
+        var(--bg);
       border-bottom: 1px solid var(--rule);
     }
     .hero h1.title.is-1     { font-size: clamp(3rem, 8vw, 5.8rem); line-height: 1; margin-bottom: 1.4rem;
@@ -176,7 +189,7 @@
        Figures — image flush; caption spans full figure width;
        soft halo shadow blends edges into the page background.
        ============================================================ */
-    figure.bigfig          { margin: 2.4rem auto 2rem; max-width: 1280px;
+    figure.bigfig          { margin: 2.4rem auto 2rem; max-width: min(1440px, 92vw);
                              padding: 0; line-height: 0; text-align: center; }
     figure.bigfig img      { display: block; width: 100%; height: auto;
                              margin: 0 auto; padding: 0; vertical-align: bottom;
@@ -200,13 +213,13 @@
       text-align: center;
     }
     figure.bigfig figcaption b { color: var(--ink); }
-    figure.bigfig.medium   { max-width: 880px; }
-    figure.bigfig.small    { max-width: 640px; }
+    figure.bigfig.medium   { max-width: min(1080px, 88vw); }
+    figure.bigfig.small    { max-width: min(720px, 80vw); }
 
     /* ============================================================
        Dimension cards (3 across)
        ============================================================ */
-    .dim-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.1rem; max-width: 1180px; margin: 0 auto; }
+    .dim-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.1rem; max-width: 1340px; margin: 0 auto; }
     @media (max-width: 980px) { .dim-grid { grid-template-columns: repeat(2, 1fr); } }
     @media (max-width: 600px) { .dim-grid { grid-template-columns: 1fr; } }
     .dim-card {
@@ -231,7 +244,7 @@
     /* ============================================================
        Findings (2×2)
        ============================================================ */
-    .findings-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.3rem; max-width: 1180px; margin: 0 auto; }
+    .findings-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.3rem; max-width: 1340px; margin: 0 auto; }
     @media (max-width: 760px) { .findings-grid { grid-template-columns: 1fr; } }
     .finding {
       background: var(--surface);
@@ -256,7 +269,7 @@
        Leaderboard — static HTML table (replaces Tabulator)
        ============================================================ */
     .leaderboard-wrap {
-      max-width: 1320px; margin: 1.5rem auto 0;
+      max-width: min(1480px, 92vw); margin: 1.5rem auto 0;
       background: var(--surface); border: 1px solid var(--rule);
       border-radius: var(--r-md); overflow-x: auto; box-shadow: var(--shadow-1);
     }
@@ -308,7 +321,7 @@
     }
     .pill b { color: var(--accent); font-weight: 700; }
     .legend       { font-size: .85rem; color: var(--ink-mute);
-                    margin: 0.8rem auto 0; text-align: right; max-width: 1320px; }
+                    margin: 0.8rem auto 0; text-align: right; max-width: min(1480px, 92vw); }
     .swatch       { display: inline-block; padding: 0 8px; border-radius: 3px;
                     font-family: 'JetBrains Mono', monospace; font-size: .8rem; margin: 0 2px; }
 
@@ -798,7 +811,7 @@
 
   <!-- LEADERBOARD -->
   <section class="section" id="leaderboard">
-    <div class="container is-fluid" style="max-width:1320px;">
+    <div class="container is-fluid" style="max-width:min(1480px, 92vw);">
       <div class="has-text-centered">
         <span class="eyebrow">03 — Leaderboard</span>
         <h2 class="title is-3">41 frontier &amp; open-source VLMs.</h2>

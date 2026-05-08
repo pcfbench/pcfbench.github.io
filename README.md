@@ -1,18 +1,24 @@
-# PCFBench Project Page
+# pcfbench.github.io
 
-Source for <https://pcfbench.github.io/>.
+> The site is **hidden** until the arXiv paper is released.
+>
+> - `main` carries only a 404 / coming-soon page (this is what visitors see).
+> - The complete project page lives on the **[`staging`](../../tree/staging)** branch.
 
-Static site adapted from the [Nerfies template](https://nerfies.github.io/) (via [TSRBench](https://tsrbench.github.io/)).
+## Re-publish (when paper is on arXiv)
 
-## Local preview
+```bash
+git checkout main
+git checkout staging -- index.html website/
+git rm 404.html
+git commit -m "Publish: paper now on arXiv"
+git push
 ```
-python3 -m http.server 8000
-# open http://localhost:8000
-```
 
-## Edit checklist
-- [ ] Fill author block in `index.html` (search for `Author One`)
-- [ ] Fill arXiv link (search for `Paper (coming soon)`)
-- [ ] Fill HF dataset URL (search for `Dataset (coming soon)`)
-- [ ] Update GitHub Code link if needed (defaults to `github.com/pcfbench`)
-- [ ] Replace BibTeX entry once authors are de-anonymised
+## Pull future edits back from main → staging
+
+```bash
+git checkout staging
+git merge main
+git push
+```

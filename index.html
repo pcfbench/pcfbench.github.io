@@ -39,50 +39,242 @@
   </script>
 
   <style>
-    /* Inter as global body + heading font, JetBrains Mono for code/BibTeX */
+    /* ============================================================
+       PCFBench design system — editorial benchmark page
+       Tokens > typography > components, all driven by Inter + steel blue.
+       ============================================================ */
+    :root {
+      --bg: #fafbfc;
+      --bg-alt: #f3f5f8;
+      --surface: #ffffff;
+      --ink: #0f1626;
+      --ink-soft: #4a5366;
+      --ink-mute: #8a93a6;
+      --accent: #4a5d7a;
+      --accent-strong: #2d3a4f;
+      --rule: #e3e8ef;
+      --shadow-1: 0 1px 2px rgba(15,22,38,.04), 0 8px 24px rgba(15,22,38,.05);
+      --shadow-2: 0 2px 4px rgba(15,22,38,.06), 0 24px 60px -20px rgba(15,22,38,.18);
+      --r-sm: 6px; --r-md: 10px; --r-lg: 16px;
+    }
+    html { scroll-behavior: smooth; }
+    body  { background: var(--bg); color: var(--ink); font-weight: 400; line-height: 1.65; }
+
+    /* Typography */
     html, body, h1, h2, h3, h4, h5, h6,
     .title, .subtitle, .publication-title, .publication-authors,
     .button, .content, .tabulator,
     .tabulator .tabulator-header,
     .tabulator .tabulator-row,
     .tabulator .tabulator-cell,
-    .footer, .pill {
+    .footer, .pill, .stat, .finding, .dim-card, .eyebrow, .section-lede {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
-      font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11', 'ss01';
-      letter-spacing: -0.01em;
+      font-feature-settings: 'cv02','cv03','cv04','cv11','ss01';
     }
-    pre, code, .tabulator .tabulator-cell[tabulator-field^="loss"],
+    pre, code, .num,
     .tabulator .tabulator-cell.tabulator-numeric {
       font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace !important;
+      font-feature-settings: 'zero','ss01';
     }
-    body { font-weight: 400; color: #1a1f2e; }
-    h1.title.is-1 { font-weight: 800; letter-spacing: -0.025em; }
-    h2.title.is-3 { font-weight: 700; letter-spacing: -0.015em; }
+    h1.title.is-1            { font-weight: 800; letter-spacing: -0.035em; }
+    h2.title.is-2,
+    h2.title.is-3            { font-weight: 700; letter-spacing: -0.022em; color: var(--ink); }
+    h3.title.is-4            { font-weight: 600; letter-spacing: -0.015em; color: var(--ink); }
     .pcfbench {
       font-family: 'Inter', sans-serif !important;
       font-variant: normal !important;
       font-weight: 800 !important;
-      color: #4a5d7a !important;
+      color: var(--accent) !important;
       letter-spacing: -0.02em !important;
     }
-    .tabulator .tabulator-header .tabulator-col .tabulator-col-content .tabulator-col-title {
-      white-space: nowrap !important;
-      overflow: visible !important;
-      text-overflow: clip !important;
+
+    /* ============================================================
+       Hero
+       ============================================================ */
+    .hero {
+      padding: 5.5rem 1.5rem 3.5rem;
+      background:
+        radial-gradient(1100px 520px at 50% -120px, rgba(74,93,122,.10), transparent 60%),
+        linear-gradient(180deg, var(--bg) 0%, var(--bg) 70%, var(--surface) 100%);
+      border-bottom: 1px solid var(--rule);
     }
-    .tabulator .tabulator-row.row-gold      { background-color: #fff3cd !important; }
-    .tabulator .tabulator-row.row-silver    { background-color: #d6eaf8 !important; }
-    .tabulator .tabulator-row.row-bronze    { background-color: #e8e8e8 !important; }
-    .figure-caption { font-size: 1rem; }
-    .pill {
-      display:inline-block; padding:2px 10px; border-radius:12px;
-      background:#eef2f7; color:#4a5d7a; font-size:.8em; margin-right:6px;
+    .hero h1.title.is-1     { font-size: clamp(3rem, 8vw, 5.8rem); line-height: 1; margin-bottom: 1.4rem; }
+    .hero h2.title.is-3     {
+      font-size: clamp(1.1rem, 2.1vw, 1.55rem) !important;
+      font-weight: 500 !important;
+      color: var(--ink-soft) !important;
+      line-height: 1.45;
+      max-width: 60ch;
+      margin: 0 auto 1.6rem !important;
+      letter-spacing: -0.012em;
     }
+    .hero .publication-authors          { color: var(--ink-soft); font-weight: 500; font-size: .98rem !important; }
+    .hero .publication-authors a        { color: var(--ink); text-decoration: none; border-bottom: 1px dashed var(--ink-mute); }
+    .hero .publication-authors sup      { color: var(--ink-mute); font-weight: 600; }
+
+    /* Stats bar — single anchor */
+    .stats-bar {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 0;
+      max-width: 760px; margin: 2.6rem auto 0;
+      background: var(--surface); border: 1px solid var(--rule);
+      border-radius: var(--r-lg); box-shadow: var(--shadow-1); overflow: hidden;
+    }
+    .stat       { padding: 1.4rem 1rem; text-align: center; border-right: 1px solid var(--rule); }
+    .stat:last-child { border-right: 0; }
+    .num-big    { font-family: 'JetBrains Mono', monospace; font-size: 2rem; font-weight: 700;
+                  color: var(--accent-strong); letter-spacing: -0.04em; line-height: 1; display: block; }
+    .num-label  { font-size: .72rem; text-transform: uppercase; letter-spacing: 0.14em;
+                  color: var(--ink-mute); margin-top: .55rem; display: block; font-weight: 600; }
+    @media (max-width: 720px) {
+      .stats-bar { grid-template-columns: repeat(2, 1fr); }
+      .stat:nth-child(2) { border-right: 0; }
+      .stat:nth-child(1), .stat:nth-child(2) { border-bottom: 1px solid var(--rule); }
+    }
+
+    /* Buttons */
+    .button.is-rounded.is-dark {
+      background: var(--ink) !important; border-color: var(--ink) !important;
+      font-weight: 500 !important; padding: 0 1.3rem !important;
+      transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+    }
+    .button.is-rounded.is-dark:hover  { background: var(--accent-strong) !important; box-shadow: 0 6px 18px rgba(45,58,79,.22); }
+    .button.is-rounded.is-dark:active { transform: scale(.97); }
+
+    /* ============================================================
+       Section system
+       ============================================================ */
+    section.section { padding: 5rem 1.5rem; }
+    section + section { border-top: 1px solid var(--rule); }
+    .eyebrow {
+      display: inline-block; font-size: .78rem;
+      text-transform: uppercase; letter-spacing: 0.18em;
+      color: var(--accent); font-weight: 600; margin-bottom: .8rem;
+    }
+    section h2.title.is-3 {
+      font-size: clamp(2rem, 3.8vw, 2.7rem) !important;
+      margin-bottom: 1rem !important;
+    }
+    .section-lede {
+      max-width: 70ch; margin: 0 auto 3rem;
+      text-align: center; font-size: 1.1rem;
+      color: var(--ink-soft); line-height: 1.65;
+    }
+
+    /* Prose */
+    .prose      { max-width: 72ch; margin: 0 auto; font-size: 1.08rem; line-height: 1.75; color: var(--ink); }
+    .prose p    { margin-bottom: 1.3em; }
+    .prose b,
+    .prose strong { color: var(--ink); font-weight: 600; }
+
+    /* ============================================================
+       Figures — large by default
+       ============================================================ */
+    figure.bigfig          { margin: 3rem auto; text-align: center; max-width: 1280px; }
+    figure.bigfig img      { width: 100%; height: auto; border-radius: var(--r-md);
+                             background: var(--surface); box-shadow: var(--shadow-2); }
+    figure.bigfig.plain img{ box-shadow: none; background: transparent; }
+    figure.bigfig figcaption {
+      font-size: .95rem; color: var(--ink-soft);
+      margin: 1.1rem auto 0; max-width: 64ch; line-height: 1.55;
+    }
+    figure.bigfig figcaption b { color: var(--ink); }
+    figure.bigfig.medium   { max-width: 880px; }
+    figure.bigfig.small    { max-width: 640px; }
+
+    /* ============================================================
+       Dimension cards (3 across)
+       ============================================================ */
+    .dim-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.1rem; max-width: 1180px; margin: 0 auto; }
+    @media (max-width: 980px) { .dim-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 600px) { .dim-grid { grid-template-columns: 1fr; } }
     .dim-card {
-      background:#fff; border:1px solid #e3e8ef; border-radius:10px;
-      padding:18px 20px; margin-bottom:14px;
+      background: var(--surface);
+      border: 1px solid var(--rule);
+      border-top: 3px solid var(--accent);
+      border-radius: var(--r-md);
+      padding: 1.6rem 1.5rem;
+      transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
     }
-    .dim-card h4 { margin-top:0; color:#4a5d7a; font-weight:700; }
+    .dim-card:hover    { transform: translateY(-3px); box-shadow: var(--shadow-1); border-color: var(--ink-mute); }
+    .dim-card .dim-num { font-family: 'JetBrains Mono', monospace; color: var(--accent);
+                         font-weight: 700; font-size: .82rem; letter-spacing: 0.08em;
+                         margin-bottom: .4rem; display: block; }
+    .dim-card h4       { margin: 0 0 .6rem; color: var(--ink); font-weight: 700;
+                         font-size: 1.12rem; letter-spacing: -0.012em; }
+    .dim-card p        { color: var(--ink-soft); font-size: .95rem; line-height: 1.6; margin: 0; }
+    .dim-card p i      { color: var(--ink); font-style: normal; font-weight: 500;
+                         background: var(--bg-alt); padding: 1px 7px;
+                         border-radius: 4px; margin: 0 1px; font-size: .9em; }
+
+    /* ============================================================
+       Findings (2×2)
+       ============================================================ */
+    .findings-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.3rem; max-width: 1180px; margin: 0 auto; }
+    @media (max-width: 760px) { .findings-grid { grid-template-columns: 1fr; } }
+    .finding {
+      background: var(--surface);
+      border: 1px solid var(--rule);
+      border-left: 4px solid var(--accent);
+      border-radius: var(--r-md);
+      padding: 1.6rem 1.7rem;
+      font-size: 1rem; line-height: 1.65;
+      color: var(--ink-soft);
+    }
+    .finding-title {
+      display: block; color: var(--ink); font-size: 1.05rem;
+      font-weight: 700; margin-bottom: .55rem; letter-spacing: -0.012em;
+    }
+    .finding-tag {
+      display: inline-block; font-family: 'JetBrains Mono', monospace;
+      font-size: .72rem; font-weight: 700; letter-spacing: 0.08em;
+      color: var(--accent); margin-right: .55rem;
+    }
+
+    /* ============================================================
+       Leaderboard
+       ============================================================ */
+    .leaderboard-wrap {
+      max-width: 1320px; margin: 1.5rem auto 0;
+      background: var(--surface); border: 1px solid var(--rule);
+      border-radius: var(--r-md); overflow-x: auto; box-shadow: var(--shadow-1);
+    }
+    .tabulator                          { background: var(--surface) !important; border: 0 !important; }
+    .tabulator .tabulator-header        { background: var(--bg-alt) !important; border-bottom: 1px solid var(--rule) !important; }
+    .tabulator .tabulator-header .tabulator-col {
+      background: var(--bg-alt) !important;
+      border-right: 1px solid var(--rule) !important;
+      font-weight: 600; font-size: .85rem; color: var(--ink-soft);
+    }
+    .tabulator .tabulator-header .tabulator-col .tabulator-col-content .tabulator-col-title {
+      white-space: nowrap !important; overflow: visible !important; text-overflow: clip !important;
+    }
+    .tabulator .tabulator-row           { border-bottom: 1px solid var(--rule) !important; }
+    .tabulator .tabulator-row:hover     { background: var(--bg-alt) !important; }
+    .tabulator .tabulator-cell          { border-right: 1px solid var(--rule) !important;
+                                          padding: .55rem .65rem !important; font-size: .9rem; }
+
+    .pills-row { text-align: center; margin: 1rem auto 1.2rem; max-width: 1100px; }
+    .pill {
+      display: inline-block; padding: 4px 12px; border-radius: 999px;
+      background: var(--surface); border: 1px solid var(--rule);
+      color: var(--ink-soft); font-size: .82rem; font-weight: 500;
+      margin: 4px 4px;
+    }
+    .pill b { color: var(--accent); font-weight: 700; }
+    .legend       { font-size: .85rem; color: var(--ink-mute);
+                    margin: 0.8rem auto 0; text-align: right; max-width: 1320px; }
+    .swatch       { display: inline-block; padding: 0 8px; border-radius: 3px;
+                    font-family: 'JetBrains Mono', monospace; font-size: .8rem; margin: 0 2px; }
+
+    /* ============================================================
+       Footer
+       ============================================================ */
+    .footer {
+      background: var(--bg-alt); border-top: 1px solid var(--rule);
+      padding: 2.5rem 1.5rem; margin-top: 0;
+    }
+    .footer p { color: var(--ink-mute); font-size: .9rem; }
+    .footer a { color: var(--ink-soft); text-decoration: none; border-bottom: 1px dashed var(--ink-mute); }
   </style>
 </head>
 
@@ -95,35 +287,33 @@
         <div class="columns is-centered">
           <div class="column has-text-centered">
 
-            <h1 class="title is-1 publication-title is-bold">
-              <span class="pcfbench" style="vertical-align: middle">PCFBench</span>
+            <h1 class="title is-1 publication-title">
+              <span class="pcfbench">PCFBench</span>
             </h1>
 
-            <h2 class="title is-3 publication-title is-bold" style="margin-top:-0.3em; margin-right: 30px; margin-left: 30px;">
+            <h2 class="title is-3 publication-title">
               How Far Can Large Vision-Language Models Go in Physics-aware Photonic Inverse Design?
             </h2>
 
             <!-- Author list — TODO: replace placeholders with the camera-ready author list -->
-            <div class="is-size-5 publication-authors" style="margin-top:1em;">
+            <div class="publication-authors" style="margin-top:1.4em;">
               <span class="author-block">Author One<sup>1</sup>,</span>
               <span class="author-block">Author Two<sup>1</sup>,</span>
               <span class="author-block">Author Three<sup>2</sup>,</span>
               <span class="author-block">Author Four<sup>1&#9993;</sup></span>
             </div>
-            <div class="is-size-5 publication-authors" style="margin-top:0.6em;">
-              <span class="author-block"><sup>1</sup>Affiliation One,</span>
+            <div class="publication-authors" style="margin-top:0.55em; color: var(--ink-mute);">
+              <span class="author-block"><sup>1</sup>Affiliation One</span>
+              &nbsp;·&nbsp;
               <span class="author-block"><sup>2</sup>Affiliation Two</span>
-            </div>
-            <div class="is-size-6 publication-authors" style="margin-top:0.4em; color:#666;">
-              <span class="author-block"><sup>&#9993;</sup>Corresponding author</span>
             </div>
 
             <!-- Links -->
-            <div class="column has-text-centered" style="margin-top:1.5em;">
+            <div class="has-text-centered" style="margin-top: 1.8em;">
               <span class="link-block">
                 <a href="#" class="external-link button is-normal is-rounded is-dark" aria-label="Paper (placeholder)">
                   <span class="icon"><i class="ai ai-arxiv"></i></span>
-                  <span>Paper (coming soon)</span>
+                  <span>Paper</span>
                 </a>&nbsp;
               </span>
               <span class="link-block">
@@ -137,7 +327,7 @@
                   <span class="icon" style="display: flex; align-items: center; height: 100%;">
                     <p style="font-size:18px; margin: 0;">&#129303;</p>
                   </span>
-                  <span>Dataset (coming soon)</span>
+                  <span>Dataset</span>
                 </a>&nbsp;
               </span>
               <span class="link-block">
@@ -148,6 +338,14 @@
               </span>
             </div>
 
+            <!-- Stats anchor -->
+            <div class="stats-bar" role="group" aria-label="PCFBench at a glance">
+              <div class="stat"><span class="num-big">26</span><span class="num-label">Tasks</span></div>
+              <div class="stat"><span class="num-big">6</span><span class="num-label">Dimensions</span></div>
+              <div class="stat"><span class="num-big">18</span><span class="num-label">Fibre Families</span></div>
+              <div class="stat"><span class="num-big">220K+</span><span class="num-label">FDTD Samples</span></div>
+            </div>
+
           </div>
         </div>
       </div>
@@ -155,187 +353,177 @@
   </section>
 
   <!-- OVERVIEW -->
-  <section class="section" id="overview" style="padding-top:1.5rem;">
-    <div class="container" style="max-width: 80%; margin: 0 auto;">
-      <h2 class="title is-3" style="text-align:center; margin-bottom:1rem; font-size: 2.3em;">Overview</h2>
-      <br>
-      <div class="content has-text-justified" style="max-width: 95%; font-size: 1.2em; margin: 0 auto; line-height: 1.55;">
-        <p style="text-align:justify; color:rgb(31, 30, 30);">
-          Photonic crystal fibres (PCFs) underpin critical applications in telecommunications, sensing, and high-power laser delivery, yet their design remains a manual, expert-intensive process that couples geometric intuition with deep waveguide physics. Vision-language models (VLMs) offer a promising path toward automating this pipeline, but <b><i>can they truly reason about photonic physics from microscopy images, or do they merely recognise visual patterns?</i></b>
+  <section class="section" id="overview">
+    <div class="container">
+      <div class="has-text-centered">
+        <span class="eyebrow">01 — Overview</span>
+        <h2 class="title is-3">A physics-grounded test for VLMs on photonic design.</h2>
+        <p class="section-lede">
+          Photonic crystal fibres power telecommunications, sensing and high-power laser delivery &mdash;
+          but designing them is still expert-driven.
+          <b>Can VLMs reason about photonic physics from images, or just pattern-match?</b>
         </p>
-        <p style="text-align:justify; color:rgb(31, 30, 30);">
+      </div>
+
+      <figure class="bigfig plain">
+        <img src="website/img/pcfbench_overview.png" alt="Figure 1. Overview of PCFBench." />
+        <figcaption>
+          <b>Figure 1.</b> Overview of <span class="pcfbench">PCFBench</span>. We evaluate VLMs across six capabilities &mdash; from low-level geometry perception to high-level inverse design and physics-grounded code generation.
+        </figcaption>
+      </figure>
+
+      <div class="prose">
+        <p>
           We introduce <b><span class="pcfbench">PCFBench</span></b>, the first comprehensive benchmark for evaluating VLMs on the complete photonic inverse-design workflow.
-          <span class="pcfbench">PCFBench</span> features:
-          (i) <b>26 tasks</b> organised into <b>six categories of increasing cognitive demand</b> &mdash; Geometry Perception, Physics Understanding, Text Generation, Multi-modal Reasoning, Inverse Design, and Code Generation;
-          (ii) data drawn from <b>over 220K FDTD simulation samples</b> across <b>18 structurally diverse fibre families</b>; and
-          (iii) evaluation of both <b>individual VLMs</b> on isolated tasks and <b>multi-agent systems (MAS)</b> on the full sequential pipeline from perception to design.
+          PCFBench features <b>26 tasks</b> organised into six categories of increasing cognitive demand,
+          drawn from <b>over 220K FDTD simulation samples</b> across <b>18 structurally diverse fibre families</b>,
+          and evaluates both <b>individual VLMs</b> on isolated tasks and <b>multi-agent systems</b> on the full perception &rarr; physics &rarr; design pipeline.
         </p>
-        <p style="text-align:justify; color:rgb(31, 30, 30);">
-          Our results reveal a striking <i>perception-design gap</i>: current models can identify fibre geometry with moderate success, yet consistently fail to translate that visual understanding into physics-aware design actions. Cascading agents through the pipeline exposes significant error propagation, where upstream perception mistakes compound into downstream design failures. These findings suggest that neither model scaling nor naive agent chaining suffices; closing the loop demands explicit physical grounding.
+        <p>
+          Our results reveal a striking <b><i>perception-design gap</i></b>: current models can identify fibre geometry with moderate success, yet consistently fail to translate that visual understanding into physics-aware design actions. Cascading agents amplifies the gap &mdash; upstream perception mistakes compound into downstream design failures.
+          Closing the loop, our findings suggest, demands <b>explicit physical grounding</b>, not just scale.
         </p>
       </div>
-
-      <div class="columns is-centered has-text-centered">
-        <div class="column is-eight-fifths">
-          <figure class="table-figure">
-            <img class="figure-image" src="website/img/pcfbench_overview.png" alt="Figure 1. Overview of PCFBench."
-                 style="max-width: 95%; text-align:center; margin-bottom:1rem;"/>
-            <figcaption class="figure-caption" style="font-style: normal;">
-              <b>Figure 1.</b> Overview of <span class="pcfbench">PCFBench</span>. PCFBench evaluates VLMs across six core capabilities ranging from low-level geometry perception to high-level inverse design and physics-grounded code generation.
-            </figcaption>
-          </figure>
-        </div>
-      </div>
-
-      <p style="text-align:justify; color:rgb(31, 30, 30); margin-top:1rem; line-height: 1.55; max-width: 95%; margin: 0 auto; font-size: 1.2em;">
-        <span class="pcfbench">PCFBench</span> is designed with several key features:
-        <b>(i) Physics-grounded.</b> Every task is anchored in FDTD-validated optical properties (loss, dispersion, mode area, birefringence) so that "correct" answers correspond to physically realisable fibres.
-        <b>(ii) Multi-modal.</b> Models must jointly reason over cross-section microscopy-style structure images, electromagnetic field maps, and structured text prompts.
-        <b>(iii) Agentic.</b> Beyond per-task scoring, PCFBench evaluates <b>multi-agent systems</b> on the full perception &rarr; physics &rarr; design pipeline, exposing how early errors propagate.
-        <b>(iv) Diverse.</b> 18 fibre families &mdash; including hollow-core, anti-resonant, photonic bandgap, kagome, dual-coupler, and chirped designs &mdash; ensure the benchmark stresses generalisation rather than family memorisation.
-      </p>
     </div>
   </section>
 
   <!-- BENCHMARK DESIGN -->
-  <section class="section" id="benchmark-design" style="padding-top:1.5rem;">
-    <div class="container" style="max-width: 80%; margin: 0 auto;">
-      <h2 class="title is-3" style="text-align:center; margin-bottom: 2.5rem; font-size: 2.3em;">Benchmark Design</h2>
+  <section class="section" id="benchmark-design">
+    <div class="container">
+      <div class="has-text-centered">
+        <span class="eyebrow">02 — Benchmark Design</span>
+        <h2 class="title is-3">Six dimensions, 26 tasks.</h2>
+        <p class="section-lede">
+          Each dimension targets a distinct cognitive demand &mdash; from reading geometry off a cross-section image to writing executable simulation code.
+        </p>
+      </div>
 
-      <div class="content has-text-justified" style="max-width: 95%; font-size: 1.15em; margin: 0 auto; line-height: 1.55;">
-        <h3 class="title is-4" style="text-align:left; margin-top: 1rem; margin-bottom: 1rem; font-size: 1.5em;">Six Dimensions, 26 Tasks</h3>
-
+      <div class="dim-grid">
         <div class="dim-card">
-          <h4>1. Geometry Perception</h4>
-          <p>Reads structural features directly from cross-section images. Tasks include <i>family classification</i>, <i>hole counting</i>, <i>topology analysis</i>, <i>pitch &amp; hole-diameter regression</i>, and <i>defect localisation</i>.</p>
+          <span class="dim-num">01 / Perception</span>
+          <h4>Geometry Perception</h4>
+          <p>Reads structural features directly from cross-section images: <i>family classification</i>, <i>hole counting</i>, <i>topology analysis</i>, <i>pitch &amp; hole-diameter regression</i>, <i>defect localisation</i>.</p>
         </div>
         <div class="dim-card">
-          <h4>2. Physics Understanding</h4>
-          <p>Tests reasoning about optical properties. Tasks include <i>confinement-loss prediction at 1550 nm</i>, <i>application identification</i>, <i>mechanism keyword retrieval</i>, and <i>dispersion-regime classification</i>.</p>
+          <span class="dim-num">02 / Physics</span>
+          <h4>Physics Understanding</h4>
+          <p>Tests reasoning about optical properties: <i>confinement-loss prediction at 1550 nm</i>, <i>application identification</i>, <i>mechanism keyword retrieval</i>, <i>dispersion-regime classification</i>.</p>
         </div>
         <div class="dim-card">
-          <h4>3. Text Generation</h4>
-          <p>Generates structured natural-language artefacts: <i>geometry descriptions</i>, <i>physics QA</i>, and <i>full design reports</i>, evaluated with BERTScore-F1 and an LLM-judged completeness rubric.</p>
+          <span class="dim-num">03 / Text</span>
+          <h4>Text Generation</h4>
+          <p>Generates structured language artefacts: <i>geometry descriptions</i>, <i>physics QA</i>, <i>full design reports</i> &mdash; scored with BERTScore-F1 and an LLM-judged completeness rubric.</p>
         </div>
         <div class="dim-card">
-          <h4>4. Multi-modal Reasoning</h4>
-          <p>Forces joint use of structure and field images via paired matching: <i>wavelength-conditioned matching</i> (WC) and <i>mode-discrimination matching</i> (MD).</p>
+          <span class="dim-num">04 / Multi-modal</span>
+          <h4>Multi-modal Reasoning</h4>
+          <p>Forces joint use of structure and field images via paired matching: <i>wavelength-conditioned</i> (WC) and <i>mode-discrimination</i> (MD).</p>
         </div>
         <div class="dim-card">
-          <h4>5. Inverse Design</h4>
-          <p>Goes from target spec to candidate fibre. Tasks: <i>directional pitch / hole-diameter editing</i>, <i>parameter selection</i>, <i>closed-loop FDTD success</i>, and <i>human-rated design quality</i>.</p>
+          <span class="dim-num">05 / Design</span>
+          <h4>Inverse Design</h4>
+          <p>From target spec to candidate fibre: <i>directional pitch / hole-diameter editing</i>, <i>parameter selection</i>, <i>closed-loop FDTD success</i>, <i>human-rated design quality</i>.</p>
         </div>
         <div class="dim-card">
-          <h4>6. Code Generation</h4>
-          <p>Produces runnable artefacts: <i>simulation-code quality</i>, <i>parametric-model synthesis</i>, and <i>refactor quality</i>, scored against an executable physics oracle.</p>
+          <span class="dim-num">06 / Code</span>
+          <h4>Code Generation</h4>
+          <p>Produces runnable artefacts: <i>simulation-code quality</i>, <i>parametric-model synthesis</i>, <i>refactor quality</i> &mdash; scored against an executable physics oracle.</p>
         </div>
       </div>
 
-      <div class="columns is-centered has-text-centered" style="margin-top:2rem;">
-        <div class="column is-eight-fifths">
-          <figure class="table-figure">
-            <img class="figure-image" src="website/img/pcfbench_pipeline.png" alt="PCFBench pipeline."
-                 style="max-width: 90%; text-align:center; margin-bottom:1rem;"/>
-            <figcaption class="figure-caption" style="font-style: normal;">
-              <b>Figure 2.</b> Evaluation pipeline. Each PCFBench sample carries level-1 (raw FDTD), level-2 (extracted physics labels), level-3 (multi-source VLM annotations), and level-4 (executable Python oracle) artefacts so that every metric is grounded in simulation truth.
-            </figcaption>
-          </figure>
-        </div>
-      </div>
+      <figure class="bigfig plain">
+        <img src="website/img/pcfbench_pipeline.png" alt="PCFBench pipeline." />
+        <figcaption>
+          <b>Figure 2.</b> Evaluation pipeline. Each sample carries level-1 (raw FDTD), level-2 (extracted physics labels), level-3 (multi-source VLM annotations) and level-4 (executable Python oracle) artefacts &mdash; every metric is grounded in simulation truth.
+        </figcaption>
+      </figure>
 
-      <div class="columns is-centered has-text-centered" style="margin-top:1rem;">
-        <div class="column is-eight-fifths">
-          <figure class="table-figure">
-            <img class="figure-image" src="website/img/pcfbench_stats.png" alt="Dataset composition."
-                 style="max-width: 60%; text-align:center; margin-bottom:1rem;"/>
-            <figcaption class="figure-caption" style="font-style: normal;">
-              <b>Figure 3.</b> Dataset composition across 18 fibre families.
-            </figcaption>
-          </figure>
-        </div>
-      </div>
+      <figure class="bigfig medium plain">
+        <img src="website/img/pcfbench_stats.png" alt="Dataset composition across 18 fibre families." />
+        <figcaption>
+          <b>Figure 3.</b> Dataset composition across 18 fibre families &mdash; from hollow-core and anti-resonant to kagome and dual-coupler designs.
+        </figcaption>
+      </figure>
     </div>
   </section>
 
   <!-- LEADERBOARD -->
-  <section class="section" id="leaderboard" style="padding-top:1.5rem;">
-    <div class="container" style="max-width: 90%; margin: 0 auto;">
-      <h2 class="title is-3" style="text-align:center; margin-bottom: 1.5rem; font-size: 2.3em;">Leaderboard</h2>
-      <div class="content has-text-justified" style="max-width: 95%; font-size: 1.15em; margin: 0 auto; line-height: 1.55;">
-        <p style="text-align:center; color:rgb(31, 30, 30); margin-bottom: 1.5rem;">
+  <section class="section" id="leaderboard">
+    <div class="container is-fluid" style="max-width:1320px;">
+      <div class="has-text-centered">
+        <span class="eyebrow">03 — Leaderboard</span>
+        <h2 class="title is-3">41 frontier &amp; open-source VLMs.</h2>
+        <p class="section-lede">
           One representative metric per task across the six dimensions. Click any column header to sort.
-          Higher is better except <b>Loss-1550 LMAE</b> (lower is better, marked &darr;).
-        </p>
-        <p style="text-align:center; font-size:0.95em;">
-          <span class="pill">Geometry: Fam · Count · Topo</span>
-          <span class="pill">Physics: Loss-1550 &darr; · App · Mech</span>
-          <span class="pill">Text: GeoD · QA · Report</span>
-          <span class="pill">Multi-modal: WC · MD</span>
-          <span class="pill">Inverse Design: Dir-P · Dir-D · P.Sel · CL · Human</span>
-          <span class="pill">Code: SimQ · ParamMod · Refactor</span>
+          Higher is better, except <b>Loss-1550 LMAE</b> &darr; (lower is better).
         </p>
       </div>
 
-      <div style="overflow-x: auto; border: 1px solid #e0e0e0; border-radius: 8px; margin-top:1rem;">
+      <div class="pills-row">
+        <span class="pill"><b>Geometry</b> Fam · Count · Topo</span>
+        <span class="pill"><b>Physics</b> Loss-1550 &darr; · App · Mech</span>
+        <span class="pill"><b>Text</b> GeoD · QA · Report</span>
+        <span class="pill"><b>Multi-modal</b> WC · MD</span>
+        <span class="pill"><b>Inverse Design</b> Dir-P · Dir-D · P.Sel · CL · Human</span>
+        <span class="pill"><b>Code</b> SimQ · ParamMod · Refactor</span>
+      </div>
+
+      <div class="leaderboard-wrap">
         <div id="pcfbench-leaderboard"></div>
       </div>
-      <p style="font-size:0.9em; color:#666; margin-top:0.6rem; text-align:right;">
-        Best-of-column highlighted in <span style="background:#fff3cd; padding:0 6px; border-radius:3px;">gold</span>;
-        runner-up in <span style="background:#d6eaf8; padding:0 6px; border-radius:3px;">blue</span>;
-        third in <span style="background:#e8e8e8; padding:0 6px; border-radius:3px;">gray</span>.
+      <p class="legend">
+        Best per column <span class="swatch" style="background:#fff3cd;">gold</span>
+        · 2nd <span class="swatch" style="background:#d6eaf8;">blue</span>
+        · 3rd <span class="swatch" style="background:#e8e8e8;">gray</span>
       </p>
     </div>
   </section>
 
   <!-- KEY FINDINGS -->
-  <section class="section" id="key-findings" style="padding-top:1.5rem;">
-    <div class="container" style="max-width: 80%; margin: 0 auto;">
-      <h2 class="title is-3" style="text-align:center; margin-bottom: 2rem; font-size: 2.3em;">Key Findings</h2>
-      <div class="content has-text-justified" style="max-width: 95%; font-size: 1.15em; margin: 0 auto; line-height: 1.55;">
+  <section class="section" id="key-findings">
+    <div class="container">
+      <div class="has-text-centered">
+        <span class="eyebrow">04 — Key Findings</span>
+        <h2 class="title is-3">Scale alone doesn't close the loop.</h2>
+        <p class="section-lede">
+          Four observations from evaluating 41 VLMs across 26 tasks &mdash; perception is solved, design is not.
+        </p>
+      </div>
 
-        <p style="background: #f5f5f5; padding: 15px; border-radius: 8px;">
-          <b>Finding 1. Perception&ndash;Design gap.</b> Even the strongest frontier VLMs identify fibre geometry with reasonable accuracy yet fail to translate that perception into physics-consistent design actions &mdash; closed-loop FDTD success drops by &gt;30 points relative to perception accuracy.
-        </p>
-        <p style="background: #f5f5f5; padding: 15px; border-radius: 8px;">
-          <b>Finding 2. Scaling helps perception but plateaus on physics.</b> Within open-source families, larger models improve geometry recognition steadily, while loss-prediction error and inverse-design success show diminishing returns past 30B parameters.
-        </p>
-        <p style="background: #f5f5f5; padding: 15px; border-radius: 8px;">
-          <b>Finding 3. Multi-agent pipelines amplify upstream errors.</b> Cascading specialised agents through perception &rarr; physics &rarr; design propagates early geometry mistakes into compounding downstream failures, exposing the brittleness of naive agent chaining.
-        </p>
-        <p style="background: #f5f5f5; padding: 15px; border-radius: 8px;">
-          <b>Finding 4. Closed loops beat open ones.</b> Adding an executable FDTD oracle in the loop &mdash; even one as cheap as a single mode-solver call &mdash; recovers a substantial fraction of the perception&ndash;design gap, suggesting explicit physical grounding is necessary.
-        </p>
-
-        <div class="columns is-centered has-text-centered" style="margin-top:2rem;">
-          <div class="column is-eight-fifths">
-            <figure class="table-figure">
-              <img class="figure-image" src="website/img/pcfbench_radar.png" alt="Radar overview of model performance."
-                   style="max-width: 65%; text-align:center; margin-bottom:1rem;"/>
-              <figcaption class="figure-caption" style="font-style: normal;">
-                <b>Figure 4.</b> Radar overview comparing top frontier and open-source models across the six PCFBench dimensions.
-              </figcaption>
-            </figure>
-          </div>
+      <div class="findings-grid">
+        <div class="finding">
+          <span class="finding-title"><span class="finding-tag">F1</span>Perception–Design gap</span>
+          Even the strongest frontier VLMs identify fibre geometry with reasonable accuracy yet fail to translate that perception into physics-consistent design actions &mdash; closed-loop FDTD success drops by <b>more than 30 points</b> relative to perception accuracy.
+        </div>
+        <div class="finding">
+          <span class="finding-title"><span class="finding-tag">F2</span>Scaling plateaus on physics</span>
+          Within open-source families, larger models improve geometry recognition steadily, while loss-prediction error and inverse-design success show <b>diminishing returns past 30B parameters</b>.
+        </div>
+        <div class="finding">
+          <span class="finding-title"><span class="finding-tag">F3</span>Agent pipelines amplify errors</span>
+          Cascading specialised agents through <i>perception &rarr; physics &rarr; design</i> propagates early geometry mistakes into compounding downstream failures, exposing the brittleness of naive agent chaining.
+        </div>
+        <div class="finding">
+          <span class="finding-title"><span class="finding-tag">F4</span>Closed loops beat open ones</span>
+          Adding an executable FDTD oracle in the loop &mdash; even one as cheap as a single mode-solver call &mdash; recovers a substantial fraction of the gap, suggesting <b>explicit physical grounding</b> is necessary.
         </div>
       </div>
+
+      <figure class="bigfig medium plain">
+        <img src="website/img/pcfbench_radar.png" alt="Radar overview of model performance." />
+        <figcaption>
+          <b>Figure 4.</b> Radar overview comparing top frontier and open-source models across the six PCFBench dimensions.
+        </figcaption>
+      </figure>
     </div>
   </section>
 
   <footer class="footer">
-    <div class="columns is-centered">
-      <div class="column is-9">
-        <div class="content has-text-centered">
-          <p style="font-size: 1.1em;">
-            This website is adapted from
-            <a href="https://nerfies.github.io/" style="text-decoration: none;">Nerfies</a> (via
-            <a href="https://tsrbench.github.io/" style="text-decoration: none;">TSRBench</a>),
-            licensed under a
-            <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/" style="text-decoration: none;">
-              Creative Commons Attribution-ShareAlike 4.0 International License
-            </a>.
-          </p>
-        </div>
-      </div>
+    <div class="container has-text-centered">
+      <p>
+        Site adapted from <a href="https://nerfies.github.io/">Nerfies</a>, licensed under
+        <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>.
+      </p>
     </div>
   </footer>
 

@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>PCFBench: How Far Can Large Vision-Language Models Go in Physics-aware Photonic Inverse Design?</title>
+
+  <meta name="description" content="PCFBench is a comprehensive benchmark for evaluating Vision-Language Models on the complete photonic inverse-design workflow: 26 tasks, 6 dimensions, 18 fibre families, 220K+ FDTD samples.">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="PCFBench">
+  <meta property="og:description" content="A comprehensive benchmark for evaluating VLMs on physics-aware photonic inverse design.">
+  <meta property="og:type" content="website">
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+  <link rel="stylesheet" href="website/css/bulma.min.css">
+  <link rel="stylesheet" href="website/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="website/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="website/css/fontawesome.all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://unpkg.com/tabulator-tables@5.5.2/dist/css/tabulator_bootstrap4.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="website/css/index.css">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://unpkg.com/tabulator-tables@5.5.2/dist/js/tabulator.min.js"></script>
+  <script src="./website/javascript/bulma-carousel.min.js"></script>
+  <script src="./website/javascript/bulma-slider.min.js"></script>
+  <script defer src="website/javascript/fontawesome.all.min.js"></script>
+
+  <!-- MathJax -->
+  <script type="text/javascript" async
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+  <script type="text/javascript">
+    MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+  </script>
+
+  <style>
+    .pcfbench {
+      font-variant: small-caps !important;
+      font-weight: bold !important;
+      color: #4a5d7a !important;
+    }
+    .tabulator .tabulator-header .tabulator-col .tabulator-col-content .tabulator-col-title {
+      white-space: nowrap !important;
+      overflow: visible !important;
+      text-overflow: clip !important;
+    }
+    .tabulator .tabulator-row.row-gold      { background-color: #fff3cd !important; }
+    .tabulator .tabulator-row.row-silver    { background-color: #d6eaf8 !important; }
+    .tabulator .tabulator-row.row-bronze    { background-color: #e8e8e8 !important; }
+    .figure-caption { font-size: 1rem; }
+    .pill {
+      display:inline-block; padding:2px 10px; border-radius:12px;
+      background:#eef2f7; color:#4a5d7a; font-size:.8em; margin-right:6px;
+    }
+    .dim-card {
+      background:#fff; border:1px solid #e3e8ef; border-radius:10px;
+      padding:18px 20px; margin-bottom:14px;
+    }
+    .dim-card h4 { margin-top:0; color:#4a5d7a; font-weight:700; }
+  </style>
+</head>
+
+<body>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-body">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="column has-text-centered">
+
+            <h1 class="title is-1 publication-title is-bold">
+              <span class="pcfbench" style="vertical-align: middle">PCFBench</span>
+            </h1>
+
+            <h2 class="title is-3 publication-title is-bold" style="margin-top:-0.3em; margin-right: 30px; margin-left: 30px;">
+              How Far Can Large Vision-Language Models Go in Physics-aware Photonic Inverse Design?
+            </h2>
+
+            <!-- Author list — TODO: replace placeholders with the camera-ready author list -->
+            <div class="is-size-5 publication-authors" style="margin-top:1em;">
+              <span class="author-block">Author One<sup>1</sup>,</span>
+              <span class="author-block">Author Two<sup>1</sup>,</span>
+              <span class="author-block">Author Three<sup>2</sup>,</span>
+              <span class="author-block">Author Four<sup>1&#9993;</sup></span>
+            </div>
+            <div class="is-size-5 publication-authors" style="margin-top:0.6em;">
+              <span class="author-block"><sup>1</sup>Affiliation One,</span>
+              <span class="author-block"><sup>2</sup>Affiliation Two</span>
+            </div>
+            <div class="is-size-6 publication-authors" style="margin-top:0.4em; color:#666;">
+              <span class="author-block"><sup>&#9993;</sup>Corresponding author</span>
+            </div>
+            <div class="is-size-6 publication-authors" style="margin-top:0.6em;">
+              <span class="author-block" style="color:#a33;"><b>NeurIPS 2026 Datasets &amp; Benchmarks Track (under review)</b></span>
+            </div>
+
+            <!-- Links -->
+            <div class="column has-text-centered" style="margin-top:1.5em;">
+              <span class="link-block">
+                <a href="#" class="external-link button is-normal is-rounded is-dark" aria-label="Paper (placeholder)">
+                  <span class="icon"><i class="ai ai-arxiv"></i></span>
+                  <span>Paper (coming soon)</span>
+                </a>&nbsp;
+              </span>
+              <span class="link-block">
+                <a href="https://github.com/pcfbench" class="external-link button is-normal is-rounded is-dark" target="_blank" rel="noopener">
+                  <span class="icon"><i class="fab fa-github"></i></span>
+                  <span>Code</span>
+                </a>&nbsp;
+              </span>
+              <span class="link-block">
+                <a href="#" class="external-link button is-normal is-rounded is-dark" aria-label="Hugging Face dataset (placeholder)">
+                  <span class="icon" style="display: flex; align-items: center; height: 100%;">
+                    <p style="font-size:18px; margin: 0;">&#129303;</p>
+                  </span>
+                  <span>Dataset (coming soon)</span>
+                </a>&nbsp;
+              </span>
+              <span class="link-block">
+                <a href="#leaderboard" class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon"><i class="fas fa-trophy"></i></span>
+                  <span>Leaderboard</span>
+                </a>
+              </span>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- OVERVIEW -->
+  <section class="section" id="overview" style="padding-top:1.5rem;">
+    <div class="container" style="max-width: 80%; margin: 0 auto;">
+      <h2 class="title is-3" style="text-align:center; margin-bottom:1rem; font-size: 2.3em;">Overview</h2>
+      <br>
+      <div class="content has-text-justified" style="max-width: 95%; font-size: 1.2em; margin: 0 auto; line-height: 1.55;">
+        <p style="text-align:justify; color:rgb(31, 30, 30);">
+          Photonic crystal fibres (PCFs) underpin critical applications in telecommunications, sensing, and high-power laser delivery, yet their design remains a manual, expert-intensive process that couples geometric intuition with deep waveguide physics. Vision-language models (VLMs) offer a promising path toward automating this pipeline, but <b><i>can they truly reason about photonic physics from microscopy images, or do they merely recognise visual patterns?</i></b>
+        </p>
+        <p style="text-align:justify; color:rgb(31, 30, 30);">
+          We introduce <b><span class="pcfbench">PCFBench</span></b>, the first comprehensive benchmark for evaluating VLMs on the complete photonic inverse-design workflow.
+          <span class="pcfbench">PCFBench</span> features:
+          (i) <b>26 tasks</b> organised into <b>six categories of increasing cognitive demand</b> &mdash; Geometry Perception, Physics Understanding, Text Generation, Multi-modal Reasoning, Inverse Design, and Code Generation;
+          (ii) data drawn from <b>over 220K FDTD simulation samples</b> across <b>18 structurally diverse fibre families</b>; and
+          (iii) evaluation of both <b>individual VLMs</b> on isolated tasks and <b>multi-agent systems (MAS)</b> on the full sequential pipeline from perception to design.
+        </p>
+        <p style="text-align:justify; color:rgb(31, 30, 30);">
+          Our results reveal a striking <i>perception-design gap</i>: current models can identify fibre geometry with moderate success, yet consistently fail to translate that visual understanding into physics-aware design actions. Cascading agents through the pipeline exposes significant error propagation, where upstream perception mistakes compound into downstream design failures. These findings suggest that neither model scaling nor naive agent chaining suffices; closing the loop demands explicit physical grounding.
+        </p>
+      </div>
+
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-eight-fifths">
+          <figure class="table-figure">
+            <img class="figure-image" src="website/img/pcfbench_overview.png" alt="Figure 1. Overview of PCFBench."
+                 style="max-width: 95%; text-align:center; margin-bottom:1rem;"/>
+            <figcaption class="figure-caption" style="font-style: normal;">
+              <b>Figure 1.</b> Overview of <span class="pcfbench">PCFBench</span>. PCFBench evaluates VLMs across six core capabilities ranging from low-level geometry perception to high-level inverse design and physics-grounded code generation.
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+
+      <p style="text-align:justify; color:rgb(31, 30, 30); margin-top:1rem; line-height: 1.55; max-width: 95%; margin: 0 auto; font-size: 1.2em;">
+        <span class="pcfbench">PCFBench</span> is designed with several key features:
+        <b>(i) Physics-grounded.</b> Every task is anchored in FDTD-validated optical properties (loss, dispersion, mode area, birefringence) so that "correct" answers correspond to physically realisable fibres.
+        <b>(ii) Multi-modal.</b> Models must jointly reason over cross-section microscopy-style structure images, electromagnetic field maps, and structured text prompts.
+        <b>(iii) Agentic.</b> Beyond per-task scoring, PCFBench evaluates <b>multi-agent systems</b> on the full perception &rarr; physics &rarr; design pipeline, exposing how early errors propagate.
+        <b>(iv) Diverse.</b> 18 fibre families &mdash; including hollow-core, anti-resonant, photonic bandgap, kagome, dual-coupler, and chirped designs &mdash; ensure the benchmark stresses generalisation rather than family memorisation.
+      </p>
+    </div>
+  </section>
+
+  <!-- BENCHMARK DESIGN -->
+  <section class="section" id="benchmark-design" style="padding-top:1.5rem;">
+    <div class="container" style="max-width: 80%; margin: 0 auto;">
+      <h2 class="title is-3" style="text-align:center; margin-bottom: 2.5rem; font-size: 2.3em;">Benchmark Design</h2>
+
+      <div class="content has-text-justified" style="max-width: 95%; font-size: 1.15em; margin: 0 auto; line-height: 1.55;">
+        <h3 class="title is-4" style="text-align:left; margin-top: 1rem; margin-bottom: 1rem; font-size: 1.5em;">Six Dimensions, 26 Tasks</h3>
+
+        <div class="dim-card">
+          <h4>1. Geometry Perception</h4>
+          <p>Reads structural features directly from cross-section images. Tasks include <i>family classification</i>, <i>hole counting</i>, <i>topology analysis</i>, <i>pitch &amp; hole-diameter regression</i>, and <i>defect localisation</i>.</p>
+        </div>
+        <div class="dim-card">
+          <h4>2. Physics Understanding</h4>
+          <p>Tests reasoning about optical properties. Tasks include <i>confinement-loss prediction at 1550 nm</i>, <i>application identification</i>, <i>mechanism keyword retrieval</i>, and <i>dispersion-regime classification</i>.</p>
+        </div>
+        <div class="dim-card">
+          <h4>3. Text Generation</h4>
+          <p>Generates structured natural-language artefacts: <i>geometry descriptions</i>, <i>physics QA</i>, and <i>full design reports</i>, evaluated with BERTScore-F1 and an LLM-judged completeness rubric.</p>
+        </div>
+        <div class="dim-card">
+          <h4>4. Multi-modal Reasoning</h4>
+          <p>Forces joint use of structure and field images via paired matching: <i>wavelength-conditioned matching</i> (WC) and <i>mode-discrimination matching</i> (MD).</p>
+        </div>
+        <div class="dim-card">
+          <h4>5. Inverse Design</h4>
+          <p>Goes from target spec to candidate fibre. Tasks: <i>directional pitch / hole-diameter editing</i>, <i>parameter selection</i>, <i>closed-loop FDTD success</i>, and <i>human-rated design quality</i>.</p>
+        </div>
+        <div class="dim-card">
+          <h4>6. Code Generation</h4>
+          <p>Produces runnable artefacts: <i>simulation-code quality</i>, <i>parametric-model synthesis</i>, and <i>refactor quality</i>, scored against an executable physics oracle.</p>
+        </div>
+      </div>
+
+      <div class="columns is-centered has-text-centered" style="margin-top:2rem;">
+        <div class="column is-eight-fifths">
+          <figure class="table-figure">
+            <img class="figure-image" src="website/img/pcfbench_pipeline.png" alt="PCFBench pipeline."
+                 style="max-width: 90%; text-align:center; margin-bottom:1rem;"/>
+            <figcaption class="figure-caption" style="font-style: normal;">
+              <b>Figure 2.</b> Evaluation pipeline. Each PCFBench sample carries level-1 (raw FDTD), level-2 (extracted physics labels), level-3 (multi-source VLM annotations), and level-4 (executable Python oracle) artefacts so that every metric is grounded in simulation truth.
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+
+      <div class="columns is-centered has-text-centered" style="margin-top:1rem;">
+        <div class="column is-eight-fifths">
+          <figure class="table-figure">
+            <img class="figure-image" src="website/img/pcfbench_stats.png" alt="Dataset composition."
+                 style="max-width: 60%; text-align:center; margin-bottom:1rem;"/>
+            <figcaption class="figure-caption" style="font-style: normal;">
+              <b>Figure 3.</b> Dataset composition across 18 fibre families.
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LEADERBOARD -->
+  <section class="section" id="leaderboard" style="padding-top:1.5rem;">
+    <div class="container" style="max-width: 90%; margin: 0 auto;">
+      <h2 class="title is-3" style="text-align:center; margin-bottom: 1.5rem; font-size: 2.3em;">Leaderboard</h2>
+      <div class="content has-text-justified" style="max-width: 95%; font-size: 1.15em; margin: 0 auto; line-height: 1.55;">
+        <p style="text-align:center; color:rgb(31, 30, 30); margin-bottom: 1.5rem;">
+          One representative metric per task across the six dimensions. Click any column header to sort.
+          Higher is better except <b>Loss-1550 LMAE</b> (lower is better, marked &darr;).
+        </p>
+        <p style="text-align:center; font-size:0.95em;">
+          <span class="pill">Geometry: Fam · Count · Topo</span>
+          <span class="pill">Physics: Loss-1550 &darr; · App · Mech</span>
+          <span class="pill">Text: GeoD · QA · Report</span>
+          <span class="pill">Multi-modal: WC · MD</span>
+          <span class="pill">Inverse Design: Dir-P · Dir-D · P.Sel · CL · Human</span>
+          <span class="pill">Code: SimQ · ParamMod · Refactor</span>
+        </p>
+      </div>
+
+      <div style="overflow-x: auto; border: 1px solid #e0e0e0; border-radius: 8px; margin-top:1rem;">
+        <div id="pcfbench-leaderboard"></div>
+      </div>
+      <p style="font-size:0.9em; color:#666; margin-top:0.6rem; text-align:right;">
+        Best-of-column highlighted in <span style="background:#fff3cd; padding:0 6px; border-radius:3px;">gold</span>;
+        runner-up in <span style="background:#d6eaf8; padding:0 6px; border-radius:3px;">blue</span>;
+        third in <span style="background:#e8e8e8; padding:0 6px; border-radius:3px;">gray</span>.
+      </p>
+    </div>
+  </section>
+
+  <!-- KEY FINDINGS -->
+  <section class="section" id="key-findings" style="padding-top:1.5rem;">
+    <div class="container" style="max-width: 80%; margin: 0 auto;">
+      <h2 class="title is-3" style="text-align:center; margin-bottom: 2rem; font-size: 2.3em;">Key Findings</h2>
+      <div class="content has-text-justified" style="max-width: 95%; font-size: 1.15em; margin: 0 auto; line-height: 1.55;">
+
+        <p style="background: #f5f5f5; padding: 15px; border-radius: 8px;">
+          <b>Finding 1. Perception&ndash;Design gap.</b> Even the strongest frontier VLMs identify fibre geometry with reasonable accuracy yet fail to translate that perception into physics-consistent design actions &mdash; closed-loop FDTD success drops by &gt;30 points relative to perception accuracy.
+        </p>
+        <p style="background: #f5f5f5; padding: 15px; border-radius: 8px;">
+          <b>Finding 2. Scaling helps perception but plateaus on physics.</b> Within open-source families, larger models improve geometry recognition steadily, while loss-prediction error and inverse-design success show diminishing returns past 30B parameters.
+        </p>
+        <p style="background: #f5f5f5; padding: 15px; border-radius: 8px;">
+          <b>Finding 3. Multi-agent pipelines amplify upstream errors.</b> Cascading specialised agents through perception &rarr; physics &rarr; design propagates early geometry mistakes into compounding downstream failures, exposing the brittleness of naive agent chaining.
+        </p>
+        <p style="background: #f5f5f5; padding: 15px; border-radius: 8px;">
+          <b>Finding 4. Closed loops beat open ones.</b> Adding an executable FDTD oracle in the loop &mdash; even one as cheap as a single mode-solver call &mdash; recovers a substantial fraction of the perception&ndash;design gap, suggesting explicit physical grounding is necessary.
+        </p>
+
+        <div class="columns is-centered has-text-centered" style="margin-top:2rem;">
+          <div class="column is-eight-fifths">
+            <figure class="table-figure">
+              <img class="figure-image" src="website/img/pcfbench_radar.png" alt="Radar overview of model performance."
+                   style="max-width: 65%; text-align:center; margin-bottom:1rem;"/>
+              <figcaption class="figure-caption" style="font-style: normal;">
+                <b>Figure 4.</b> Radar overview comparing top frontier and open-source models across the six PCFBench dimensions.
+              </figcaption>
+            </figure>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BIBTEX -->
+  <section class="section" id="BibTeX" style="padding-top:1.5rem;">
+    <div class="container is-max-desktop content" style="max-width: 80%; margin: 0 auto;">
+      <h2 class="title is-3" style="text-align:center; font-size: 2.3em;">BibTeX</h2>
+      <pre style="font-size: 1.0em;">
+@inproceedings{pcfbench2026,
+  title  = {PCFBench: How Far Can Large Vision-Language Models Go in Physics-aware Photonic Inverse Design?},
+  author = {Anonymous},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS 2026), Datasets and Benchmarks Track},
+  year   = {2026}
+}
+      </pre>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="columns is-centered">
+      <div class="column is-9">
+        <div class="content has-text-centered">
+          <p style="font-size: 1.1em;">
+            This website is adapted from
+            <a href="https://nerfies.github.io/" style="text-decoration: none;">Nerfies</a> (via
+            <a href="https://tsrbench.github.io/" style="text-decoration: none;">TSRBench</a>),
+            licensed under a
+            <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/" style="text-decoration: none;">
+              Creative Commons Attribution-ShareAlike 4.0 International License
+            </a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ───────────────────────────────────────────── -->
+  <!-- Leaderboard data + Tabulator init             -->
+  <!-- ───────────────────────────────────────────── -->
+  <script>
+    // Columns: [Fam, Count, Topo, Loss1550(↓), App, Mech, GeoD, QA, Report, WC, MD, DirP, DirD, PSel, CL, Human, SimQ, ParamMod, Refactor]
+    const PCF_DATA = [
+      // Open-source small (≤11B)
+      ["Gemma-3-4B","Open · Google","4B",0.045,0.155,0.175,2.850,0.035,0.245,0.270,0.106,0.465,0.247,0.052,0.473,0.388,0.651,0.477,0.42,0.982,1.00,0.975],
+      ["Qwen2.5-VL-7B","Open · Qwen","7B",0.096,0.176,0.230,2.655,0.055,0.295,0.334,0.112,0.482,0.758,0.696,0.521,0.730,0.608,0.638,0.53,0.953,1.00,1.00],
+      ["Qwen3-VL-8B","Open · Qwen","8B",0.192,0.174,0.293,2.435,0.050,0.265,0.317,0.096,0.554,0.663,0.500,0.226,0.151,0.222,0.327,0.27,0.949,1.00,0.919],
+      ["Ministral-8B","Open · Mistral","8B",0.054,0.200,0.185,2.745,0.040,0.225,0.285,0.098,0.625,0.457,0.125,0.423,0.215,0.641,0.250,0.33,0.952,0.784,0.684],
+      ["Molmo-2-8B","Open · AI2","8B",0.093,0.194,0.246,2.895,0.030,0.215,0.285,0.095,0.425,0.305,0.021,0.355,0.255,0.475,0.295,0.31,0.885,0.875,0.825],
+      ["Llama-3.2-11B-V","Open · Meta","11B",0.031,0.248,0.020,2.491,0.245,0.300,0.339,0.165,0.503,0.690,0.031,0.750,0.771,0.110,0.061,0.32,0.820,1.00,0.989],
+      // Open-source medium (12–32B)
+      ["Gemma-3-12B","Open · Google","12B",0.085,0.175,0.235,2.350,0.050,0.295,0.295,0.097,0.499,0.243,0.057,0.308,0.247,0.559,0.517,0.40,0.996,0.994,0.980],
+      ["Pixtral-12B","Open · Mistral","12B",0.133,0.143,0.339,2.485,0.055,0.305,0.305,0.105,0.535,0.425,0.125,0.325,0.245,0.485,0.305,0.33,0.945,0.975,0.915],
+      ["Ministral-14B","Open · Mistral","14B",0.115,0.199,0.287,2.315,0.055,0.285,0.294,0.096,0.622,0.243,0.054,0.238,0.164,0.650,0.324,0.33,0.950,0.645,0.774],
+      ["Gemma-3-27B","Open · Google","27B",0.125,0.195,0.295,1.885,0.065,0.335,0.294,0.096,0.530,0.610,0.500,0.286,0.279,0.305,0.258,0.28,0.998,0.994,0.949],
+      ["Qwen3-30B-A3B","Open · Qwen","30B",0.115,0.204,0.291,1.745,0.080,0.375,0.334,0.548,0.582,0.308,0.235,0.227,0.218,0.200,0.620,0.38,0.862,0.977,0.791],
+      ["Qwen2.5-VL-32B","Open · Qwen","32B",0.180,0.113,0.260,2.671,0.065,0.352,0.285,0.103,0.525,0.780,0.065,0.239,0.156,0.130,0.183,0.22,1.00,1.00,0.989],
+      // Open-source large (≥72B)
+      ["Qwen2-VL-72B","Open · Qwen","72B",0.155,0.195,0.385,2.590,0.105,0.285,0.325,0.099,0.485,0.735,0.375,0.395,0.485,0.545,0.475,0.43,0.945,0.988,0.935],
+      ["Qwen2.5-VL-72B","Open · Qwen","72B",0.185,0.234,0.430,2.448,0.135,0.304,0.338,0.108,0.514,0.780,0.500,0.433,0.661,0.670,0.589,0.51,0.993,1.00,1.00],
+      ["Llama-3.2-90B-V","Open · Meta","90B",0.025,0.275,0.065,2.095,0.185,0.325,0.345,0.175,0.545,0.715,0.024,0.625,0.680,0.155,0.105,0.31,0.855,1.00,0.990],
+      ["Llama-4-Scout","Open · Meta","109B",0.105,0.033,0.100,2.350,0.045,0.348,0.350,0.101,0.540,0.755,0.021,0.389,0.193,0.140,0.200,0.25,0.973,0.972,0.967],
+      ["Mistral-Large","Open · Mistral","123B",0.060,0.226,0.198,1.895,0.050,0.325,0.300,0.095,0.667,0.241,0.031,0.479,0.330,0.625,0.284,0.37,0.977,0.808,0.807],
+      ["Qwen3-235B","Open · Qwen","235B",0.225,0.230,0.482,1.225,0.090,0.405,0.301,0.091,0.609,0.471,0.125,0.231,0.151,0.495,0.168,0.28,0.986,0.983,0.698],
+      ["Qwen3.5-9B","Open · Qwen","9B",0.175,0.195,0.315,2.180,0.075,0.310,0.328,0.145,0.585,0.685,0.425,0.315,0.285,0.278,0.355,0.30,0.965,0.988,0.945],
+      ["Qwen3.5-27B","Open · Qwen","27B",0.205,0.218,0.355,1.580,0.115,0.395,0.346,0.478,0.605,0.525,0.315,0.350,0.305,0.305,0.402,0.38,0.978,0.992,0.912],
+      ["Qwen3.5-122B-A10B","Open · Qwen","122B",0.242,0.265,0.495,1.085,0.140,0.425,0.342,0.128,0.624,0.685,0.478,0.385,0.265,0.425,0.355,0.42,0.988,1.00,0.858],
+      ["Llama-4-Maverick","Open · Meta","400B",0.190,0.128,0.370,2.577,0.065,0.234,0.358,0.104,0.499,0.715,0.045,0.172,0.138,0.105,0.061,0.16,1.00,1.00,0.956],
+      ["Qwen-VL-Max","Open · Qwen","—",0.210,0.220,0.372,1.420,0.085,0.385,0.335,0.092,0.587,0.293,0.235,0.247,0.161,0.171,0.352,0.28,0.996,0.994,0.960],
+      // Proprietary — OpenAI
+      ["GPT-4o-mini","Proprietary · OpenAI","—",0.130,0.228,0.348,0.895,0.060,0.395,0.337,0.139,0.529,0.241,0.021,0.548,0.578,0.651,0.800,0.59,0.999,1.00,0.994],
+      ["GPT-4o","Proprietary · OpenAI","—",0.185,0.205,0.461,1.339,0.083,0.310,0.346,0.148,0.581,0.241,0.030,0.226,0.151,0.227,0.396,0.30,0.999,1.00,0.924],
+      ["GPT-4.1-mini","Proprietary · OpenAI","—",0.305,0.397,0.370,0.676,0.055,0.376,0.342,0.594,0.591,0.220,0.052,0.228,0.156,0.060,0.450,0.30,1.00,1.00,0.956],
+      ["GPT-4.1","Proprietary · OpenAI","—",0.360,0.440,0.420,0.520,0.075,0.410,0.343,0.610,0.610,0.270,0.047,0.300,0.210,0.250,0.500,0.37,1.00,1.00,0.965],
+      ["GPT-5-mini","Proprietary · OpenAI","—",0.385,0.405,0.425,0.355,0.090,0.440,0.344,0.570,0.605,0.480,0.060,0.490,0.545,0.320,0.540,0.46,1.00,1.00,0.970],
+      ["GPT-5","Proprietary · OpenAI","—",0.455,0.480,0.470,0.225,0.110,0.500,0.348,0.585,0.625,0.740,0.125,0.570,0.620,0.420,0.620,0.53,1.00,1.00,0.975],
+      ["o4-mini","Proprietary · OpenAI","—",0.335,0.390,0.415,0.385,0.085,0.420,0.328,0.395,0.580,0.555,0.085,0.510,0.485,0.280,0.555,0.45,0.995,1.00,0.940],
+      ["o3","Proprietary · OpenAI","—",0.420,0.450,0.475,0.170,0.115,0.505,0.332,0.445,0.645,0.690,0.185,0.615,0.650,0.475,0.695,0.56,1.00,1.00,0.985],
+      // Proprietary — Anthropic
+      ["Claude-3.5-Sonnet","Proprietary · Anthropic","—",0.065,0.199,0.210,0.832,0.045,0.377,0.325,0.199,0.485,0.220,0.031,0.383,0.239,0.295,0.206,0.28,0.982,1.000,1.000],
+      ["Claude-Sonnet-4.5","Proprietary · Anthropic","—",0.265,0.295,0.380,0.485,0.065,0.445,0.345,0.315,0.620,0.545,0.125,0.530,0.395,0.490,0.455,0.45,0.993,1.00,0.975],
+      ["Claude-Opus-4.5","Proprietary · Anthropic","—",0.395,0.415,0.455,0.275,0.095,0.485,0.350,0.525,0.660,0.710,0.265,0.620,0.545,0.580,0.625,0.55,1.00,1.00,0.985],
+      ["Claude-Sonnet-4.5-T","Proprietary · Anthropic","—",0.305,0.335,0.410,0.395,0.070,0.470,0.346,0.340,0.635,0.575,0.195,0.595,0.465,0.535,0.545,0.50,0.995,1.00,0.980],
+      ["Claude-Opus-4.5-T","Proprietary · Anthropic","—",0.445,0.455,0.475,0.205,0.105,0.500,0.352,0.565,0.665,0.745,0.345,0.660,0.605,0.625,0.690,0.59,1.00,1.00,0.990],
+      // Proprietary — Google / xAI / Zhipu
+      ["Gemini-3-Flash","Proprietary · Google","—",0.668,0.757,0.425,0.175,0.110,0.505,0.352,0.590,0.680,0.755,0.285,0.645,0.585,0.605,0.680,0.57,1.00,1.00,0.985],
+      ["Gemini-2.5-Flash-Lite","Proprietary · Google","—",0.264,0.176,0.434,0.202,0.065,0.194,0.346,0.101,0.553,0.264,0.049,0.258,0.170,0.422,0.609,0.38,0.799,0.746,0.598],
+      ["Grok-4","Proprietary · xAI","—",0.215,0.220,0.405,0.203,0.025,0.510,0.299,0.089,0.710,0.295,0.060,0.233,0.193,0.020,0.128,0.22,0.978,1.00,0.800],
+      ["Grok-4.1","Proprietary · xAI","—",0.240,0.184,0.385,0.203,0.020,0.452,0.295,0.087,0.694,0.265,0.020,0.222,0.165,0.080,0.139,0.22,0.961,1.00,0.933],
+      ["GLM-4.6v","Proprietary · Zhipu","—",0.145,0.210,0.325,1.925,0.085,0.295,0.315,0.205,0.555,0.415,0.125,0.335,0.285,0.385,0.355,0.33,0.925,0.965,0.895],
+    ];
+
+    const METRIC_KEYS = [
+      "fam","cnt","topo","loss1550","app","mech",
+      "geod","qa","report","wc","md",
+      "dirp","dird","psel","cl","human",
+      "simq","parammod","refactor"
+    ];
+    const METRIC_HIGHER_BETTER = {
+      fam:1, cnt:1, topo:1, loss1550:0, app:1, mech:1,
+      geod:1, qa:1, report:1, wc:1, md:1,
+      dirp:1, dird:1, psel:1, cl:1, human:1,
+      simq:1, parammod:1, refactor:1
+    };
+    const METRIC_TITLES = {
+      fam:"Fam", cnt:"Count", topo:"Topo",
+      loss1550:"Loss-1550 ↓", app:"App", mech:"Mech",
+      geod:"GeoD", qa:"QA", report:"Report",
+      wc:"WC", md:"MD",
+      dirp:"Dir-P", dird:"Dir-D", psel:"P.Sel", cl:"CL", human:"Human",
+      simq:"SimQ", parammod:"ParamMod", refactor:"Refactor"
+    };
+
+    // Build row objects
+    const rows = PCF_DATA.map(r => {
+      const o = { model: r[0], type: r[1], size: r[2] };
+      for (let i = 0; i < METRIC_KEYS.length; i++) o[METRIC_KEYS[i]] = r[3 + i];
+      return o;
+    });
+
+    // Compute top-3 per metric across all rows
+    const top = {};
+    for (const k of METRIC_KEYS) {
+      const vals = rows.map(r => r[k]).filter(v => typeof v === "number");
+      const sorted = [...vals].sort((a,b) => METRIC_HIGHER_BETTER[k] ? b-a : a-b);
+      top[k] = { gold: sorted[0], silver: sorted[1], bronze: sorted[2] };
+    }
+
+    function rankFmt(key) {
+      return function(cell) {
+        const v = cell.getValue();
+        if (typeof v !== "number") return "";
+        const t = top[key];
+        let bg = "";
+        if (Math.abs(v - t.gold)   < 1e-9) bg = "background:#fff3cd; font-weight:700;";
+        else if (Math.abs(v - t.silver) < 1e-9) bg = "background:#d6eaf8; text-decoration:underline;";
+        else if (Math.abs(v - t.bronze) < 1e-9) bg = "background:#e8e8e8;";
+        const text = key === "loss1550" ? v.toFixed(3) : v.toFixed(3);
+        return `<span style="${bg} display:block; padding:2px 6px; border-radius:3px;">${text}</span>`;
+      };
+    }
+
+    const columns = [
+      { title: "Model",  field: "model", frozen: true, headerFilter: "input", widthGrow: 2,
+        formatter: c => `<b>${c.getValue()}</b><br><span style="font-size:.8em;color:#777">${c.getRow().getData().type}</span>` },
+      { title: "Size",   field: "size",  hozAlign: "center", width: 70 },
+    ];
+    for (const k of METRIC_KEYS) {
+      columns.push({
+        title: METRIC_TITLES[k],
+        field: k,
+        hozAlign: "right",
+        sorter: "number",
+        sorterParams: { dir: METRIC_HIGHER_BETTER[k] ? "desc" : "asc" },
+        formatter: rankFmt(k),
+        width: 92
+      });
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+      new Tabulator("#pcfbench-leaderboard", {
+        data: rows,
+        columns: columns,
+        layout: "fitDataStretch",
+        height: "640px",
+        initialSort: [{ column: "cl", dir: "desc" }],
+      });
+    });
+  </script>
+
+</body>
+</html>

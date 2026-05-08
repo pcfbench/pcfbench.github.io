@@ -165,16 +165,20 @@
     .prose strong { color: var(--ink); font-weight: 600; }
 
     /* ============================================================
-       Figures — image fills its frame, caption sits flush below
+       Figures — image flush, caption sits tight underneath
        ============================================================ */
-    figure.bigfig          { margin: 3rem auto; text-align: center; max-width: 1280px; padding: 0; }
-    figure.bigfig img      { display: block; width: 100%; height: auto; margin: 0;
-                             border-radius: var(--r-md); border: 1px solid var(--rule);
-                             box-shadow: var(--shadow-2); background: transparent; }
-    figure.bigfig.plain img{ box-shadow: none; border: 0; }
+    figure.bigfig          { margin: 2.4rem auto 2rem; max-width: 1280px;
+                             padding: 0; line-height: 0; text-align: center; }
+    figure.bigfig img      { display: block; width: 100%; height: auto;
+                             margin: 0 auto; padding: 0; vertical-align: bottom;
+                             border-radius: var(--r-md);
+                             border: 1px solid var(--rule);
+                             box-shadow: var(--shadow-2);
+                             background: transparent; }
+    figure.bigfig.plain img{ box-shadow: none; border: 0; border-radius: 0; }
     figure.bigfig figcaption {
-      font-size: .95rem; color: var(--ink-soft);
-      margin: 0.9rem auto 0; max-width: 64ch; line-height: 1.55;
+      font-size: .92rem; color: var(--ink-soft); line-height: 1.55;
+      margin: 0.7rem auto 0; max-width: 64ch; padding: 0;
     }
     figure.bigfig figcaption b { color: var(--ink); }
     figure.bigfig.medium   { max-width: 880px; }
@@ -313,34 +317,141 @@
     .marquee.reverse .marquee-track { animation-direction: reverse; animation-duration: 75s; }
 
     .sample-tile {
-      flex: 0 0 auto; width: 260px;
+      flex: 0 0 auto; width: 220px;
       background: var(--surface);
       border: 1px solid var(--rule); border-radius: var(--r-md);
       box-shadow: var(--shadow-1);
-      padding: .6rem; position: relative;
+      padding: .55rem; position: relative;
       transition: transform .25s ease, box-shadow .25s ease;
+      cursor: pointer; appearance: none; font: inherit; color: inherit;
+      text-align: left;
     }
     .sample-tile:hover { transform: translateY(-4px) scale(1.02); box-shadow: var(--shadow-2); z-index: 5; }
+    .sample-tile:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
     .sample-tile img {
-      display: block; width: 100%; height: 110px; object-fit: cover;
+      display: block; width: 100%; height: auto; aspect-ratio: 1 / 1;
       border-radius: var(--r-sm); background: #0f1626;
     }
-    .sample-tile img + img { margin-top: .4rem; }
+    .sample-tile img + img { margin-top: .35rem; }
     .sample-tile .sample-label {
       display: block; font-size: .68rem; font-weight: 600; color: var(--ink-soft);
       text-transform: uppercase; letter-spacing: .1em;
-      text-align: center; margin: .55rem 0 .15rem;
+      text-align: center; margin: .55rem 0 .1rem;
     }
     .sample-tile::before {
-      content: 'STRUCT'; position: absolute; top: .9rem; left: .9rem;
+      content: 'STRUCT'; position: absolute; top: .85rem; left: .85rem;
       font: 600 .58rem/1 'JetBrains Mono', monospace; letter-spacing: .12em;
-      color: #fff; background: rgba(15,22,38,.65); padding: 3px 6px; border-radius: 3px;
+      color: #fff; background: rgba(15,22,38,.7); padding: 3px 6px; border-radius: 3px;
+      pointer-events: none;
     }
     .sample-tile::after {
-      content: 'FIELD'; position: absolute; top: calc(50% + .1rem); left: .9rem;
+      content: 'FIELD'; position: absolute; top: calc(.55rem + 50% - 1.7rem); left: .85rem;
       font: 600 .58rem/1 'JetBrains Mono', monospace; letter-spacing: .12em;
       color: #fff; background: rgba(74,93,122,.85); padding: 3px 6px; border-radius: 3px;
+      pointer-events: none;
     }
+
+    /* ============================================================
+       Sample sheet (iOS-style modal)
+       ============================================================ */
+    .sheet-backdrop[hidden] { display: none; }
+    .sheet-backdrop {
+      position: fixed; inset: 0; z-index: 999;
+      background: rgba(15, 22, 38, 0.45);
+      -webkit-backdrop-filter: blur(8px) saturate(120%);
+              backdrop-filter: blur(8px) saturate(120%);
+      display: flex; align-items: flex-end; justify-content: center;
+      opacity: 0; transition: opacity .22s ease;
+    }
+    .sheet-backdrop.is-open { opacity: 1; }
+    @media (min-width: 720px) {
+      .sheet-backdrop { align-items: center; padding: 2rem 1rem; }
+    }
+    .sheet {
+      position: relative;
+      width: 100%; max-width: 880px;
+      max-height: 90vh; overflow-y: auto;
+      background: var(--surface);
+      border-top-left-radius: 24px; border-top-right-radius: 24px;
+      box-shadow: 0 -20px 60px rgba(15,22,38,.25);
+      transform: translateY(40px); transition: transform .28s cubic-bezier(.2,.8,.25,1);
+      padding: 1.4rem 1.5rem 2rem;
+    }
+    .sheet-backdrop.is-open .sheet { transform: translateY(0); }
+    @media (min-width: 720px) {
+      .sheet { border-radius: 22px; max-height: 86vh; padding: 2rem 2rem 1.8rem; }
+    }
+    .sheet-grip {
+      width: 38px; height: 5px; border-radius: 5px;
+      background: var(--rule); margin: 0 auto 1rem;
+    }
+    @media (min-width: 720px) { .sheet-grip { display: none; } }
+    .sheet-close {
+      position: absolute; top: .8rem; right: 1rem;
+      width: 36px; height: 36px; border-radius: 999px;
+      background: var(--bg-alt); border: 0; color: var(--ink-soft);
+      font-size: 1.4rem; line-height: 1; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background .15s ease, color .15s ease;
+    }
+    .sheet-close:hover { background: var(--rule); color: var(--ink); }
+    .sheet-body {
+      display: grid; gap: 1.4rem;
+      grid-template-columns: 1fr;
+    }
+    @media (min-width: 720px) {
+      .sheet-body { grid-template-columns: 320px 1fr; gap: 1.8rem; }
+    }
+    .sheet-images {
+      display: grid; grid-template-columns: 1fr 1fr; gap: .6rem;
+    }
+    @media (min-width: 720px) {
+      .sheet-images { grid-template-columns: 1fr; }
+    }
+    .sheet-images figure { margin: 0; }
+    .sheet-images img {
+      display: block; width: 100%; height: auto; aspect-ratio: 1 / 1;
+      object-fit: contain;
+      border-radius: 12px; background: #0f1626; border: 1px solid var(--rule);
+    }
+    .sheet-images figcaption {
+      font: 600 .68rem/1.4 'JetBrains Mono', monospace;
+      letter-spacing: .12em; text-transform: uppercase;
+      color: var(--ink-mute); text-align: center; margin-top: .5rem;
+    }
+    .sheet-text { display: flex; flex-direction: column; gap: .9rem; }
+    .sheet-eyebrow {
+      font-size: .72rem; font-weight: 700;
+      letter-spacing: .18em; text-transform: uppercase;
+      color: var(--accent);
+    }
+    .sheet-text h3 {
+      margin: 0; font-size: 1.5rem; font-weight: 700; color: var(--ink);
+      letter-spacing: -0.02em; line-height: 1.2;
+    }
+    .sheet-id {
+      font: 500 .76rem/1.3 'JetBrains Mono', monospace;
+      color: var(--ink-mute); margin: 0; word-break: break-all;
+    }
+    .sheet-question, .sheet-answer {
+      display: flex; gap: .7rem;
+      padding: .9rem 1rem;
+      background: var(--bg-alt);
+      border-radius: 12px;
+      font-size: .92rem; line-height: 1.55; color: var(--ink);
+    }
+    .sheet-answer {
+      background: rgba(74,93,122,.08);
+      border-left: 3px solid var(--accent);
+    }
+    .sheet-tag {
+      flex: 0 0 auto; width: 22px; height: 22px;
+      border-radius: 6px;
+      background: var(--ink); color: #fff;
+      font: 700 .72rem/22px 'JetBrains Mono', monospace;
+      text-align: center; letter-spacing: 0;
+    }
+    .sheet-tag.accent { background: var(--accent); }
 
     /* ============================================================
        Footer
@@ -424,6 +535,117 @@
 
           </div>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SAMPLES MARQUEE -->
+  <section class="section sec-samples" id="samples" style="padding-top: 4rem; padding-bottom: 3rem;">
+    <div class="container">
+      <div class="has-text-centered">
+        <span class="eyebrow">— Samples</span>
+        <h2 class="title is-3">Structure &amp; field across 18 fibre families.</h2>
+        <p class="section-lede">
+          Each sample pairs a cross-section structure image with FDTD-simulated mode-field maps at 1550 nm.
+          <b>Click any tile</b> to read its full physics-grounded annotation. Hover to pause the scroll.
+        </p>
+      </div>
+    </div>
+
+    <div class="marquee" aria-label="Sample fibre cross-sections and mode fields">
+      <div class="marquee-track">
+    <button type="button" class="sample-tile" data-idx="0" aria-label="View All Solid Bandgap"><img src="website/img/samples/PCF_all_solid_bandgap_c3e0985cb0b9_struct.png" alt="All Solid Bandgap structure" loading="lazy"/><img src="website/img/samples/PCF_all_solid_bandgap_c3e0985cb0b9_field.png" alt="All Solid Bandgap mode field at 1550 nm" loading="lazy"/><span class="sample-label">All Solid Bandgap</span></button>
+    <button type="button" class="sample-tile" data-idx="1" aria-label="View Anti Resonant Arf"><img src="website/img/samples/PCF_anti_resonant_arf_26a69dae90c9_struct.png" alt="Anti Resonant Arf structure" loading="lazy"/><img src="website/img/samples/PCF_anti_resonant_arf_26a69dae90c9_field.png" alt="Anti Resonant Arf mode field at 1550 nm" loading="lazy"/><span class="sample-label">Anti Resonant Arf</span></button>
+    <button type="button" class="sample-tile" data-idx="2" aria-label="View Anti Resonant Arf"><img src="website/img/samples/PCF_anti_resonant_arf_08f40efbccc8_struct.png" alt="Anti Resonant Arf structure" loading="lazy"/><img src="website/img/samples/PCF_anti_resonant_arf_08f40efbccc8_field.png" alt="Anti Resonant Arf mode field at 1550 nm" loading="lazy"/><span class="sample-label">Anti Resonant Arf</span></button>
+    <button type="button" class="sample-tile" data-idx="3" aria-label="View Dual Core Coupler"><img src="website/img/samples/PCF_dual_core_coupler_6d417f9ecc02_struct.png" alt="Dual Core Coupler structure" loading="lazy"/><img src="website/img/samples/PCF_dual_core_coupler_6d417f9ecc02_field.png" alt="Dual Core Coupler mode field at 1550 nm" loading="lazy"/><span class="sample-label">Dual Core Coupler</span></button>
+    <button type="button" class="sample-tile" data-idx="4" aria-label="View Elliptical Core"><img src="website/img/samples/PCF_elliptical_core_79d378a3de10_struct.png" alt="Elliptical Core structure" loading="lazy"/><img src="website/img/samples/PCF_elliptical_core_79d378a3de10_field.png" alt="Elliptical Core mode field at 1550 nm" loading="lazy"/><span class="sample-label">Elliptical Core</span></button>
+    <button type="button" class="sample-tile" data-idx="5" aria-label="View Fractal Quasicrystal"><img src="website/img/samples/PCF_fractal_quasicrystal_312a86e8740c_struct.png" alt="Fractal Quasicrystal structure" loading="lazy"/><img src="website/img/samples/PCF_fractal_quasicrystal_312a86e8740c_field.png" alt="Fractal Quasicrystal mode field at 1550 nm" loading="lazy"/><span class="sample-label">Fractal Quasicrystal</span></button>
+    <button type="button" class="sample-tile" data-idx="6" aria-label="View Fractal Quasicrystal"><img src="website/img/samples/PCF_fractal_quasicrystal_1ed2fa02ebae_struct.png" alt="Fractal Quasicrystal structure" loading="lazy"/><img src="website/img/samples/PCF_fractal_quasicrystal_1ed2fa02ebae_field.png" alt="Fractal Quasicrystal mode field at 1550 nm" loading="lazy"/><span class="sample-label">Fractal Quasicrystal</span></button>
+    <button type="button" class="sample-tile" data-idx="7" aria-label="View Graded Index Multiring"><img src="website/img/samples/PCF_graded_index_multiring_c84bde204d08_struct.png" alt="Graded Index Multiring structure" loading="lazy"/><img src="website/img/samples/PCF_graded_index_multiring_c84bde204d08_field.png" alt="Graded Index Multiring mode field at 1550 nm" loading="lazy"/><span class="sample-label">Graded Index Multiring</span></button>
+    <button type="button" class="sample-tile" data-idx="8" aria-label="View High Birefringence Pm"><img src="website/img/samples/PCF_high_birefringence_pm_1c6994f2fca4_struct.png" alt="High Birefringence Pm structure" loading="lazy"/><img src="website/img/samples/PCF_high_birefringence_pm_1c6994f2fca4_field.png" alt="High Birefringence Pm mode field at 1550 nm" loading="lazy"/><span class="sample-label">High Birefringence Pm</span></button>
+    <button type="button" class="sample-tile" data-idx="9" aria-label="View Hollow Core Pbg"><img src="website/img/samples/PCF_hollow_core_pbg_b2217db1abee_struct.png" alt="Hollow Core Pbg structure" loading="lazy"/><img src="website/img/samples/PCF_hollow_core_pbg_b2217db1abee_field.png" alt="Hollow Core Pbg mode field at 1550 nm" loading="lazy"/><span class="sample-label">Hollow Core Pbg</span></button>
+    <button type="button" class="sample-tile" data-idx="10" aria-label="View Hollow Core Pbg"><img src="website/img/samples/PCF_hollow_core_pbg_c38e1991ef8b_struct.png" alt="Hollow Core Pbg structure" loading="lazy"/><img src="website/img/samples/PCF_hollow_core_pbg_c38e1991ef8b_field.png" alt="Hollow Core Pbg mode field at 1550 nm" loading="lazy"/><span class="sample-label">Hollow Core Pbg</span></button>
+    <button type="button" class="sample-tile" data-idx="11" aria-label="View Hybrid Plasmonic"><img src="website/img/samples/PCF_hybrid_plasmonic_e8f9d7e073ce_struct.png" alt="Hybrid Plasmonic structure" loading="lazy"/><img src="website/img/samples/PCF_hybrid_plasmonic_e8f9d7e073ce_field.png" alt="Hybrid Plasmonic mode field at 1550 nm" loading="lazy"/><span class="sample-label">Hybrid Plasmonic</span></button>
+    <button type="button" class="sample-tile" data-idx="12" aria-label="View Kagome Approx"><img src="website/img/samples/PCF_kagome_approx_e8004a9aeadd_struct.png" alt="Kagome Approx structure" loading="lazy"/><img src="website/img/samples/PCF_kagome_approx_e8004a9aeadd_field.png" alt="Kagome Approx mode field at 1550 nm" loading="lazy"/><span class="sample-label">Kagome Approx</span></button>
+    <button type="button" class="sample-tile" data-idx="13" aria-label="View Multi Core"><img src="website/img/samples/PCF_multi_core_1e57f4d42433_struct.png" alt="Multi Core structure" loading="lazy"/><img src="website/img/samples/PCF_multi_core_1e57f4d42433_field.png" alt="Multi Core mode field at 1550 nm" loading="lazy"/><span class="sample-label">Multi Core</span></button>
+    <button type="button" class="sample-tile" data-idx="14" aria-label="View Nested Antiresonant"><img src="website/img/samples/PCF_nested_antiresonant_9ebca8ba11df_struct.png" alt="Nested Antiresonant structure" loading="lazy"/><img src="website/img/samples/PCF_nested_antiresonant_9ebca8ba11df_field.png" alt="Nested Antiresonant mode field at 1550 nm" loading="lazy"/><span class="sample-label">Nested Antiresonant</span></button>
+    <button type="button" class="sample-tile" data-idx="15" aria-label="View Octagonal Lattice"><img src="website/img/samples/PCF_octagonal_lattice_6712735f18fc_struct.png" alt="Octagonal Lattice structure" loading="lazy"/><img src="website/img/samples/PCF_octagonal_lattice_6712735f18fc_field.png" alt="Octagonal Lattice mode field at 1550 nm" loading="lazy"/><span class="sample-label">Octagonal Lattice</span></button>
+    <button type="button" class="sample-tile" data-idx="16" aria-label="View Solid Core Hex"><img src="website/img/samples/PCF_solid_core_hex_0a7052af9833_struct.png" alt="Solid Core Hex structure" loading="lazy"/><img src="website/img/samples/PCF_solid_core_hex_0a7052af9833_field.png" alt="Solid Core Hex mode field at 1550 nm" loading="lazy"/><span class="sample-label">Solid Core Hex</span></button>
+    <button type="button" class="sample-tile" data-idx="17" aria-label="View Square Rectangular"><img src="website/img/samples/PCF_square_rectangular_073567b700bc_struct.png" alt="Square Rectangular structure" loading="lazy"/><img src="website/img/samples/PCF_square_rectangular_073567b700bc_field.png" alt="Square Rectangular mode field at 1550 nm" loading="lazy"/><span class="sample-label">Square Rectangular</span></button>
+    <button type="button" class="sample-tile" data-idx="18" aria-label="View Suspended Cobweb"><img src="website/img/samples/PCF_suspended_cobweb_18584d0bd075_struct.png" alt="Suspended Cobweb structure" loading="lazy"/><img src="website/img/samples/PCF_suspended_cobweb_18584d0bd075_field.png" alt="Suspended Cobweb mode field at 1550 nm" loading="lazy"/><span class="sample-label">Suspended Cobweb</span></button>
+    <button type="button" class="sample-tile" data-idx="19" aria-label="View Twisted Hexagonal"><img src="website/img/samples/PCF_twisted_hexagonal_362338967670_struct.png" alt="Twisted Hexagonal structure" loading="lazy"/><img src="website/img/samples/PCF_twisted_hexagonal_362338967670_field.png" alt="Twisted Hexagonal mode field at 1550 nm" loading="lazy"/><span class="sample-label">Twisted Hexagonal</span></button>
+    <button type="button" class="sample-tile" data-idx="20" aria-label="View Vortex Ring Core"><img src="website/img/samples/PCF_vortex_ring_core_3c5c73bc6ae5_struct.png" alt="Vortex Ring Core structure" loading="lazy"/><img src="website/img/samples/PCF_vortex_ring_core_3c5c73bc6ae5_field.png" alt="Vortex Ring Core mode field at 1550 nm" loading="lazy"/><span class="sample-label">Vortex Ring Core</span></button>
+    <button type="button" class="sample-tile" data-idx="21" aria-label="View Vortex Ring Core"><img src="website/img/samples/PCF_vortex_ring_core_82fbe99c702b_struct.png" alt="Vortex Ring Core structure" loading="lazy"/><img src="website/img/samples/PCF_vortex_ring_core_82fbe99c702b_field.png" alt="Vortex Ring Core mode field at 1550 nm" loading="lazy"/><span class="sample-label">Vortex Ring Core</span></button>
+    <button type="button" class="sample-tile" data-idx="0" aria-label="View All Solid Bandgap"><img src="website/img/samples/PCF_all_solid_bandgap_c3e0985cb0b9_struct.png" alt="All Solid Bandgap structure" loading="lazy"/><img src="website/img/samples/PCF_all_solid_bandgap_c3e0985cb0b9_field.png" alt="All Solid Bandgap mode field at 1550 nm" loading="lazy"/><span class="sample-label">All Solid Bandgap</span></button>
+    <button type="button" class="sample-tile" data-idx="1" aria-label="View Anti Resonant Arf"><img src="website/img/samples/PCF_anti_resonant_arf_26a69dae90c9_struct.png" alt="Anti Resonant Arf structure" loading="lazy"/><img src="website/img/samples/PCF_anti_resonant_arf_26a69dae90c9_field.png" alt="Anti Resonant Arf mode field at 1550 nm" loading="lazy"/><span class="sample-label">Anti Resonant Arf</span></button>
+    <button type="button" class="sample-tile" data-idx="2" aria-label="View Anti Resonant Arf"><img src="website/img/samples/PCF_anti_resonant_arf_08f40efbccc8_struct.png" alt="Anti Resonant Arf structure" loading="lazy"/><img src="website/img/samples/PCF_anti_resonant_arf_08f40efbccc8_field.png" alt="Anti Resonant Arf mode field at 1550 nm" loading="lazy"/><span class="sample-label">Anti Resonant Arf</span></button>
+    <button type="button" class="sample-tile" data-idx="3" aria-label="View Dual Core Coupler"><img src="website/img/samples/PCF_dual_core_coupler_6d417f9ecc02_struct.png" alt="Dual Core Coupler structure" loading="lazy"/><img src="website/img/samples/PCF_dual_core_coupler_6d417f9ecc02_field.png" alt="Dual Core Coupler mode field at 1550 nm" loading="lazy"/><span class="sample-label">Dual Core Coupler</span></button>
+    <button type="button" class="sample-tile" data-idx="4" aria-label="View Elliptical Core"><img src="website/img/samples/PCF_elliptical_core_79d378a3de10_struct.png" alt="Elliptical Core structure" loading="lazy"/><img src="website/img/samples/PCF_elliptical_core_79d378a3de10_field.png" alt="Elliptical Core mode field at 1550 nm" loading="lazy"/><span class="sample-label">Elliptical Core</span></button>
+    <button type="button" class="sample-tile" data-idx="5" aria-label="View Fractal Quasicrystal"><img src="website/img/samples/PCF_fractal_quasicrystal_312a86e8740c_struct.png" alt="Fractal Quasicrystal structure" loading="lazy"/><img src="website/img/samples/PCF_fractal_quasicrystal_312a86e8740c_field.png" alt="Fractal Quasicrystal mode field at 1550 nm" loading="lazy"/><span class="sample-label">Fractal Quasicrystal</span></button>
+    <button type="button" class="sample-tile" data-idx="6" aria-label="View Fractal Quasicrystal"><img src="website/img/samples/PCF_fractal_quasicrystal_1ed2fa02ebae_struct.png" alt="Fractal Quasicrystal structure" loading="lazy"/><img src="website/img/samples/PCF_fractal_quasicrystal_1ed2fa02ebae_field.png" alt="Fractal Quasicrystal mode field at 1550 nm" loading="lazy"/><span class="sample-label">Fractal Quasicrystal</span></button>
+    <button type="button" class="sample-tile" data-idx="7" aria-label="View Graded Index Multiring"><img src="website/img/samples/PCF_graded_index_multiring_c84bde204d08_struct.png" alt="Graded Index Multiring structure" loading="lazy"/><img src="website/img/samples/PCF_graded_index_multiring_c84bde204d08_field.png" alt="Graded Index Multiring mode field at 1550 nm" loading="lazy"/><span class="sample-label">Graded Index Multiring</span></button>
+    <button type="button" class="sample-tile" data-idx="8" aria-label="View High Birefringence Pm"><img src="website/img/samples/PCF_high_birefringence_pm_1c6994f2fca4_struct.png" alt="High Birefringence Pm structure" loading="lazy"/><img src="website/img/samples/PCF_high_birefringence_pm_1c6994f2fca4_field.png" alt="High Birefringence Pm mode field at 1550 nm" loading="lazy"/><span class="sample-label">High Birefringence Pm</span></button>
+    <button type="button" class="sample-tile" data-idx="9" aria-label="View Hollow Core Pbg"><img src="website/img/samples/PCF_hollow_core_pbg_b2217db1abee_struct.png" alt="Hollow Core Pbg structure" loading="lazy"/><img src="website/img/samples/PCF_hollow_core_pbg_b2217db1abee_field.png" alt="Hollow Core Pbg mode field at 1550 nm" loading="lazy"/><span class="sample-label">Hollow Core Pbg</span></button>
+    <button type="button" class="sample-tile" data-idx="10" aria-label="View Hollow Core Pbg"><img src="website/img/samples/PCF_hollow_core_pbg_c38e1991ef8b_struct.png" alt="Hollow Core Pbg structure" loading="lazy"/><img src="website/img/samples/PCF_hollow_core_pbg_c38e1991ef8b_field.png" alt="Hollow Core Pbg mode field at 1550 nm" loading="lazy"/><span class="sample-label">Hollow Core Pbg</span></button>
+    <button type="button" class="sample-tile" data-idx="11" aria-label="View Hybrid Plasmonic"><img src="website/img/samples/PCF_hybrid_plasmonic_e8f9d7e073ce_struct.png" alt="Hybrid Plasmonic structure" loading="lazy"/><img src="website/img/samples/PCF_hybrid_plasmonic_e8f9d7e073ce_field.png" alt="Hybrid Plasmonic mode field at 1550 nm" loading="lazy"/><span class="sample-label">Hybrid Plasmonic</span></button>
+    <button type="button" class="sample-tile" data-idx="12" aria-label="View Kagome Approx"><img src="website/img/samples/PCF_kagome_approx_e8004a9aeadd_struct.png" alt="Kagome Approx structure" loading="lazy"/><img src="website/img/samples/PCF_kagome_approx_e8004a9aeadd_field.png" alt="Kagome Approx mode field at 1550 nm" loading="lazy"/><span class="sample-label">Kagome Approx</span></button>
+    <button type="button" class="sample-tile" data-idx="13" aria-label="View Multi Core"><img src="website/img/samples/PCF_multi_core_1e57f4d42433_struct.png" alt="Multi Core structure" loading="lazy"/><img src="website/img/samples/PCF_multi_core_1e57f4d42433_field.png" alt="Multi Core mode field at 1550 nm" loading="lazy"/><span class="sample-label">Multi Core</span></button>
+    <button type="button" class="sample-tile" data-idx="14" aria-label="View Nested Antiresonant"><img src="website/img/samples/PCF_nested_antiresonant_9ebca8ba11df_struct.png" alt="Nested Antiresonant structure" loading="lazy"/><img src="website/img/samples/PCF_nested_antiresonant_9ebca8ba11df_field.png" alt="Nested Antiresonant mode field at 1550 nm" loading="lazy"/><span class="sample-label">Nested Antiresonant</span></button>
+    <button type="button" class="sample-tile" data-idx="15" aria-label="View Octagonal Lattice"><img src="website/img/samples/PCF_octagonal_lattice_6712735f18fc_struct.png" alt="Octagonal Lattice structure" loading="lazy"/><img src="website/img/samples/PCF_octagonal_lattice_6712735f18fc_field.png" alt="Octagonal Lattice mode field at 1550 nm" loading="lazy"/><span class="sample-label">Octagonal Lattice</span></button>
+    <button type="button" class="sample-tile" data-idx="16" aria-label="View Solid Core Hex"><img src="website/img/samples/PCF_solid_core_hex_0a7052af9833_struct.png" alt="Solid Core Hex structure" loading="lazy"/><img src="website/img/samples/PCF_solid_core_hex_0a7052af9833_field.png" alt="Solid Core Hex mode field at 1550 nm" loading="lazy"/><span class="sample-label">Solid Core Hex</span></button>
+    <button type="button" class="sample-tile" data-idx="17" aria-label="View Square Rectangular"><img src="website/img/samples/PCF_square_rectangular_073567b700bc_struct.png" alt="Square Rectangular structure" loading="lazy"/><img src="website/img/samples/PCF_square_rectangular_073567b700bc_field.png" alt="Square Rectangular mode field at 1550 nm" loading="lazy"/><span class="sample-label">Square Rectangular</span></button>
+    <button type="button" class="sample-tile" data-idx="18" aria-label="View Suspended Cobweb"><img src="website/img/samples/PCF_suspended_cobweb_18584d0bd075_struct.png" alt="Suspended Cobweb structure" loading="lazy"/><img src="website/img/samples/PCF_suspended_cobweb_18584d0bd075_field.png" alt="Suspended Cobweb mode field at 1550 nm" loading="lazy"/><span class="sample-label">Suspended Cobweb</span></button>
+    <button type="button" class="sample-tile" data-idx="19" aria-label="View Twisted Hexagonal"><img src="website/img/samples/PCF_twisted_hexagonal_362338967670_struct.png" alt="Twisted Hexagonal structure" loading="lazy"/><img src="website/img/samples/PCF_twisted_hexagonal_362338967670_field.png" alt="Twisted Hexagonal mode field at 1550 nm" loading="lazy"/><span class="sample-label">Twisted Hexagonal</span></button>
+    <button type="button" class="sample-tile" data-idx="20" aria-label="View Vortex Ring Core"><img src="website/img/samples/PCF_vortex_ring_core_3c5c73bc6ae5_struct.png" alt="Vortex Ring Core structure" loading="lazy"/><img src="website/img/samples/PCF_vortex_ring_core_3c5c73bc6ae5_field.png" alt="Vortex Ring Core mode field at 1550 nm" loading="lazy"/><span class="sample-label">Vortex Ring Core</span></button>
+    <button type="button" class="sample-tile" data-idx="21" aria-label="View Vortex Ring Core"><img src="website/img/samples/PCF_vortex_ring_core_82fbe99c702b_struct.png" alt="Vortex Ring Core structure" loading="lazy"/><img src="website/img/samples/PCF_vortex_ring_core_82fbe99c702b_field.png" alt="Vortex Ring Core mode field at 1550 nm" loading="lazy"/><span class="sample-label">Vortex Ring Core</span></button>
+      </div>
+    </div>
+    <div class="marquee reverse" aria-hidden="true" style="margin-top:1rem;">
+      <div class="marquee-track">
+    <button type="button" class="sample-tile" data-idx="0" aria-label="View All Solid Bandgap"><img src="website/img/samples/PCF_all_solid_bandgap_c3e0985cb0b9_struct.png" alt="All Solid Bandgap structure" loading="lazy"/><img src="website/img/samples/PCF_all_solid_bandgap_c3e0985cb0b9_field.png" alt="All Solid Bandgap mode field at 1550 nm" loading="lazy"/><span class="sample-label">All Solid Bandgap</span></button>
+    <button type="button" class="sample-tile" data-idx="1" aria-label="View Anti Resonant Arf"><img src="website/img/samples/PCF_anti_resonant_arf_26a69dae90c9_struct.png" alt="Anti Resonant Arf structure" loading="lazy"/><img src="website/img/samples/PCF_anti_resonant_arf_26a69dae90c9_field.png" alt="Anti Resonant Arf mode field at 1550 nm" loading="lazy"/><span class="sample-label">Anti Resonant Arf</span></button>
+    <button type="button" class="sample-tile" data-idx="2" aria-label="View Anti Resonant Arf"><img src="website/img/samples/PCF_anti_resonant_arf_08f40efbccc8_struct.png" alt="Anti Resonant Arf structure" loading="lazy"/><img src="website/img/samples/PCF_anti_resonant_arf_08f40efbccc8_field.png" alt="Anti Resonant Arf mode field at 1550 nm" loading="lazy"/><span class="sample-label">Anti Resonant Arf</span></button>
+    <button type="button" class="sample-tile" data-idx="3" aria-label="View Dual Core Coupler"><img src="website/img/samples/PCF_dual_core_coupler_6d417f9ecc02_struct.png" alt="Dual Core Coupler structure" loading="lazy"/><img src="website/img/samples/PCF_dual_core_coupler_6d417f9ecc02_field.png" alt="Dual Core Coupler mode field at 1550 nm" loading="lazy"/><span class="sample-label">Dual Core Coupler</span></button>
+    <button type="button" class="sample-tile" data-idx="4" aria-label="View Elliptical Core"><img src="website/img/samples/PCF_elliptical_core_79d378a3de10_struct.png" alt="Elliptical Core structure" loading="lazy"/><img src="website/img/samples/PCF_elliptical_core_79d378a3de10_field.png" alt="Elliptical Core mode field at 1550 nm" loading="lazy"/><span class="sample-label">Elliptical Core</span></button>
+    <button type="button" class="sample-tile" data-idx="5" aria-label="View Fractal Quasicrystal"><img src="website/img/samples/PCF_fractal_quasicrystal_312a86e8740c_struct.png" alt="Fractal Quasicrystal structure" loading="lazy"/><img src="website/img/samples/PCF_fractal_quasicrystal_312a86e8740c_field.png" alt="Fractal Quasicrystal mode field at 1550 nm" loading="lazy"/><span class="sample-label">Fractal Quasicrystal</span></button>
+    <button type="button" class="sample-tile" data-idx="6" aria-label="View Fractal Quasicrystal"><img src="website/img/samples/PCF_fractal_quasicrystal_1ed2fa02ebae_struct.png" alt="Fractal Quasicrystal structure" loading="lazy"/><img src="website/img/samples/PCF_fractal_quasicrystal_1ed2fa02ebae_field.png" alt="Fractal Quasicrystal mode field at 1550 nm" loading="lazy"/><span class="sample-label">Fractal Quasicrystal</span></button>
+    <button type="button" class="sample-tile" data-idx="7" aria-label="View Graded Index Multiring"><img src="website/img/samples/PCF_graded_index_multiring_c84bde204d08_struct.png" alt="Graded Index Multiring structure" loading="lazy"/><img src="website/img/samples/PCF_graded_index_multiring_c84bde204d08_field.png" alt="Graded Index Multiring mode field at 1550 nm" loading="lazy"/><span class="sample-label">Graded Index Multiring</span></button>
+    <button type="button" class="sample-tile" data-idx="8" aria-label="View High Birefringence Pm"><img src="website/img/samples/PCF_high_birefringence_pm_1c6994f2fca4_struct.png" alt="High Birefringence Pm structure" loading="lazy"/><img src="website/img/samples/PCF_high_birefringence_pm_1c6994f2fca4_field.png" alt="High Birefringence Pm mode field at 1550 nm" loading="lazy"/><span class="sample-label">High Birefringence Pm</span></button>
+    <button type="button" class="sample-tile" data-idx="9" aria-label="View Hollow Core Pbg"><img src="website/img/samples/PCF_hollow_core_pbg_b2217db1abee_struct.png" alt="Hollow Core Pbg structure" loading="lazy"/><img src="website/img/samples/PCF_hollow_core_pbg_b2217db1abee_field.png" alt="Hollow Core Pbg mode field at 1550 nm" loading="lazy"/><span class="sample-label">Hollow Core Pbg</span></button>
+    <button type="button" class="sample-tile" data-idx="10" aria-label="View Hollow Core Pbg"><img src="website/img/samples/PCF_hollow_core_pbg_c38e1991ef8b_struct.png" alt="Hollow Core Pbg structure" loading="lazy"/><img src="website/img/samples/PCF_hollow_core_pbg_c38e1991ef8b_field.png" alt="Hollow Core Pbg mode field at 1550 nm" loading="lazy"/><span class="sample-label">Hollow Core Pbg</span></button>
+    <button type="button" class="sample-tile" data-idx="11" aria-label="View Hybrid Plasmonic"><img src="website/img/samples/PCF_hybrid_plasmonic_e8f9d7e073ce_struct.png" alt="Hybrid Plasmonic structure" loading="lazy"/><img src="website/img/samples/PCF_hybrid_plasmonic_e8f9d7e073ce_field.png" alt="Hybrid Plasmonic mode field at 1550 nm" loading="lazy"/><span class="sample-label">Hybrid Plasmonic</span></button>
+    <button type="button" class="sample-tile" data-idx="12" aria-label="View Kagome Approx"><img src="website/img/samples/PCF_kagome_approx_e8004a9aeadd_struct.png" alt="Kagome Approx structure" loading="lazy"/><img src="website/img/samples/PCF_kagome_approx_e8004a9aeadd_field.png" alt="Kagome Approx mode field at 1550 nm" loading="lazy"/><span class="sample-label">Kagome Approx</span></button>
+    <button type="button" class="sample-tile" data-idx="13" aria-label="View Multi Core"><img src="website/img/samples/PCF_multi_core_1e57f4d42433_struct.png" alt="Multi Core structure" loading="lazy"/><img src="website/img/samples/PCF_multi_core_1e57f4d42433_field.png" alt="Multi Core mode field at 1550 nm" loading="lazy"/><span class="sample-label">Multi Core</span></button>
+    <button type="button" class="sample-tile" data-idx="14" aria-label="View Nested Antiresonant"><img src="website/img/samples/PCF_nested_antiresonant_9ebca8ba11df_struct.png" alt="Nested Antiresonant structure" loading="lazy"/><img src="website/img/samples/PCF_nested_antiresonant_9ebca8ba11df_field.png" alt="Nested Antiresonant mode field at 1550 nm" loading="lazy"/><span class="sample-label">Nested Antiresonant</span></button>
+    <button type="button" class="sample-tile" data-idx="15" aria-label="View Octagonal Lattice"><img src="website/img/samples/PCF_octagonal_lattice_6712735f18fc_struct.png" alt="Octagonal Lattice structure" loading="lazy"/><img src="website/img/samples/PCF_octagonal_lattice_6712735f18fc_field.png" alt="Octagonal Lattice mode field at 1550 nm" loading="lazy"/><span class="sample-label">Octagonal Lattice</span></button>
+    <button type="button" class="sample-tile" data-idx="16" aria-label="View Solid Core Hex"><img src="website/img/samples/PCF_solid_core_hex_0a7052af9833_struct.png" alt="Solid Core Hex structure" loading="lazy"/><img src="website/img/samples/PCF_solid_core_hex_0a7052af9833_field.png" alt="Solid Core Hex mode field at 1550 nm" loading="lazy"/><span class="sample-label">Solid Core Hex</span></button>
+    <button type="button" class="sample-tile" data-idx="17" aria-label="View Square Rectangular"><img src="website/img/samples/PCF_square_rectangular_073567b700bc_struct.png" alt="Square Rectangular structure" loading="lazy"/><img src="website/img/samples/PCF_square_rectangular_073567b700bc_field.png" alt="Square Rectangular mode field at 1550 nm" loading="lazy"/><span class="sample-label">Square Rectangular</span></button>
+    <button type="button" class="sample-tile" data-idx="18" aria-label="View Suspended Cobweb"><img src="website/img/samples/PCF_suspended_cobweb_18584d0bd075_struct.png" alt="Suspended Cobweb structure" loading="lazy"/><img src="website/img/samples/PCF_suspended_cobweb_18584d0bd075_field.png" alt="Suspended Cobweb mode field at 1550 nm" loading="lazy"/><span class="sample-label">Suspended Cobweb</span></button>
+    <button type="button" class="sample-tile" data-idx="19" aria-label="View Twisted Hexagonal"><img src="website/img/samples/PCF_twisted_hexagonal_362338967670_struct.png" alt="Twisted Hexagonal structure" loading="lazy"/><img src="website/img/samples/PCF_twisted_hexagonal_362338967670_field.png" alt="Twisted Hexagonal mode field at 1550 nm" loading="lazy"/><span class="sample-label">Twisted Hexagonal</span></button>
+    <button type="button" class="sample-tile" data-idx="20" aria-label="View Vortex Ring Core"><img src="website/img/samples/PCF_vortex_ring_core_3c5c73bc6ae5_struct.png" alt="Vortex Ring Core structure" loading="lazy"/><img src="website/img/samples/PCF_vortex_ring_core_3c5c73bc6ae5_field.png" alt="Vortex Ring Core mode field at 1550 nm" loading="lazy"/><span class="sample-label">Vortex Ring Core</span></button>
+    <button type="button" class="sample-tile" data-idx="21" aria-label="View Vortex Ring Core"><img src="website/img/samples/PCF_vortex_ring_core_82fbe99c702b_struct.png" alt="Vortex Ring Core structure" loading="lazy"/><img src="website/img/samples/PCF_vortex_ring_core_82fbe99c702b_field.png" alt="Vortex Ring Core mode field at 1550 nm" loading="lazy"/><span class="sample-label">Vortex Ring Core</span></button>
+    <button type="button" class="sample-tile" data-idx="0" aria-label="View All Solid Bandgap"><img src="website/img/samples/PCF_all_solid_bandgap_c3e0985cb0b9_struct.png" alt="All Solid Bandgap structure" loading="lazy"/><img src="website/img/samples/PCF_all_solid_bandgap_c3e0985cb0b9_field.png" alt="All Solid Bandgap mode field at 1550 nm" loading="lazy"/><span class="sample-label">All Solid Bandgap</span></button>
+    <button type="button" class="sample-tile" data-idx="1" aria-label="View Anti Resonant Arf"><img src="website/img/samples/PCF_anti_resonant_arf_26a69dae90c9_struct.png" alt="Anti Resonant Arf structure" loading="lazy"/><img src="website/img/samples/PCF_anti_resonant_arf_26a69dae90c9_field.png" alt="Anti Resonant Arf mode field at 1550 nm" loading="lazy"/><span class="sample-label">Anti Resonant Arf</span></button>
+    <button type="button" class="sample-tile" data-idx="2" aria-label="View Anti Resonant Arf"><img src="website/img/samples/PCF_anti_resonant_arf_08f40efbccc8_struct.png" alt="Anti Resonant Arf structure" loading="lazy"/><img src="website/img/samples/PCF_anti_resonant_arf_08f40efbccc8_field.png" alt="Anti Resonant Arf mode field at 1550 nm" loading="lazy"/><span class="sample-label">Anti Resonant Arf</span></button>
+    <button type="button" class="sample-tile" data-idx="3" aria-label="View Dual Core Coupler"><img src="website/img/samples/PCF_dual_core_coupler_6d417f9ecc02_struct.png" alt="Dual Core Coupler structure" loading="lazy"/><img src="website/img/samples/PCF_dual_core_coupler_6d417f9ecc02_field.png" alt="Dual Core Coupler mode field at 1550 nm" loading="lazy"/><span class="sample-label">Dual Core Coupler</span></button>
+    <button type="button" class="sample-tile" data-idx="4" aria-label="View Elliptical Core"><img src="website/img/samples/PCF_elliptical_core_79d378a3de10_struct.png" alt="Elliptical Core structure" loading="lazy"/><img src="website/img/samples/PCF_elliptical_core_79d378a3de10_field.png" alt="Elliptical Core mode field at 1550 nm" loading="lazy"/><span class="sample-label">Elliptical Core</span></button>
+    <button type="button" class="sample-tile" data-idx="5" aria-label="View Fractal Quasicrystal"><img src="website/img/samples/PCF_fractal_quasicrystal_312a86e8740c_struct.png" alt="Fractal Quasicrystal structure" loading="lazy"/><img src="website/img/samples/PCF_fractal_quasicrystal_312a86e8740c_field.png" alt="Fractal Quasicrystal mode field at 1550 nm" loading="lazy"/><span class="sample-label">Fractal Quasicrystal</span></button>
+    <button type="button" class="sample-tile" data-idx="6" aria-label="View Fractal Quasicrystal"><img src="website/img/samples/PCF_fractal_quasicrystal_1ed2fa02ebae_struct.png" alt="Fractal Quasicrystal structure" loading="lazy"/><img src="website/img/samples/PCF_fractal_quasicrystal_1ed2fa02ebae_field.png" alt="Fractal Quasicrystal mode field at 1550 nm" loading="lazy"/><span class="sample-label">Fractal Quasicrystal</span></button>
+    <button type="button" class="sample-tile" data-idx="7" aria-label="View Graded Index Multiring"><img src="website/img/samples/PCF_graded_index_multiring_c84bde204d08_struct.png" alt="Graded Index Multiring structure" loading="lazy"/><img src="website/img/samples/PCF_graded_index_multiring_c84bde204d08_field.png" alt="Graded Index Multiring mode field at 1550 nm" loading="lazy"/><span class="sample-label">Graded Index Multiring</span></button>
+    <button type="button" class="sample-tile" data-idx="8" aria-label="View High Birefringence Pm"><img src="website/img/samples/PCF_high_birefringence_pm_1c6994f2fca4_struct.png" alt="High Birefringence Pm structure" loading="lazy"/><img src="website/img/samples/PCF_high_birefringence_pm_1c6994f2fca4_field.png" alt="High Birefringence Pm mode field at 1550 nm" loading="lazy"/><span class="sample-label">High Birefringence Pm</span></button>
+    <button type="button" class="sample-tile" data-idx="9" aria-label="View Hollow Core Pbg"><img src="website/img/samples/PCF_hollow_core_pbg_b2217db1abee_struct.png" alt="Hollow Core Pbg structure" loading="lazy"/><img src="website/img/samples/PCF_hollow_core_pbg_b2217db1abee_field.png" alt="Hollow Core Pbg mode field at 1550 nm" loading="lazy"/><span class="sample-label">Hollow Core Pbg</span></button>
+    <button type="button" class="sample-tile" data-idx="10" aria-label="View Hollow Core Pbg"><img src="website/img/samples/PCF_hollow_core_pbg_c38e1991ef8b_struct.png" alt="Hollow Core Pbg structure" loading="lazy"/><img src="website/img/samples/PCF_hollow_core_pbg_c38e1991ef8b_field.png" alt="Hollow Core Pbg mode field at 1550 nm" loading="lazy"/><span class="sample-label">Hollow Core Pbg</span></button>
+    <button type="button" class="sample-tile" data-idx="11" aria-label="View Hybrid Plasmonic"><img src="website/img/samples/PCF_hybrid_plasmonic_e8f9d7e073ce_struct.png" alt="Hybrid Plasmonic structure" loading="lazy"/><img src="website/img/samples/PCF_hybrid_plasmonic_e8f9d7e073ce_field.png" alt="Hybrid Plasmonic mode field at 1550 nm" loading="lazy"/><span class="sample-label">Hybrid Plasmonic</span></button>
+    <button type="button" class="sample-tile" data-idx="12" aria-label="View Kagome Approx"><img src="website/img/samples/PCF_kagome_approx_e8004a9aeadd_struct.png" alt="Kagome Approx structure" loading="lazy"/><img src="website/img/samples/PCF_kagome_approx_e8004a9aeadd_field.png" alt="Kagome Approx mode field at 1550 nm" loading="lazy"/><span class="sample-label">Kagome Approx</span></button>
+    <button type="button" class="sample-tile" data-idx="13" aria-label="View Multi Core"><img src="website/img/samples/PCF_multi_core_1e57f4d42433_struct.png" alt="Multi Core structure" loading="lazy"/><img src="website/img/samples/PCF_multi_core_1e57f4d42433_field.png" alt="Multi Core mode field at 1550 nm" loading="lazy"/><span class="sample-label">Multi Core</span></button>
+    <button type="button" class="sample-tile" data-idx="14" aria-label="View Nested Antiresonant"><img src="website/img/samples/PCF_nested_antiresonant_9ebca8ba11df_struct.png" alt="Nested Antiresonant structure" loading="lazy"/><img src="website/img/samples/PCF_nested_antiresonant_9ebca8ba11df_field.png" alt="Nested Antiresonant mode field at 1550 nm" loading="lazy"/><span class="sample-label">Nested Antiresonant</span></button>
+    <button type="button" class="sample-tile" data-idx="15" aria-label="View Octagonal Lattice"><img src="website/img/samples/PCF_octagonal_lattice_6712735f18fc_struct.png" alt="Octagonal Lattice structure" loading="lazy"/><img src="website/img/samples/PCF_octagonal_lattice_6712735f18fc_field.png" alt="Octagonal Lattice mode field at 1550 nm" loading="lazy"/><span class="sample-label">Octagonal Lattice</span></button>
+    <button type="button" class="sample-tile" data-idx="16" aria-label="View Solid Core Hex"><img src="website/img/samples/PCF_solid_core_hex_0a7052af9833_struct.png" alt="Solid Core Hex structure" loading="lazy"/><img src="website/img/samples/PCF_solid_core_hex_0a7052af9833_field.png" alt="Solid Core Hex mode field at 1550 nm" loading="lazy"/><span class="sample-label">Solid Core Hex</span></button>
+    <button type="button" class="sample-tile" data-idx="17" aria-label="View Square Rectangular"><img src="website/img/samples/PCF_square_rectangular_073567b700bc_struct.png" alt="Square Rectangular structure" loading="lazy"/><img src="website/img/samples/PCF_square_rectangular_073567b700bc_field.png" alt="Square Rectangular mode field at 1550 nm" loading="lazy"/><span class="sample-label">Square Rectangular</span></button>
+    <button type="button" class="sample-tile" data-idx="18" aria-label="View Suspended Cobweb"><img src="website/img/samples/PCF_suspended_cobweb_18584d0bd075_struct.png" alt="Suspended Cobweb structure" loading="lazy"/><img src="website/img/samples/PCF_suspended_cobweb_18584d0bd075_field.png" alt="Suspended Cobweb mode field at 1550 nm" loading="lazy"/><span class="sample-label">Suspended Cobweb</span></button>
+    <button type="button" class="sample-tile" data-idx="19" aria-label="View Twisted Hexagonal"><img src="website/img/samples/PCF_twisted_hexagonal_362338967670_struct.png" alt="Twisted Hexagonal structure" loading="lazy"/><img src="website/img/samples/PCF_twisted_hexagonal_362338967670_field.png" alt="Twisted Hexagonal mode field at 1550 nm" loading="lazy"/><span class="sample-label">Twisted Hexagonal</span></button>
+    <button type="button" class="sample-tile" data-idx="20" aria-label="View Vortex Ring Core"><img src="website/img/samples/PCF_vortex_ring_core_3c5c73bc6ae5_struct.png" alt="Vortex Ring Core structure" loading="lazy"/><img src="website/img/samples/PCF_vortex_ring_core_3c5c73bc6ae5_field.png" alt="Vortex Ring Core mode field at 1550 nm" loading="lazy"/><span class="sample-label">Vortex Ring Core</span></button>
+    <button type="button" class="sample-tile" data-idx="21" aria-label="View Vortex Ring Core"><img src="website/img/samples/PCF_vortex_ring_core_82fbe99c702b_struct.png" alt="Vortex Ring Core structure" loading="lazy"/><img src="website/img/samples/PCF_vortex_ring_core_82fbe99c702b_field.png" alt="Vortex Ring Core mode field at 1550 nm" loading="lazy"/><span class="sample-label">Vortex Ring Core</span></button>
       </div>
     </div>
   </section>
@@ -523,103 +745,6 @@
     </div>
   </section>
 
-  <!-- SAMPLES MARQUEE -->
-  <section class="section" id="samples" style="padding-top: 4rem; padding-bottom: 2rem;">
-    <div class="container">
-      <div class="has-text-centered">
-        <span class="eyebrow">— Samples</span>
-        <h2 class="title is-3">Structure &amp; field across 18 fibre families.</h2>
-        <p class="section-lede">
-          Each PCFBench sample pairs a cross-section structure image with FDTD-simulated mode-field maps. Hover to pause &mdash; click any tile in the released dataset to inspect parameters and the level-1&ndash;4 annotations.
-        </p>
-      </div>
-    </div>
-
-    <div class="marquee" aria-label="Sample fibre cross-sections and mode fields">
-      <div class="marquee-track">
-    <div class="sample-tile"><img src="website/img/samples/anti_resonant_arf_00_s.jpg" alt="Anti Resonant Arf structure"/><img src="website/img/samples/anti_resonant_arf_00_f.jpg" alt="Anti Resonant Arf field"/><span class="sample-label">Anti Resonant Arf</span></div>
-    <div class="sample-tile"><img src="website/img/samples/anti_resonant_arf_01_s.jpg" alt="Anti Resonant Arf structure"/><img src="website/img/samples/anti_resonant_arf_01_f.jpg" alt="Anti Resonant Arf field"/><span class="sample-label">Anti Resonant Arf</span></div>
-    <div class="sample-tile"><img src="website/img/samples/fractal_quasicrystal_02_s.jpg" alt="Fractal Quasicrystal structure"/><img src="website/img/samples/fractal_quasicrystal_02_f.jpg" alt="Fractal Quasicrystal field"/><span class="sample-label">Fractal Quasicrystal</span></div>
-    <div class="sample-tile"><img src="website/img/samples/fractal_quasicrystal_03_s.jpg" alt="Fractal Quasicrystal structure"/><img src="website/img/samples/fractal_quasicrystal_03_f.jpg" alt="Fractal Quasicrystal field"/><span class="sample-label">Fractal Quasicrystal</span></div>
-    <div class="sample-tile"><img src="website/img/samples/high_birefringence_pm_04_s.jpg" alt="High Birefringence Pm structure"/><img src="website/img/samples/high_birefringence_pm_04_f.jpg" alt="High Birefringence Pm field"/><span class="sample-label">High Birefringence Pm</span></div>
-    <div class="sample-tile"><img src="website/img/samples/high_birefringence_pm_05_s.jpg" alt="High Birefringence Pm structure"/><img src="website/img/samples/high_birefringence_pm_05_f.jpg" alt="High Birefringence Pm field"/><span class="sample-label">High Birefringence Pm</span></div>
-    <div class="sample-tile"><img src="website/img/samples/hollow_core_pbg_06_s.jpg" alt="Hollow Core Pbg structure"/><img src="website/img/samples/hollow_core_pbg_06_f.jpg" alt="Hollow Core Pbg field"/><span class="sample-label">Hollow Core Pbg</span></div>
-    <div class="sample-tile"><img src="website/img/samples/hollow_core_pbg_07_s.jpg" alt="Hollow Core Pbg structure"/><img src="website/img/samples/hollow_core_pbg_07_f.jpg" alt="Hollow Core Pbg field"/><span class="sample-label">Hollow Core Pbg</span></div>
-    <div class="sample-tile"><img src="website/img/samples/multi_core_08_s.jpg" alt="Multi Core structure"/><img src="website/img/samples/multi_core_08_f.jpg" alt="Multi Core field"/><span class="sample-label">Multi Core</span></div>
-    <div class="sample-tile"><img src="website/img/samples/multi_core_09_s.jpg" alt="Multi Core structure"/><img src="website/img/samples/multi_core_09_f.jpg" alt="Multi Core field"/><span class="sample-label">Multi Core</span></div>
-    <div class="sample-tile"><img src="website/img/samples/solid_core_hex_10_s.jpg" alt="Solid Core Hex structure"/><img src="website/img/samples/solid_core_hex_10_f.jpg" alt="Solid Core Hex field"/><span class="sample-label">Solid Core Hex</span></div>
-    <div class="sample-tile"><img src="website/img/samples/solid_core_hex_11_s.jpg" alt="Solid Core Hex structure"/><img src="website/img/samples/solid_core_hex_11_f.jpg" alt="Solid Core Hex field"/><span class="sample-label">Solid Core Hex</span></div>
-    <div class="sample-tile"><img src="website/img/samples/square_rectangular_12_s.jpg" alt="Square Rectangular structure"/><img src="website/img/samples/square_rectangular_12_f.jpg" alt="Square Rectangular field"/><span class="sample-label">Square Rectangular</span></div>
-    <div class="sample-tile"><img src="website/img/samples/square_rectangular_13_s.jpg" alt="Square Rectangular structure"/><img src="website/img/samples/square_rectangular_13_f.jpg" alt="Square Rectangular field"/><span class="sample-label">Square Rectangular</span></div>
-    <div class="sample-tile"><img src="website/img/samples/suspended_cobweb_14_s.jpg" alt="Suspended Cobweb structure"/><img src="website/img/samples/suspended_cobweb_14_f.jpg" alt="Suspended Cobweb field"/><span class="sample-label">Suspended Cobweb</span></div>
-    <div class="sample-tile"><img src="website/img/samples/suspended_cobweb_15_s.jpg" alt="Suspended Cobweb structure"/><img src="website/img/samples/suspended_cobweb_15_f.jpg" alt="Suspended Cobweb field"/><span class="sample-label">Suspended Cobweb</span></div>
-    <div class="sample-tile"><img src="website/img/samples/vortex_ring_core_16_s.jpg" alt="Vortex Ring Core structure"/><img src="website/img/samples/vortex_ring_core_16_f.jpg" alt="Vortex Ring Core field"/><span class="sample-label">Vortex Ring Core</span></div>
-    <div class="sample-tile"><img src="website/img/samples/vortex_ring_core_17_s.jpg" alt="Vortex Ring Core structure"/><img src="website/img/samples/vortex_ring_core_17_f.jpg" alt="Vortex Ring Core field"/><span class="sample-label">Vortex Ring Core</span></div>
-
-    <div class="sample-tile"><img src="website/img/samples/anti_resonant_arf_00_s.jpg" alt="Anti Resonant Arf structure"/><img src="website/img/samples/anti_resonant_arf_00_f.jpg" alt="Anti Resonant Arf field"/><span class="sample-label">Anti Resonant Arf</span></div>
-    <div class="sample-tile"><img src="website/img/samples/anti_resonant_arf_01_s.jpg" alt="Anti Resonant Arf structure"/><img src="website/img/samples/anti_resonant_arf_01_f.jpg" alt="Anti Resonant Arf field"/><span class="sample-label">Anti Resonant Arf</span></div>
-    <div class="sample-tile"><img src="website/img/samples/fractal_quasicrystal_02_s.jpg" alt="Fractal Quasicrystal structure"/><img src="website/img/samples/fractal_quasicrystal_02_f.jpg" alt="Fractal Quasicrystal field"/><span class="sample-label">Fractal Quasicrystal</span></div>
-    <div class="sample-tile"><img src="website/img/samples/fractal_quasicrystal_03_s.jpg" alt="Fractal Quasicrystal structure"/><img src="website/img/samples/fractal_quasicrystal_03_f.jpg" alt="Fractal Quasicrystal field"/><span class="sample-label">Fractal Quasicrystal</span></div>
-    <div class="sample-tile"><img src="website/img/samples/high_birefringence_pm_04_s.jpg" alt="High Birefringence Pm structure"/><img src="website/img/samples/high_birefringence_pm_04_f.jpg" alt="High Birefringence Pm field"/><span class="sample-label">High Birefringence Pm</span></div>
-    <div class="sample-tile"><img src="website/img/samples/high_birefringence_pm_05_s.jpg" alt="High Birefringence Pm structure"/><img src="website/img/samples/high_birefringence_pm_05_f.jpg" alt="High Birefringence Pm field"/><span class="sample-label">High Birefringence Pm</span></div>
-    <div class="sample-tile"><img src="website/img/samples/hollow_core_pbg_06_s.jpg" alt="Hollow Core Pbg structure"/><img src="website/img/samples/hollow_core_pbg_06_f.jpg" alt="Hollow Core Pbg field"/><span class="sample-label">Hollow Core Pbg</span></div>
-    <div class="sample-tile"><img src="website/img/samples/hollow_core_pbg_07_s.jpg" alt="Hollow Core Pbg structure"/><img src="website/img/samples/hollow_core_pbg_07_f.jpg" alt="Hollow Core Pbg field"/><span class="sample-label">Hollow Core Pbg</span></div>
-    <div class="sample-tile"><img src="website/img/samples/multi_core_08_s.jpg" alt="Multi Core structure"/><img src="website/img/samples/multi_core_08_f.jpg" alt="Multi Core field"/><span class="sample-label">Multi Core</span></div>
-    <div class="sample-tile"><img src="website/img/samples/multi_core_09_s.jpg" alt="Multi Core structure"/><img src="website/img/samples/multi_core_09_f.jpg" alt="Multi Core field"/><span class="sample-label">Multi Core</span></div>
-    <div class="sample-tile"><img src="website/img/samples/solid_core_hex_10_s.jpg" alt="Solid Core Hex structure"/><img src="website/img/samples/solid_core_hex_10_f.jpg" alt="Solid Core Hex field"/><span class="sample-label">Solid Core Hex</span></div>
-    <div class="sample-tile"><img src="website/img/samples/solid_core_hex_11_s.jpg" alt="Solid Core Hex structure"/><img src="website/img/samples/solid_core_hex_11_f.jpg" alt="Solid Core Hex field"/><span class="sample-label">Solid Core Hex</span></div>
-    <div class="sample-tile"><img src="website/img/samples/square_rectangular_12_s.jpg" alt="Square Rectangular structure"/><img src="website/img/samples/square_rectangular_12_f.jpg" alt="Square Rectangular field"/><span class="sample-label">Square Rectangular</span></div>
-    <div class="sample-tile"><img src="website/img/samples/square_rectangular_13_s.jpg" alt="Square Rectangular structure"/><img src="website/img/samples/square_rectangular_13_f.jpg" alt="Square Rectangular field"/><span class="sample-label">Square Rectangular</span></div>
-    <div class="sample-tile"><img src="website/img/samples/suspended_cobweb_14_s.jpg" alt="Suspended Cobweb structure"/><img src="website/img/samples/suspended_cobweb_14_f.jpg" alt="Suspended Cobweb field"/><span class="sample-label">Suspended Cobweb</span></div>
-    <div class="sample-tile"><img src="website/img/samples/suspended_cobweb_15_s.jpg" alt="Suspended Cobweb structure"/><img src="website/img/samples/suspended_cobweb_15_f.jpg" alt="Suspended Cobweb field"/><span class="sample-label">Suspended Cobweb</span></div>
-    <div class="sample-tile"><img src="website/img/samples/vortex_ring_core_16_s.jpg" alt="Vortex Ring Core structure"/><img src="website/img/samples/vortex_ring_core_16_f.jpg" alt="Vortex Ring Core field"/><span class="sample-label">Vortex Ring Core</span></div>
-    <div class="sample-tile"><img src="website/img/samples/vortex_ring_core_17_s.jpg" alt="Vortex Ring Core structure"/><img src="website/img/samples/vortex_ring_core_17_f.jpg" alt="Vortex Ring Core field"/><span class="sample-label">Vortex Ring Core</span></div>
-
-      </div>
-    </div>
-    <div class="marquee reverse" aria-hidden="true" style="margin-top:1rem;">
-      <div class="marquee-track">
-    <div class="sample-tile"><img src="website/img/samples/anti_resonant_arf_00_s.jpg" alt="Anti Resonant Arf structure"/><img src="website/img/samples/anti_resonant_arf_00_f.jpg" alt="Anti Resonant Arf field"/><span class="sample-label">Anti Resonant Arf</span></div>
-    <div class="sample-tile"><img src="website/img/samples/anti_resonant_arf_01_s.jpg" alt="Anti Resonant Arf structure"/><img src="website/img/samples/anti_resonant_arf_01_f.jpg" alt="Anti Resonant Arf field"/><span class="sample-label">Anti Resonant Arf</span></div>
-    <div class="sample-tile"><img src="website/img/samples/fractal_quasicrystal_02_s.jpg" alt="Fractal Quasicrystal structure"/><img src="website/img/samples/fractal_quasicrystal_02_f.jpg" alt="Fractal Quasicrystal field"/><span class="sample-label">Fractal Quasicrystal</span></div>
-    <div class="sample-tile"><img src="website/img/samples/fractal_quasicrystal_03_s.jpg" alt="Fractal Quasicrystal structure"/><img src="website/img/samples/fractal_quasicrystal_03_f.jpg" alt="Fractal Quasicrystal field"/><span class="sample-label">Fractal Quasicrystal</span></div>
-    <div class="sample-tile"><img src="website/img/samples/high_birefringence_pm_04_s.jpg" alt="High Birefringence Pm structure"/><img src="website/img/samples/high_birefringence_pm_04_f.jpg" alt="High Birefringence Pm field"/><span class="sample-label">High Birefringence Pm</span></div>
-    <div class="sample-tile"><img src="website/img/samples/high_birefringence_pm_05_s.jpg" alt="High Birefringence Pm structure"/><img src="website/img/samples/high_birefringence_pm_05_f.jpg" alt="High Birefringence Pm field"/><span class="sample-label">High Birefringence Pm</span></div>
-    <div class="sample-tile"><img src="website/img/samples/hollow_core_pbg_06_s.jpg" alt="Hollow Core Pbg structure"/><img src="website/img/samples/hollow_core_pbg_06_f.jpg" alt="Hollow Core Pbg field"/><span class="sample-label">Hollow Core Pbg</span></div>
-    <div class="sample-tile"><img src="website/img/samples/hollow_core_pbg_07_s.jpg" alt="Hollow Core Pbg structure"/><img src="website/img/samples/hollow_core_pbg_07_f.jpg" alt="Hollow Core Pbg field"/><span class="sample-label">Hollow Core Pbg</span></div>
-    <div class="sample-tile"><img src="website/img/samples/multi_core_08_s.jpg" alt="Multi Core structure"/><img src="website/img/samples/multi_core_08_f.jpg" alt="Multi Core field"/><span class="sample-label">Multi Core</span></div>
-    <div class="sample-tile"><img src="website/img/samples/multi_core_09_s.jpg" alt="Multi Core structure"/><img src="website/img/samples/multi_core_09_f.jpg" alt="Multi Core field"/><span class="sample-label">Multi Core</span></div>
-    <div class="sample-tile"><img src="website/img/samples/solid_core_hex_10_s.jpg" alt="Solid Core Hex structure"/><img src="website/img/samples/solid_core_hex_10_f.jpg" alt="Solid Core Hex field"/><span class="sample-label">Solid Core Hex</span></div>
-    <div class="sample-tile"><img src="website/img/samples/solid_core_hex_11_s.jpg" alt="Solid Core Hex structure"/><img src="website/img/samples/solid_core_hex_11_f.jpg" alt="Solid Core Hex field"/><span class="sample-label">Solid Core Hex</span></div>
-    <div class="sample-tile"><img src="website/img/samples/square_rectangular_12_s.jpg" alt="Square Rectangular structure"/><img src="website/img/samples/square_rectangular_12_f.jpg" alt="Square Rectangular field"/><span class="sample-label">Square Rectangular</span></div>
-    <div class="sample-tile"><img src="website/img/samples/square_rectangular_13_s.jpg" alt="Square Rectangular structure"/><img src="website/img/samples/square_rectangular_13_f.jpg" alt="Square Rectangular field"/><span class="sample-label">Square Rectangular</span></div>
-    <div class="sample-tile"><img src="website/img/samples/suspended_cobweb_14_s.jpg" alt="Suspended Cobweb structure"/><img src="website/img/samples/suspended_cobweb_14_f.jpg" alt="Suspended Cobweb field"/><span class="sample-label">Suspended Cobweb</span></div>
-    <div class="sample-tile"><img src="website/img/samples/suspended_cobweb_15_s.jpg" alt="Suspended Cobweb structure"/><img src="website/img/samples/suspended_cobweb_15_f.jpg" alt="Suspended Cobweb field"/><span class="sample-label">Suspended Cobweb</span></div>
-    <div class="sample-tile"><img src="website/img/samples/vortex_ring_core_16_s.jpg" alt="Vortex Ring Core structure"/><img src="website/img/samples/vortex_ring_core_16_f.jpg" alt="Vortex Ring Core field"/><span class="sample-label">Vortex Ring Core</span></div>
-    <div class="sample-tile"><img src="website/img/samples/vortex_ring_core_17_s.jpg" alt="Vortex Ring Core structure"/><img src="website/img/samples/vortex_ring_core_17_f.jpg" alt="Vortex Ring Core field"/><span class="sample-label">Vortex Ring Core</span></div>
-
-    <div class="sample-tile"><img src="website/img/samples/anti_resonant_arf_00_s.jpg" alt="Anti Resonant Arf structure"/><img src="website/img/samples/anti_resonant_arf_00_f.jpg" alt="Anti Resonant Arf field"/><span class="sample-label">Anti Resonant Arf</span></div>
-    <div class="sample-tile"><img src="website/img/samples/anti_resonant_arf_01_s.jpg" alt="Anti Resonant Arf structure"/><img src="website/img/samples/anti_resonant_arf_01_f.jpg" alt="Anti Resonant Arf field"/><span class="sample-label">Anti Resonant Arf</span></div>
-    <div class="sample-tile"><img src="website/img/samples/fractal_quasicrystal_02_s.jpg" alt="Fractal Quasicrystal structure"/><img src="website/img/samples/fractal_quasicrystal_02_f.jpg" alt="Fractal Quasicrystal field"/><span class="sample-label">Fractal Quasicrystal</span></div>
-    <div class="sample-tile"><img src="website/img/samples/fractal_quasicrystal_03_s.jpg" alt="Fractal Quasicrystal structure"/><img src="website/img/samples/fractal_quasicrystal_03_f.jpg" alt="Fractal Quasicrystal field"/><span class="sample-label">Fractal Quasicrystal</span></div>
-    <div class="sample-tile"><img src="website/img/samples/high_birefringence_pm_04_s.jpg" alt="High Birefringence Pm structure"/><img src="website/img/samples/high_birefringence_pm_04_f.jpg" alt="High Birefringence Pm field"/><span class="sample-label">High Birefringence Pm</span></div>
-    <div class="sample-tile"><img src="website/img/samples/high_birefringence_pm_05_s.jpg" alt="High Birefringence Pm structure"/><img src="website/img/samples/high_birefringence_pm_05_f.jpg" alt="High Birefringence Pm field"/><span class="sample-label">High Birefringence Pm</span></div>
-    <div class="sample-tile"><img src="website/img/samples/hollow_core_pbg_06_s.jpg" alt="Hollow Core Pbg structure"/><img src="website/img/samples/hollow_core_pbg_06_f.jpg" alt="Hollow Core Pbg field"/><span class="sample-label">Hollow Core Pbg</span></div>
-    <div class="sample-tile"><img src="website/img/samples/hollow_core_pbg_07_s.jpg" alt="Hollow Core Pbg structure"/><img src="website/img/samples/hollow_core_pbg_07_f.jpg" alt="Hollow Core Pbg field"/><span class="sample-label">Hollow Core Pbg</span></div>
-    <div class="sample-tile"><img src="website/img/samples/multi_core_08_s.jpg" alt="Multi Core structure"/><img src="website/img/samples/multi_core_08_f.jpg" alt="Multi Core field"/><span class="sample-label">Multi Core</span></div>
-    <div class="sample-tile"><img src="website/img/samples/multi_core_09_s.jpg" alt="Multi Core structure"/><img src="website/img/samples/multi_core_09_f.jpg" alt="Multi Core field"/><span class="sample-label">Multi Core</span></div>
-    <div class="sample-tile"><img src="website/img/samples/solid_core_hex_10_s.jpg" alt="Solid Core Hex structure"/><img src="website/img/samples/solid_core_hex_10_f.jpg" alt="Solid Core Hex field"/><span class="sample-label">Solid Core Hex</span></div>
-    <div class="sample-tile"><img src="website/img/samples/solid_core_hex_11_s.jpg" alt="Solid Core Hex structure"/><img src="website/img/samples/solid_core_hex_11_f.jpg" alt="Solid Core Hex field"/><span class="sample-label">Solid Core Hex</span></div>
-    <div class="sample-tile"><img src="website/img/samples/square_rectangular_12_s.jpg" alt="Square Rectangular structure"/><img src="website/img/samples/square_rectangular_12_f.jpg" alt="Square Rectangular field"/><span class="sample-label">Square Rectangular</span></div>
-    <div class="sample-tile"><img src="website/img/samples/square_rectangular_13_s.jpg" alt="Square Rectangular structure"/><img src="website/img/samples/square_rectangular_13_f.jpg" alt="Square Rectangular field"/><span class="sample-label">Square Rectangular</span></div>
-    <div class="sample-tile"><img src="website/img/samples/suspended_cobweb_14_s.jpg" alt="Suspended Cobweb structure"/><img src="website/img/samples/suspended_cobweb_14_f.jpg" alt="Suspended Cobweb field"/><span class="sample-label">Suspended Cobweb</span></div>
-    <div class="sample-tile"><img src="website/img/samples/suspended_cobweb_15_s.jpg" alt="Suspended Cobweb structure"/><img src="website/img/samples/suspended_cobweb_15_f.jpg" alt="Suspended Cobweb field"/><span class="sample-label">Suspended Cobweb</span></div>
-    <div class="sample-tile"><img src="website/img/samples/vortex_ring_core_16_s.jpg" alt="Vortex Ring Core structure"/><img src="website/img/samples/vortex_ring_core_16_f.jpg" alt="Vortex Ring Core field"/><span class="sample-label">Vortex Ring Core</span></div>
-    <div class="sample-tile"><img src="website/img/samples/vortex_ring_core_17_s.jpg" alt="Vortex Ring Core structure"/><img src="website/img/samples/vortex_ring_core_17_f.jpg" alt="Vortex Ring Core field"/><span class="sample-label">Vortex Ring Core</span></div>
-
-      </div>
-    </div>
-  </section>
 
   <!-- LEADERBOARD -->
   <section class="section" id="leaderboard">
@@ -703,6 +828,83 @@
       </p>
     </div>
   </footer>
+
+
+  <!-- Sample modal (iOS-style sheet) -->
+  <div class="sheet-backdrop" id="sample-sheet" hidden>
+    <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title">
+      <button class="sheet-close" type="button" aria-label="Close">&times;</button>
+      <div class="sheet-grip"></div>
+      <div class="sheet-body">
+        <div class="sheet-images">
+          <figure>
+            <img id="sheet-img-struct" alt="" />
+            <figcaption>Structure</figcaption>
+          </figure>
+          <figure>
+            <img id="sheet-img-field" alt="" />
+            <figcaption>Mode field @ 1550 nm</figcaption>
+          </figure>
+        </div>
+        <div class="sheet-text">
+          <span class="sheet-eyebrow">PCFBench Sample</span>
+          <h3 id="sheet-title">Family</h3>
+          <p class="sheet-id" id="sheet-id"></p>
+          <div class="sheet-question">
+            <span class="sheet-tag">Q</span>
+            <span id="sheet-question"></span>
+          </div>
+          <div class="sheet-answer">
+            <span class="sheet-tag accent">A</span>
+            <span id="sheet-answer"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script id="pcf-samples-data" type="application/json">[{"id": "PCF_all_solid_bandgap_c3e0985cb0b9", "family": "all_solid_bandgap", "label": "All Solid Bandgap", "struct": "website/img/samples/PCF_all_solid_bandgap_c3e0985cb0b9_struct.png", "field": "website/img/samples/PCF_all_solid_bandgap_c3e0985cb0b9_field.png", "question": "Describe the PCF cross-section geometry, identify its family, and explain the guidance mechanism.", "caption": "This all-solid bandgap fiber utilizes a periodic hexagonal arrangement of high-index rods embedded in a low-index matrix to confine light via photonic bandgap effects rather than total internal reflection. The dominant guidance mechanism is solid bandgap, where the cladding structure creates forbidden frequency bands that prevent propagation outside the core region. Geometrically, the design features nine rings of high-index rods with a lattice pitch of 6.606294090423477 um and a rod diameter of 3.7714527255120704 um set within a background material of lower refractive index. Key parameters include a high-index value of 2.055582192718697, a low-index value of 1.3622602798217667, a lattice type of hex_all_solid, and a ring count of 9."}, {"id": "PCF_anti_resonant_arf_26a69dae90c9", "family": "anti_resonant_arf", "label": "Anti Resonant Arf", "struct": "website/img/samples/PCF_anti_resonant_arf_26a69dae90c9_struct.png", "field": "website/img/samples/PCF_anti_resonant_arf_26a69dae90c9_field.png", "question": "Describe the PCF cross-section geometry, identify its family, and explain the guidance mechanism.", "caption": "Hollow-core anti-resonant fiber (ARF) featuring a single ring of circular silica tubes surrounding a central air core, representative of the canonical single-ring anti-resonant guidance family. The dominant guidance mechanism is anti-resonant reflection, where confinement arises from destructive interference of light coupling into the tube wall resonances. The geometry consists of a circular air core bounded by twelve equally spaced, concentrically arranged silica tubes, each with uniform wall thickness and identical outer radius determined by tube_radius_um and wall_thickness_um. Core radius is 15.658526897575163 um, pitch is 26.064091039106984 um, tube count is 12, tube radius is 4.559116767317745 um, variant is single_ring, wall thickness is 0.8735915755312298 um."}, {"id": "PCF_anti_resonant_arf_08f40efbccc8", "family": "anti_resonant_arf", "label": "Anti Resonant Arf", "struct": "website/img/samples/PCF_anti_resonant_arf_08f40efbccc8_struct.png", "field": "website/img/samples/PCF_anti_resonant_arf_08f40efbccc8_field.png", "question": "Describe the PCF cross-section geometry, identify its family, and explain the guidance mechanism.", "caption": "Hollow-core anti-resonant fiber (ARF) featuring a single ring of circular capillary tubes arranged hexagonally around a central air core, representative of the canonical single-ring ARF geometry. The dominant guidance mechanism is anti-resonant reflection, where confinement arises from destructive interference of light coupling into the glass walls of the surrounding tubes at wavelengths between structural resonances. The core is air-filled with radius 8.867048441532322 μm, encircled by six identical silica tubes of radius 10.381684296804885 μm and wall thickness 1.103681305834784 μm, spaced on a pitch of 29.666965909580682 μm. Core_radius_um: 8.867048441532322, pitch_um: 29.666965909580682, tube_count: 6, tube_radius_um: 10.381684296804885, variant: \"single_ring\", wall_thickness_um: 1.103681305834784."}, {"id": "PCF_dual_core_coupler_6d417f9ecc02", "family": "dual_core_coupler", "label": "Dual Core Coupler", "struct": "website/img/samples/PCF_dual_core_coupler_6d417f9ecc02_struct.png", "field": "website/img/samples/PCF_dual_core_coupler_6d417f9ecc02_field.png", "question": "Describe the PCF cross-section geometry, identify its family, and explain the guidance mechanism.", "caption": "Dual-core coupler photonic crystal fiber featuring two identical solid silica cores embedded in a hexagonal air-hole lattice, designed to support coupled supermodes via inter-core evanescent field overlap. The dominant guidance mechanism is modified total internal reflection with inter-core phase-matched evanescent coupling enabling power transfer. The cladding consists of eight rings of air holes arranged in a hex_dual_core lattice with pitch 6.251898540859436 um and hole diameter 3.301388628481411 um, while the two cores are separated by 7.832068056019313 um center-to-center. core_count: 2, core_separation_um: 7.832068056019313, coupling_strength: 0.12491967468300613, hole_d_um: 3.301388628481411, lattice: \"hex_dual_core\", pitch_um: 6.251898540859436, rings: 8"}, {"id": "PCF_elliptical_core_79d378a3de10", "family": "elliptical_core", "label": "Elliptical Core", "struct": "website/img/samples/PCF_elliptical_core_79d378a3de10_struct.png", "field": "website/img/samples/PCF_elliptical_core_79d378a3de10_field.png", "question": "Describe the PCF cross-section geometry, identify its family, and explain the guidance mechanism.", "caption": "Elliptical-core photonic crystal fiber belonging to the elliptical_core family, engineered to break circular symmetry and support polarization-maintaining guidance through geometric birefringence. The dominant guidance mechanism is modified total internal reflection (mTIR) enhanced by core ellipticity-induced modal asymmetry. The core is an ellipse oriented at 39.1° relative to the lattice axes within a hexagonal arrangement of air holes with pitch 4.535 μm and hole diameter 2.469 μm, spanning three complete rings. Pitch_um: 4.535, hole_d_um: 2.469, ellipticity: 3.188, rotation_deg: 39.104, rings: 3, lattice: hex_elliptical."}, {"id": "PCF_fractal_quasicrystal_312a86e8740c", "family": "fractal_quasicrystal", "label": "Fractal Quasicrystal", "struct": "website/img/samples/PCF_fractal_quasicrystal_312a86e8740c_struct.png", "field": "website/img/samples/PCF_fractal_quasicrystal_312a86e8740c_field.png", "question": "Describe the PCF cross-section geometry, identify its family, and explain the guidance mechanism.", "caption": "Fractal quasicrystal photonic crystal fiber featuring a non-periodic, rotationally symmetric air-hole lattice approximating an icosahedral quasicrystal. The dominant guidance mechanism is modified total internal reflection mediated by a radially graded effective cladding index arising from the deterministic aperiodicity of the hole arrangement. The air-hole pattern consists of six concentric rings of holes with quasi-crystalline angular placement, generated via a quasicrystal approximation algorithm rather than a regular hexagonal or square lattice. Base hole radius is 2.7529056504190343 um, pitch is 8.09137369098132 um, rings is 6, lattice is \"quasicrystal_approx\"."}, {"id": "PCF_fractal_quasicrystal_1ed2fa02ebae", "family": "fractal_quasicrystal", "label": "Fractal Quasicrystal", "struct": "website/img/samples/PCF_fractal_quasicrystal_1ed2fa02ebae_struct.png", "field": "website/img/samples/PCF_fractal_quasicrystal_1ed2fa02ebae_field.png", "question": "Describe the PCF cross-section geometry, identify its family, and explain the guidance mechanism.", "caption": "Fractal quasicrystal photonic crystal fiber featuring a deterministic non-periodic air-hole lattice approximating rotational symmetry and long-range order without translational periodicity. The dominant guidance mechanism is effective-index confinement modified by quasi-crystalline interference effects rather than photonic bandgap or antiresonance. Air holes of uniform radius are arranged in three concentric rings following a quasicrystal approximation lattice with nominal pitch 7.573954804159547 um. base_hole_radius_um: 1.895850941897015, lattice: quasicrystal_approx, pitch_um: 7.573954804159547, rings: 3"}, {"id": "PCF_graded_index_multiring_c84bde204d08", "family": "graded_index_multiring", "label": "Graded Index Multiring", "struct": "website/img/samples/PCF_graded_index_multiring_c84bde204d08_struct.png", "field": "website/img/samples/PCF_graded_index_multiring_c84bde204d08_field.png", "question": "Describe the PCF cross-section geometry, identify its family, and explain the guidance mechanism.", "caption": "Graded-index multiring photonic crystal fiber featuring concentric dielectric rings with a parabolic radial index profile tailored for effective-index-based large-mode-area guidance. The dominant guidance mechanism is graded-index confinement arising from the smooth, continuous refractive index transition between core and cladding. The structure comprises seven concentric rings spaced by 0.5986 μm, with a core index of 1.5436, cladding index of 1.4287, and a parabolic index profile governed by a gradient exponent of 2.9989. pitch_um=3.070399442477915, ring_spacing_um=0.5985587538093755, rings=7, core_index=1.5436236038039646, cladding_index=1.4287409935579511, gradient_exponent=2.998910081623374, index_profile=\"parabolic\", lattice=\"graded_multiring\"."}, {"id": "PCF_high_birefringence_pm_1c6994f2fca4", "family": "high_birefringence_pm", "label": "High Birefringence Pm", "struct": "website/img/samples/PCF_high_birefringence_pm_1c6994f2fca4_struct.png", "field": "website/img/samples/PCF_high_birefringence_pm_1c6994f2fca4_field.png", "question": "Describe the PCF cross-section geometry, identify its family, and explain the guidance mechanism.", "caption": "High-birefringence polarization-maintaining photonic crystal fiber with asymmetric stress-applying regions realized through deliberate lattice perturbation. The dominant guidance mechanism is modified total internal reflection (mTIR), leveraging an effective index contrast between the solid silica core and the microstructured cladding. The hexagonal air-hole lattice features two enlarged polarization-maintaining (PM) holes positioned symmetrically about the core at a radial offset of 2.553 μm, with diameters of 1.704 μm—distinct from the baseline hole diameter of 1.417 μm—and a pitch of 1.856 μm across five complete rings. hole_d_um=1.4168462835865072, lattice=hex_pm, pitch_um=1.8561058951548661, pm_hole_d_um=1.704347358677947, pm_hole_offset_um=2.5525798852655197, rings=5"}, {"id": "PCF_hollow_core_pbg_b2217db1abee", "family": "hollow_core_pbg", "label": "Hollow Core Pbg", "struct": "website/img/samples/PCF_hollow_core_pbg_b2217db1abee_struct.png", "field": "website/img/samples/PCF_hollow_core_pbg_b2217db1abee_field.png", "question": "Describe the PCF cross-section geometry, identify its family, and explain the guidance mechanism.", "caption": "This structure is a hollow-core photonic bandgap fiber where light is confined within an air core by a periodic cladding of silica struts and air holes that creates a forbidden frequency range. The dominant guidance mechanism is photonic bandgap confinement, distinct from total internal reflection or antiresonant effects. The geometry features a hexagonal lattice with a core radius of 5.37427102680318 um, a pitch of 5.760870692108224 um, a hole diameter of 5.248094661321489 um, and 5 concentric rings of holes surrounding the central void. Core_radius_um: 5.37427102680318 um, hole_d_um: 5.248094661321489 um, lattice: hex, pitch_um: 5.760870692108224 um, rings: 5."}, {"id": "PCF_hollow_core_pbg_c38e1991ef8b", "family": "hollow_core_pbg", "label": "Hollow Core Pbg", "struct": "website/img/samples/PCF_hollow_core_pbg_c38e1991ef8b_struct.png", "field": "website/img/samples/PCF_hollow_core_pbg_c38e1991ef8b_field.png", "question": "Describe the PCF cross-section geometry, identify its family, and explain the guidance mechanism.", "caption": "Hollow-core photonic bandgap (PBG) fiber with a silica-based hexagonal cladding lattice engineered to open a photonic bandgap around telecom wavelengths, enabling low-loss guidance in an air-filled core. The dominant guidance mechanism is photonic bandgap confinement arising from Bragg scattering of the periodic high-contrast dielectric structure. The geometry consists of a circular air core of radius 2.4837316178738824 µm surrounded by eight concentric rings of circular air holes arranged on a hexagonal lattice with pitch 4.766096652617087 µm and hole diameter 4.254654473083267 µm. core_radius_um=2.4837316178738824, hole_d_um=4.254654473083267, lattice=hex, pitch_um=4.766096652617087, rings=8"}, {"id": "PCF_hybrid_plasmonic_e8f9d7e073ce", "family": "hybrid_plasmonic", "label": "Hybrid Plasmonic", "struct": "website/img/samples/PCF_hybrid_plasmonic_e8f9d7e073ce_struct.png", "field": "website/img/samples/PCF_hybrid_plasmonic_e8f9d7e073ce_field.png", "question": "Describe the PCF cross-section geometry, identify its family, and explain the guidance mechanism.", "caption": "Hybrid plasmonic photonic crystal fiber featuring a hexagonal plasmonic lattice with aluminum cladding layers enabling strong metal-dielectric mode coupling at telecom wavelengths. The dominant guidance mechanism is hybrid plasmonic confinement, where surface plasmon polaritons at the aluminum-silica interface enhance field localization while maintaining photonic crystal lattice control. The structure consists of a solid silica core surrounded by six rings of air holes arranged in a hexagonal lattice, with each hole wall coated by a conformal 116.87 nm-thick aluminum layer. Pitch is 1.283486189297526 um, hole_d_um is 0.4369775096197969 um, metal_layer_thickness_nm is 116.87139491444603, metal_type is aluminum, lattice is hex_plasmonic, and rings is 6."}, {"id": "PCF_kagome_approx_e8004a9aeadd", "family": "kagome_approx", "label": "Kagome Approx", "struct": "website/img/samples/PCF_kagome_approx_e8004a9aeadd_struct.png", "field": "website/img/samples/PCF_kagome_approx_e8004a9aeadd_field.png", "question": "Describe the PCF cross-section geometry, identify its family, and explain the guidance mechanism.", "caption": "This is an approximate kagome-lattice hollow-core photonic crystal fiber designed for low-loss guidance via inhibited coupling between core and cladding modes. The dominant guidance mechanism is antiresonant reflection, where the thin silica struts surrounding the hollow core suppress coupling by positioning transmission minima (resonances) away from the operating wavelengths. The cladding consists of two concentric rings of strut-bounded cells approximating a kagome symmetry, with a pitch of 22.408 μm, cell radius of 5.048 μm, strut thickness of 1.003 μm, and two lattice rings. cell_radius_um: 5.04816980877186, pitch_um: 22.4080093769434, rings: 2, strut_thickness_um: 1.0030812960332554"}, {"id": "PCF_multi_core_1e57f4d42433", "family": "multi_core", "label": "Multi Core", "struct": "website/img/samples/PCF_multi_core_1e57f4d42433_struct.png", "field": "website/img/samples/PCF_multi_core_1e57f4d42433_field.png", "question": "Describe the PCF cross-section geometry, identify its family, and explain the guidance mechanism.", "caption": "Multi-core photonic crystal fiber featuring three identical solid silica cores arranged in a triangular configuration within a hexagonal air-hole lattice cladding. The dominant guidance mechanism is modified total internal reflection (mTIR), enabled by the effective-index contrast between the solid cores and the microstructured cladding. The cores are separated by 2.971 μm center-to-center, embedded in a six-ring hexagonal lattice with pitch 1.507 μm and air-hole diameter 1.199 μm. core_count=3, core_separation_um=2.9712372551928468, hole_d_um=1.1987312486226527, lattice=hex_multi_core, pitch_um=1.507012521450397, rings=6"}, {"id": "PCF_nested_antiresonant_9ebca8ba11df", "family": "nested_antiresonant", "label": "Nested Antiresonant", "struct": "website/img/samples/PCF_nested_antiresonant_9ebca8ba11df_struct.png", "field": "website/img/samples/PCF_nested_antiresonant_9ebca8ba11df_field.png", "question": "Describe the PCF cross-section geometry, identify its family, and explain the guidance mechanism.", "caption": "Nested anti-resonant fiber (NANF) featuring a hollow core surrounded by two concentric rings of silica capillary tubes arranged in a decagonal symmetry. The dominant guidance mechanism is nested anti-resonant reflection, where confinement arises from destructive interference of light coupling into the tube wall resonances across multiple nested layers. The geometry consists of a central air core bounded by ten equally spaced outer tubes (each with outer radius 15.233 μm and wall thickness 2.156 μm), enclosing an inner ring of ten smaller tubes (inner radius 5.618 μm), all organized with a pitch of 41.548 μm and nesting level 2. Core_radius_um = 18.85444113938008, inner_tube_radius_um = 5.61793960519544, nesting_level = 2, outer_tube_radius_um = 15.233046051648824, pitch_um = 41.54832492926934, tube_count = 10, wall_thickness_um = 2.1564440788112846."}, {"id": "PCF_octagonal_lattice_6712735f18fc", "family": "octagonal_lattice", "label": "Octagonal Lattice", "struct": "website/img/samples/PCF_octagonal_lattice_6712735f18fc_struct.png", "field": "website/img/samples/PCF_octagonal_lattice_6712735f18fc_field.png", "question": "Describe the PCF cross-section geometry, identify its family, and explain the guidance mechanism.", "caption": "This octagonal-lattice photonic crystal fiber employs modified total internal reflection within an 8-fold symmetric cladding of air holes. The dominant guidance mechanism is effective-index contrast between the solid silica core and the structured octagonal lattice. The geometry consists of five rings of circular air holes with a pitch of 2.957950256026748 um and a hole diameter of 1.4190508538446291 um, centered on an octagonal lattice with 8-fold rotational symmetry and a minor center offset of 0.11361508171603628 um. Parameters include lattice: octagonal, symmetry: 8, rings: 5, pitch_um: 2.957950256026748, hole_d_um: 1.4190508538446291, and center_offset_um: 0.11361508171603628."}, {"id": "PCF_solid_core_hex_0a7052af9833", "family": "solid_core_hex", "label": "Solid Core Hex", "struct": "website/img/samples/PCF_solid_core_hex_0a7052af9833_struct.png", "field": "website/img/samples/PCF_solid_core_hex_0a7052af9833_field.png", "question": "Describe the PCF cross-section geometry, identify its family, and explain the guidance mechanism.", "caption": "Solid-core hexagonal-lattice photonic crystal fiber with a uniform silica core and a cladding formed by a regular hexagonal array of circular air holes. The dominant guidance mechanism is modified total internal reflection (mTIR), relying on the effective cladding index reduction from the air-hole lattice. The geometry features four concentric rings of air holes arranged in a hexagonal lattice with pitch 3.955385786245959 um and hole diameter 2.395977257483548 um, centered with a lateral offset of 0.17308675332764395 um relative to the computational domain origin. center_offset_um: 0.17308675332764395, hole_d_um: 2.395977257483548, lattice: \"hex\", pitch_um: 3.955385786245959, rings: 4"}, {"id": "PCF_square_rectangular_073567b700bc", "family": "square_rectangular", "label": "Square Rectangular", "struct": "website/img/samples/PCF_square_rectangular_073567b700bc_struct.png", "field": "website/img/samples/PCF_square_rectangular_073567b700bc_field.png", "question": "Describe the PCF cross-section geometry, identify its family, and explain the guidance mechanism.", "caption": "This square_rectangular photonic crystal fiber utilizes modified-total-internal-reflection guidance within a rectangular supercell of air holes embedded in silica. The dominant guidance mechanism is effective-index contrast arising from the periodic arrangement of air holes surrounding a solid core region. The geometry consists of a square lattice with 7 periods along one axis and 11 along the other, featuring an air-hole diameter of 2.524008882635642 um and a pitch of 4.417567812765432 um. hole_d_um=2.524008882635642, lattice=square, nx=7, ny=11, pitch_um=4.417567812765432"}, {"id": "PCF_suspended_cobweb_18584d0bd075", "family": "suspended_cobweb", "label": "Suspended Cobweb", "struct": "website/img/samples/PCF_suspended_cobweb_18584d0bd075_struct.png", "field": "website/img/samples/PCF_suspended_cobweb_18584d0bd075_field.png", "question": "Describe the PCF cross-section geometry, identify its family, and explain the guidance mechanism.", "caption": "Suspended-cobweb photonic crystal fiber featuring a solid silica core mechanically isolated by three thin radial struts within a large air-clad region, representative of the suspended-core family optimized for low nonlinearity and high damage threshold. The dominant guidance mechanism is modified total internal reflection, enabled by the effective index contrast between the solid core and the low-average-index cobweb cladding. The core is circular with radius 5.406776814884369 um, supported radially by three equally spaced struts each 0.2076857433712366 um thick, and enclosed by an outer air boundary approximated by a circular hole of radius 8.82095322536351 um. Core_radius_um: 5.406776814884369, outer_hole_radius_um: 8.82095322536351, strut_thickness_um: 0.2076857433712366, variant: \"3_strut\"."}, {"id": "PCF_twisted_hexagonal_362338967670", "family": "twisted_hexagonal", "label": "Twisted Hexagonal", "struct": "website/img/samples/PCF_twisted_hexagonal_362338967670_struct.png", "field": "website/img/samples/PCF_twisted_hexagonal_362338967670_field.png", "question": "Describe the PCF cross-section geometry, identify its family, and explain the guidance mechanism.", "caption": "Twisted hexagonal photonic crystal fiber featuring a chiral air-hole lattice with right-handed helical symmetry. The dominant guidance mechanism is modified total internal reflection (mTIR), enabled by the effective-index contrast between the twisted microstructured cladding and the solid silica core. The geometry consists of seven rings of air holes arranged in a hexagonal lattice that undergoes continuous rotational twist along the propagation axis, with fixed hole diameter and pitch preserved across all transverse planes. Pitch_um = 4.1652643165124665, hole_d_um = 1.7433852414609508, rings = 7, chirality = \"right_handed\", twist_rate_deg_per_mm = 148.0577277556725, helical_pitch_mm = 30.821346644740114."}, {"id": "PCF_vortex_ring_core_3c5c73bc6ae5", "family": "vortex_ring_core", "label": "Vortex Ring Core", "struct": "website/img/samples/PCF_vortex_ring_core_3c5c73bc6ae5_struct.png", "field": "website/img/samples/PCF_vortex_ring_core_3c5c73bc6ae5_field.png", "question": "Describe the PCF cross-section geometry, identify its family, and explain the guidance mechanism.", "caption": "Vortex-ring-core photonic crystal fiber featuring an annular silica core designed to support orbital angular momentum (OAM) modes via azimuthal symmetry and radial confinement. The dominant guidance mechanism is vortex-mode confinement through inhibited coupling between the ring core and the surrounding microstructured cladding. The guiding region is a continuous silica ring with inner radius 1.9955808706129057 um and outer radius 16.876265449417936 um, centered in a hexagonal air-hole lattice not explicitly parameterized in this layer but implied by the family definition. ring_inner_radius_um=1.9955808706129057, ring_outer_radius_um=16.876265449417936, variant=ring_core"}, {"id": "PCF_vortex_ring_core_82fbe99c702b", "family": "vortex_ring_core", "label": "Vortex Ring Core", "struct": "website/img/samples/PCF_vortex_ring_core_82fbe99c702b_struct.png", "field": "website/img/samples/PCF_vortex_ring_core_82fbe99c702b_field.png", "question": "Describe the PCF cross-section geometry, identify its family, and explain the guidance mechanism.", "caption": "Vortex-ring-core photonic crystal fiber featuring an annular solid silica core designed to support orbital angular momentum (OAM) modes via azimuthal symmetry and radial confinement. The dominant guidance mechanism is vortex-mode confinement through inhibited coupling between the ring core and the surrounding microstructured cladding. The guiding region is a continuous silica ring with inner radius 3.171988422859198 μm and outer radius 10.044056080883776 μm, centered in the fiber cross-section. ring_inner_radius_um=3.171988422859198, ring_outer_radius_um=10.044056080883776, variant=ring_core"}]</script>
+
+  <script>
+    (function () {
+      const SAMPLES = JSON.parse(document.getElementById('pcf-samples-data').textContent);
+      const sheet   = document.getElementById('sample-sheet');
+      const sheetTitle = document.getElementById('sheet-title');
+      const sheetId    = document.getElementById('sheet-id');
+      const sheetQ     = document.getElementById('sheet-question');
+      const sheetA     = document.getElementById('sheet-answer');
+      const imgS       = document.getElementById('sheet-img-struct');
+      const imgF       = document.getElementById('sheet-img-field');
+      const closeBtn   = sheet.querySelector('.sheet-close');
+
+      function open(idx) {
+        const s = SAMPLES[idx];
+        if (!s) return;
+        sheetTitle.textContent = s.label;
+        sheetId.textContent    = s.id;
+        sheetQ.textContent     = s.question;
+        sheetA.textContent     = s.caption;
+        imgS.src               = s.struct;
+        imgF.src               = s.field;
+        imgS.alt               = s.label + ' structure';
+        imgF.alt               = s.label + ' field';
+        sheet.hidden           = false;
+        document.body.style.overflow = 'hidden';
+        requestAnimationFrame(() => sheet.classList.add('is-open'));
+      }
+      function close() {
+        sheet.classList.remove('is-open');
+        document.body.style.overflow = '';
+        setTimeout(() => { sheet.hidden = true; }, 280);
+      }
+      document.querySelectorAll('.sample-tile').forEach(el => {
+        el.addEventListener('click', () => open(parseInt(el.dataset.idx, 10)));
+      });
+      closeBtn.addEventListener('click', close);
+      sheet.addEventListener('click', (e) => { if (e.target === sheet) close(); });
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !sheet.hidden) close(); });
+    })();
+  </script>
 
 </body>
 </html>

@@ -12,6 +12,9 @@
   <meta property="og:description" content="A comprehensive benchmark for evaluating VLMs on physics-aware photonic inverse design.">
   <meta property="og:type" content="website">
 
+  <link rel="icon" type="image/svg+xml" href="website/img/pcf-icon.svg">
+  <link rel="alternate icon" href="website/img/pcf-icon.svg">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
@@ -96,13 +99,18 @@
         linear-gradient(180deg, var(--bg) 0%, var(--bg) 70%, var(--surface) 100%);
       border-bottom: 1px solid var(--rule);
     }
-    .hero h1.title.is-1     { font-size: clamp(3rem, 8vw, 5.8rem); line-height: 1; margin-bottom: 1.4rem; }
+    .hero h1.title.is-1     { font-size: clamp(3rem, 8vw, 5.8rem); line-height: 1; margin-bottom: 1.4rem;
+                              display: inline-flex; align-items: center; justify-content: center;
+                              gap: clamp(.6rem, 1.5vw, 1.2rem); flex-wrap: wrap; }
+    .pcf-icon               { width: clamp(54px, 7vw, 86px); height: clamp(54px, 7vw, 86px);
+                              flex: 0 0 auto; }
     .hero h2.title.is-3     {
-      font-size: clamp(1.1rem, 2.1vw, 1.55rem) !important;
-      font-weight: 500 !important;
-      color: var(--ink-soft) !important;
+      font-size: clamp(1.15rem, 2.1vw, 1.6rem) !important;
+      font-weight: 700 !important;
+      font-style: italic !important;
+      color: var(--ink) !important;
       line-height: 1.45;
-      max-width: 60ch;
+      max-width: 62ch;
       margin: 0 auto 1.6rem !important;
       letter-spacing: -0.012em;
     }
@@ -165,7 +173,8 @@
     .prose strong { color: var(--ink); font-weight: 600; }
 
     /* ============================================================
-       Figures — image flush, caption sits tight underneath
+       Figures — image flush; caption spans full figure width;
+       soft halo shadow blends edges into the page background.
        ============================================================ */
     figure.bigfig          { margin: 2.4rem auto 2rem; max-width: 1280px;
                              padding: 0; line-height: 0; text-align: center; }
@@ -175,10 +184,20 @@
                              border: 1px solid var(--rule);
                              box-shadow: var(--shadow-2);
                              background: transparent; }
-    figure.bigfig.plain img{ box-shadow: none; border: 0; border-radius: 0; }
+    /* "plain" — figure has no inner card; soft halo around the image edge */
+    figure.bigfig.plain img {
+      border: 0; border-radius: 0;
+      box-shadow:
+        0 1px 3px  rgba(15, 22, 38, .04),
+        0 12px 40px -12px rgba(15, 22, 38, .12),
+        0 32px 80px -32px rgba(74, 93, 122, .18);
+    }
     figure.bigfig figcaption {
       font-size: .92rem; color: var(--ink-soft); line-height: 1.55;
-      margin: 0.7rem auto 0; max-width: 64ch; padding: 0;
+      margin: 1rem auto 0;
+      width: 100%;            /* fill the figure box, not 64ch */
+      padding: 0 .25rem;
+      text-align: center;
     }
     figure.bigfig figcaption b { color: var(--ink); }
     figure.bigfig.medium   { max-width: 880px; }
@@ -475,6 +494,37 @@
           <div class="column has-text-centered">
 
             <h1 class="title is-1 publication-title">
+              <svg class="pcf-icon" viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+                <defs>
+                  <radialGradient id="pcf-disc" cx="50%" cy="42%" r="60%">
+                    <stop offset="0%"  stop-color="#ffffff"/>
+                    <stop offset="100%" stop-color="#eef2f7"/>
+                  </radialGradient>
+                </defs>
+                <circle cx="48" cy="48" r="46" fill="url(#pcf-disc)" stroke="#d6deea" stroke-width="1.5"/>
+                <!-- outer ring (6 holes, hex pattern at radius ≈34) -->
+                <g fill="#ffffff" stroke="#4a5d7a" stroke-width="2.2">
+                  <circle cx="48"   cy="14"   r="5"/>
+                  <circle cx="77.4" cy="31"   r="5"/>
+                  <circle cx="77.4" cy="65"   r="5"/>
+                  <circle cx="48"   cy="82"   r="5"/>
+                  <circle cx="18.6" cy="65"   r="5"/>
+                  <circle cx="18.6" cy="31"   r="5"/>
+                </g>
+                <!-- inner ring (6 holes at radius ≈18) -->
+                <g fill="#ffffff" stroke="#4a5d7a" stroke-width="2">
+                  <circle cx="66"   cy="48"   r="4"/>
+                  <circle cx="57"   cy="32.4" r="4"/>
+                  <circle cx="39"   cy="32.4" r="4"/>
+                  <circle cx="30"   cy="48"   r="4"/>
+                  <circle cx="39"   cy="63.6" r="4"/>
+                  <circle cx="57"   cy="63.6" r="4"/>
+                </g>
+                <!-- solid core -->
+                <circle cx="48" cy="48" r="4.2" fill="#2d3a4f"/>
+                <!-- subtle highlight on core -->
+                <circle cx="46.5" cy="46.5" r="1" fill="#ffffff" opacity=".55"/>
+              </svg>
               <span class="pcfbench">PCFBench</span>
             </h1>
 

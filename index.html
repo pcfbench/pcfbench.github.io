@@ -81,31 +81,11 @@
         <a href="#leaderboard">Leaderboard <span aria-hidden="true">↓</span></a>
       </p>
     </div>
-    <figure class="hero-fig loop" id="hero-loop">
+    <figure class="hero-fig loop" id="hero-loop" aria-label="Four real design loops from the PCFBench case study, each with the structure, the proposed edit and the re-simulated mode field">
       <div class="loop-plate">
-        <div class="loop-panes">
-          <div class="lp lp-s">
-            <img class="b" src="assets/img/loops/case05_struct_before.png" alt="Fibre cross-section before the edit" width="480" height="480">
-            <img class="a" src="assets/img/loops/case05_struct_after.png" alt="" width="480" height="480">
-            <div class="lp-scan"></div>
-            <span class="lp-tag edit"></span>
-          </div>
-          <div class="lp lp-f">
-            <img class="b" src="assets/img/loops/case05_field_before.webp" alt="Simulated mode field before the edit" width="560" height="560">
-            <img class="a" src="assets/img/loops/case05_field_after.webp" alt="" width="560" height="560">
-            <div class="lp-sweep"></div>
-            <span class="lp-tag out"></span>
-          </div>
-        </div>
-        <div class="loop-bar">
-          <ol class="loop-steps" aria-hidden="true"><li data-s="0">Perceive</li><li data-s="1">Propose</li><li data-s="2">Re-simulate</li></ol>
-          <p class="loop-meta"><b class="fam"></b><span class="who"></span></p>
-        </div>
+        <div class="loop-grid" id="loop-grid"></div>
+        <ol class="loop-steps" aria-hidden="true"><li>Perceive</li><li>Propose</li><li>Re-simulate</li></ol>
       </div>
-      <figcaption>
-        <span class="loop-dots" role="group" aria-label="Choose a design loop"></span>
-        <span><strong>Fig. 1.</strong> Real design loops from the PCFBench case study. A VLM reads the fibre, proposes one edit, and FDTD re-simulates it. Some edits help, others hurt.</span>
-      </figcaption>
     </figure>
   </div>
 </header>

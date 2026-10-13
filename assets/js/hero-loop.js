@@ -1,100 +1,75 @@
-// Hero figure: cycles through four real design loops from the PCFBench case study
+// Hero figure: four real design loops from the PCFBench case study, shown side by side and animated in sync
 // (perceive → propose one edit → FDTD re-simulation). Data: data/hero_loops.json, built by build_data.py.
 
 const fig = document.getElementById('hero-loop');
-const loops = await fetch('data/hero_loops.json').then((r) => r.json());
-const q = (s) => fig.querySelector(s);
-const sB = q('.lp-s .b'), sA = q('.lp-s .a'), fB = q('.lp-f .b'), fA = q('.lp-f .a');
-const edit = q('.lp-tag.edit'), out = q('.lp-tag.out'), scan = q('.lp-scan'), sweep = q('.lp-sweep');
-const fam = q('.fam'), who = q('.who');
+const grid = document.getElementById('loop-grid');
 const steps = [...fig.querySelectorAll('.loop-steps li')];
-const dotsBox = q('.loop-dots');
+const loops = await fetch('data/hero_loops.json').then((r) => r.json());
 
 const fmt = (v) => (Number.isInteger(v) ? String(v) : v.toFixed(2));
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
-// preload every frame so swaps never flash
-loops.forEach((l) => Object.values(l.images).forEach((src) => { const im = new Image(); im.src = src; }));
+grid.innerHTML = loops.map((l) => `
+  <div class="lc">
+    <div class="lc-panes">
+      <div class="lp lp-s">
+        <img class="b" src="${l.images.struct_before}" alt="${esc(l.label)} cross-section" width="480" height="480">
+        <img class="a" src="${l.images.struct_after}" alt="" width="480" height="480">
+        <div class="lp-scan"></div>
+      </div>
+      <div class="lp lp-f">
+        <img class="b" src="${l.images.field_before}" alt="${esc(l.label)} mode field at 1550 nm" width="560" height="560">
+        <img class="a" src="${l.images.field_after}" alt="" width="560" height="560">
+        <div class="lp-sweep"></div>
+        <span class="lc-out ${l.improved ? 'down' : 'up'}">loss <b>${l.improved ? '↓' : '↑'}</b></span>
+      </div>
+    </div>
+    <p class="lc-fam">${esc(l.label)}</p>
+    <p class="lc-edit">${esc(l.model)}<span class="chg"><i class="sep"> · </i>${esc(l.param_short)} ${fmt(l.before)} → ${fmt(l.after)}${l.unit ? ` ${l.unit}` : ''}</span></p>
+  </div>`).join('');
 
-dotsBox.innerHTML = loops.map((l, i) =>
-  `<button type="button" aria-pressed="${i === 0}" aria-label="Design loop ${i + 1}: ${esc(l.label)}"></button>`).join('');
-const dots = [...dotsBox.querySelectorAll('button')];
-
-function setContent(l, i) {
-  sB.src = l.images.struct_before; sA.src = l.images.struct_after;
-  fB.src = l.images.field_before; fA.src = l.images.field_after;
-  sB.alt = `${l.label} cross-section before the edit`;
-  fB.alt = `${l.label} mode field before the edit`;
-  edit.textContent = `${l.param_label} ${fmt(l.before)} → ${fmt(l.after)}${l.unit ? ` ${l.unit}` : ''}`;
-  out.innerHTML = `loss ${l.improved ? '<span class="down">↓</span>' : '<span class="up">↑</span>'} after re-simulation`;
-  fam.textContent = l.label;
-  who.textContent = `edit by ${l.model}`;
-  dots.forEach((d, k) => d.setAttribute('aria-pressed', String(k === i)));
-}
+const all = (sel) => [...grid.querySelectorAll(sel)];
 const setStep = (k) => steps.forEach((li, j) => li.classList.toggle('on', j === k));
 
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 if (reduced || !window.gsap) {
-  // static: show each loop's outcome, dots switch between loops
   fig.classList.add('static');
-  setContent(loops[0], 0);
-  setStep(2);
-  dots.forEach((d, i) => d.addEventListener('click', () => setContent(loops[i], i)));
 } else {
   const gsap = window.gsap;
-  gsap.set([edit, out], { xPercent: -50, x: 0 });
-  let current = null, idx = 0, visible = true;
+  const S = 0.12; // small stagger so the four cards move as a wave, not in lockstep
+  const tl = gsap.timeline({ repeat: -1, paused: true });
+  tl.call(() => setStep(0), null, 0)
+    .fromTo(all('.lp-scan'), { top: '-30%', opacity: 1 }, { top: '100%', duration: 1.2, ease: 'none', stagger: S }, 0.3)
+    .set(all('.lp-scan'), { opacity: 0 }, 1.9)
+    .call(() => setStep(1), null, 1.9)
+    .to(all('.lc-edit .chg'), { opacity: 1, duration: 0.4, stagger: S }, 2.0)
+    .call(() => setStep(2), null, 3.2)
+    .to(all('.lp-s .a'), { opacity: 1, duration: 1.0, stagger: S }, 3.3)
+    .to(all('.lp-s .b'), { opacity: 0, duration: 1.0, stagger: S }, 3.3)
+    .fromTo(all('.lp-sweep'), { left: '-45%', opacity: 1 }, { left: '100%', duration: 1.0, ease: 'power1.inOut', stagger: S }, 3.6)
+    .to(all('.lp-f .a'), { opacity: 1, duration: 0.9, stagger: S }, 4.1)
+    .to(all('.lp-f .b'), { opacity: 0, duration: 0.9, stagger: S }, 4.1)
+    .fromTo(all('.lc-out'), { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.35, ease: 'back.out(2)', stagger: S }, 4.9)
+    // hold on the outcome, then fade back to the starting fibres
+    .call(() => setStep(-1), null, 7.4)
+    .to(all('.lp .a, .lc-out, .lc-edit .chg'), { opacity: 0, duration: 0.6 }, 7.6)
+    .to(all('.lp .b'), { opacity: 1, duration: 0.6 }, 7.6)
+    .to({}, { duration: 0.4 }, 8.2);
 
-  const build = (i) => {
-    const l = loops[i];
-    setContent(l, i);
-    setStep(0);
-    const tl = gsap.timeline({ paused: true, onComplete: () => show((i + 1) % loops.length) });
-    tl.set([sA, fA, sB, fB], { opacity: 0 })
-      .set([edit, out], { opacity: 0, y: 6 })
-      .to([sB, fB], { opacity: 1, duration: 0.6, stagger: 0.15 }, 0.05)
-      .fromTo(scan, { top: '-30%', opacity: 1 }, { top: '100%', duration: 1.2, ease: 'none' }, 0.4)
-      .set(scan, { opacity: 0 }, 1.6)
-      .call(() => setStep(1), null, 1.7)
-      .to(edit, { opacity: 1, y: 0, duration: 0.4 }, 1.8)
-      .call(() => setStep(2), null, 3.1)
-      .to(sA, { opacity: 1, duration: 1.0 }, 3.2)
-      .to(sB, { opacity: 0, duration: 1.0 }, 3.2)
-      .fromTo(sweep, { left: '-40%', opacity: 1 }, { left: '100%', duration: 1.0, ease: 'power1.inOut' }, 3.5)
-      .to(fA, { opacity: 1, duration: 0.9 }, 4.0)
-      .to(fB, { opacity: 0, duration: 0.9 }, 4.0)
-      .to(out, { opacity: 1, y: 0, duration: 0.4 }, 4.8)
-      .to([sA, fA, edit, out], { opacity: 0, duration: 0.45 }, 7.0);
-    return tl;
-  };
+  // pause while off screen or the tab is hidden
+  let visible = true, frozen = false;
+  const sync = () => (!frozen && visible && !document.hidden ? tl.play() : tl.pause());
+  new IntersectionObserver(([e]) => { visible = e.isIntersecting; sync(); }, { threshold: 0.2 }).observe(fig);
+  document.addEventListener('visibilitychange', sync);
 
-  function show(i) {
-    current?.kill();
-    idx = i;
-    current = build(i);
-    if (visible && !document.hidden) current.play();
-  }
-  dots.forEach((d, i) => d.addEventListener('click', () => show(i)));
-
-  // pause while the hero is off screen or the tab is hidden
-  new IntersectionObserver(([e]) => {
-    visible = e.isIntersecting;
-    if (!current) return;
-    if (visible && !document.hidden) current.play(); else current.pause();
-  }, { threshold: 0.2 }).observe(fig);
-  document.addEventListener('visibilitychange', () => {
-    if (!current) return;
-    if (document.hidden) current.pause(); else if (visible) current.play();
-  });
-
-  // screenshot hook: ?loop=<i>&ls=<seconds> freezes a frame
-  const p = new URLSearchParams(location.search);
-  if (p.has('loop')) {
-    show(Number(p.get('loop')));
-    const t = Number(p.get('ls') || 6);
-    current.seek(t).pause();
-    setStep(t < 1.7 ? 0 : t < 3.1 ? 1 : 2);
+  // screenshot hook: ?ls=<seconds> freezes a frame
+  const t = new URLSearchParams(location.search).get('ls');
+  if (t !== null) {
+    const v = Number(t);
+    tl.seek(v).pause();
+    setStep(v < 1.9 ? 0 : v < 3.2 ? 1 : v < 7.4 ? 2 : -1);
+    frozen = true;
   } else {
-    show(0);
+    sync();
   }
 }

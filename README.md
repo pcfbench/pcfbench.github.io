@@ -5,13 +5,21 @@ Source for <https://pcfbench.github.io/>, the project page of *PCFBench: How Far
 - Dataset: <https://huggingface.co/datasets/PCF-Bench/PCF-Bench>
 - Evaluation code: <https://github.com/shengchaochen82/PCF-Bench-Eval>
 
-Static site adapted from the [Nerfies template](https://nerfies.github.io/) (via [TSRBench](https://tsrbench.github.io/)).
+## Layout
 
-## Local preview
+- `index.html`: the single page
+- `assets/css/site.css`: all styles
+- `assets/js/`: `main.js` (nav, reveal, lightbox), `animation.js` (inverse-design animation, GSAP), `samples.js`, `families.js`, `leaderboard.js`
+- `data/`: `leaderboard.json`, `mas.json`, `families.json`, `samples.json`, `case07.json`, generated from the paper tables and the case study
+- `assets/img/`: optimized images, vendor icons (lobe-icons, MIT) and brand assets
+
+No build step. Preview locally with:
+
 ```
 python3 -m http.server 8000
 # open http://localhost:8000
 ```
 
 ## Remaining edit
-- [ ] Fill the arXiv link once the paper is live (search `index.html` for `PAPER-LINK`)
+
+- [ ] Fill the arXiv link once the paper is live (search `index.html` for `PAPER-LINK`, three places).

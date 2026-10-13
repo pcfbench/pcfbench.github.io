@@ -1,0 +1,92 @@
+[
+ {
+  "family": "hybrid_plasmonic",
+  "label": "Hybrid plasmonic",
+  "count": 14354
+ },
+ {
+  "family": "fractal_quasicrystal",
+  "label": "Fractal quasicrystal",
+  "count": 14230
+ },
+ {
+  "family": "vortex_ring_core",
+  "label": "Vortex ring-core",
+  "count": 14131
+ },
+ {
+  "family": "graded_index_multiring",
+  "label": "Graded-index multi-ring",
+  "count": 14108
+ },
+ {
+  "family": "all_solid_bandgap",
+  "label": "All-solid bandgap",
+  "count": 14093
+ },
+ {
+  "family": "suspended_cobweb",
+  "label": "Suspended cobweb",
+  "count": 14084
+ },
+ {
+  "family": "twisted_hexagonal",
+  "label": "Twisted hexagonal",
+  "count": 12686
+ },
+ {
+  "family": "hollow_core_pbg",
+  "label": "Hollow-core PBG",
+  "count": 12599
+ },
+ {
+  "family": "square_rectangular",
+  "label": "Square / rectangular",
+  "count": 12575
+ },
+ {
+  "family": "kagome_approx",
+  "label": "Kagome",
+  "count": 12568
+ },
+ {
+  "family": "anti_resonant_arf",
+  "label": "Anti-resonant (ARF)",
+  "count": 12457
+ },
+ {
+  "family": "octagonal_lattice",
+  "label": "Octagonal lattice",
+  "count": 12428
+ },
+ {
+  "family": "nested_antiresonant",
+  "label": "Nested anti-resonant",
+  "count": 12376
+ },
+ {
+  "family": "solid_core_hex",
+  "label": "Solid-core hexagonal",
+  "count": 12311
+ },
+ {
+  "family": "high_birefringence_pm",
+  "label": "High-birefringence PM",
+  "count": 8837
+ },
+ {
+  "family": "elliptical_core",
+  "label": "Elliptical core",
+  "count": 8766
+ },
+ {
+  "family": "dual_core_coupler",
+  "label": "Dual-core coupler",
+  "count": 8730
+ },
+ {
+  "family": "multi_core",
+  "label": "Multi-core",
+  "count": 8667
+ }
+]

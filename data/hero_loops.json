@@ -1,0 +1,90 @@
+[
+ {
+  "case": "case05_plasmonic_high",
+  "family": "hybrid_plasmonic",
+  "label": "Hybrid plasmonic",
+  "model": "Mistral-Large",
+  "param": "hole_d_um",
+  "param_label": "hole diameter",
+  "param_short": "hole d",
+  "unit": "μm",
+  "before": 1.8567796237246632,
+  "after": 1.65,
+  "direction": "decrease",
+  "loss_before": 10.762714007835397,
+  "loss_after": 3.8138902004567385,
+  "improved": true,
+  "images": {
+   "struct_before": "assets/img/loops/case05_struct_before.png",
+   "struct_after": "assets/img/loops/case05_struct_after.png",
+   "field_before": "assets/img/loops/case05_field_before.webp",
+   "field_after": "assets/img/loops/case05_field_after.webp"
+  }
+ },
+ {
+  "case": "case20_fractal_quasi",
+  "family": "fractal_quasicrystal",
+  "label": "Fractal quasicrystal",
+  "model": "Claude-Opus-4.5",
+  "param": "rings",
+  "param_label": "rings",
+  "param_short": "rings",
+  "unit": "",
+  "before": 2,
+  "after": 3,
+  "direction": "increase",
+  "loss_before": 93.31567139861858,
+  "loss_after": 7138.223024992923,
+  "improved": false,
+  "images": {
+   "struct_before": "assets/img/loops/case20_struct_before.png",
+   "struct_after": "assets/img/loops/case20_struct_after.png",
+   "field_before": "assets/img/loops/case20_field_before.webp",
+   "field_after": "assets/img/loops/case20_field_after.webp"
+  }
+ },
+ {
+  "case": "case18_octagonal",
+  "family": "octagonal_lattice",
+  "label": "Octagonal lattice",
+  "model": "GPT-4o-mini",
+  "param": "hole_d_um",
+  "param_label": "hole diameter",
+  "param_short": "hole d",
+  "unit": "μm",
+  "before": 2.3855631413865317,
+  "after": 2.1856,
+  "direction": "decrease",
+  "loss_before": 0.05637987375035572,
+  "loss_after": 2.054665060417646e-10,
+  "improved": true,
+  "images": {
+   "struct_before": "assets/img/loops/case18_struct_before.png",
+   "struct_after": "assets/img/loops/case18_struct_after.png",
+   "field_before": "assets/img/loops/case18_field_before.webp",
+   "field_after": "assets/img/loops/case18_field_after.webp"
+  }
+ },
+ {
+  "case": "case08_cobweb_high",
+  "family": "suspended_cobweb",
+  "label": "Suspended cobweb",
+  "model": "GPT-4o",
+  "param": "outer_hole_radius_um",
+  "param_label": "outer hole radius",
+  "param_short": "outer hole r",
+  "unit": "μm",
+  "before": 3.7306246094020485,
+  "after": 4.5,
+  "direction": "increase",
+  "loss_before": 557.7323442041385,
+  "loss_after": 21633.665727164946,
+  "improved": false,
+  "images": {
+   "struct_before": "assets/img/loops/case08_struct_before.png",
+   "struct_after": "assets/img/loops/case08_struct_after.png",
+   "field_before": "assets/img/loops/case08_field_before.webp",
+   "field_after": "assets/img/loops/case08_field_after.webp"
+  }
+ }
+]

@@ -1,0 +1,37 @@
+{
+ "case": "case07_multicore_high",
+ "family": "multi_core",
+ "family_label": "Multi-core",
+ "system": "Sequential Pipeline (GPT-4o backbone, cascaded)",
+ "params_before": {
+  "pitch_um": 2.6116393601343817,
+  "hole_d_um": 1.2895128639967912,
+  "rings": 5,
+  "core_count": 3
+ },
+ "params_after": {
+  "pitch_um": 3.264549200167977,
+  "hole_d_um": 1.2895128639967912
+ },
+ "family_pred": "solid_core_hexagonal",
+ "family_gt": "multi_core",
+ "family_correct": false,
+ "rings_correct": true,
+ "predicted_loss": 1.2,
+ "loss_log_mae": 1.6375135850355311,
+ "mechanism": "Modified TIR",
+ "wl_correct": false,
+ "design_param": "pitch",
+ "design_direction": "increase",
+ "direction_correct": true,
+ "step_factor": 1.25,
+ "e2e_success": false,
+ "loss_before": 52.082860800248014,
+ "loss_after": 7.884412506883245,
+ "images": {
+  "struct_before": "assets/img/case07/struct_before.png",
+  "field_before": "assets/img/case07/field_before.webp",
+  "struct_after": "assets/img/case07/struct_after.png",
+  "field_after": "assets/img/case07/field_after.webp"
+ }
+}

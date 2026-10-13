@@ -81,16 +81,31 @@
         <a href="#leaderboard">Leaderboard <span aria-hidden="true">↓</span></a>
       </p>
     </div>
-    <figure class="hero-fig">
-      <div class="hero-plate">
-        <div class="cell"><img src="assets/img/samples/PCF_fractal_quasicrystal_1ed2fa02ebae_struct.png" alt="Fractal quasicrystal PCF cross-section" width="336" height="336"><b>a</b></div>
-        <div class="cell"><img src="assets/img/samples/PCF_dual_core_coupler_6d417f9ecc02_struct.png" alt="Dual-core coupler PCF cross-section" width="336" height="336"><b>b</b></div>
-        <div class="cell"><img src="assets/img/samples/PCF_suspended_cobweb_18584d0bd075_struct.png" alt="Suspended cobweb PCF cross-section" width="336" height="336"><b>c</b></div>
-        <div class="cell f"><img src="assets/img/samples/PCF_fractal_quasicrystal_1ed2fa02ebae_field_1550.webp" alt="Fractal quasicrystal mode field at 1550 nm" width="640" height="640"><b>d</b></div>
-        <div class="cell f"><img src="assets/img/samples/PCF_dual_core_coupler_6d417f9ecc02_field_1550.webp" alt="Dual-core coupler mode field at 1550 nm" width="640" height="640"><b>e</b></div>
-        <div class="cell f"><img src="assets/img/samples/PCF_suspended_cobweb_18584d0bd075_field_1550.webp" alt="Suspended cobweb mode field at 1550 nm" width="640" height="640"><b>f</b></div>
+    <figure class="hero-fig loop" id="hero-loop">
+      <div class="loop-plate">
+        <div class="loop-panes">
+          <div class="lp lp-s">
+            <img class="b" src="assets/img/loops/case05_struct_before.png" alt="Fibre cross-section before the edit" width="480" height="480">
+            <img class="a" src="assets/img/loops/case05_struct_after.png" alt="" width="480" height="480">
+            <div class="lp-scan"></div>
+            <span class="lp-tag edit"></span>
+          </div>
+          <div class="lp lp-f">
+            <img class="b" src="assets/img/loops/case05_field_before.webp" alt="Simulated mode field before the edit" width="560" height="560">
+            <img class="a" src="assets/img/loops/case05_field_after.webp" alt="" width="560" height="560">
+            <div class="lp-sweep"></div>
+            <span class="lp-tag out"></span>
+          </div>
+        </div>
+        <div class="loop-bar">
+          <ol class="loop-steps" aria-hidden="true"><li data-s="0">Perceive</li><li data-s="1">Propose</li><li data-s="2">Re-simulate</li></ol>
+          <p class="loop-meta"><b class="fam"></b><span class="who"></span></p>
+        </div>
       </div>
-      <figcaption><strong>Fig. 1.</strong> (a–c) Refractive-index cross-sections of three PCF families. (d–f) Their simulated mode fields at 1550 nm.</figcaption>
+      <figcaption>
+        <span class="loop-dots" role="group" aria-label="Choose a design loop"></span>
+        <span><strong>Fig. 1.</strong> Real design loops from the PCFBench case study. A VLM reads the fibre, proposes one edit, and FDTD re-simulates it. Some edits help, others hurt.</span>
+      </figcaption>
     </figure>
   </div>
 </header>
@@ -334,6 +349,7 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
 <script type="module" src="assets/js/main.js"></script>
+<script type="module" src="assets/js/hero-loop.js"></script>
 <script type="module" src="assets/js/animation.js"></script>
 <script type="module" src="assets/js/samples.js"></script>
 <script type="module" src="assets/js/families.js"></script>

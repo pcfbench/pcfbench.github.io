@@ -1,6 +1,6 @@
 # PCFBench Project Page
 
-Source for <https://pcfbench.github.io/>, the project page of *PCFBench: How Far Can Large Vision-Language Models Go in Physics-aware Photonic Inverse Design?* (NeurIPS 2026, Datasets & Benchmarks Track).
+Source for <https://pcfbench.github.io/>, the project page of *PCFBench: How Far Can Large Vision-Language Models Go in Physics-aware Photonic Inverse Design?* (NeurIPS 2026, Evaluations & Datasets Track).
 
 - Dataset: <https://huggingface.co/datasets/PCF-Bench/PCF-Bench>
 - Evaluation code: <https://github.com/shengchaochen82/PCF-Bench-Eval>

@@ -125,7 +125,15 @@
   <div class="wrap">
     <p class="kicker">02 &middot; The task</p>
     <h2 class="sec-title">From an image to a better fibre.</h2>
-    <p class="lede dark-lede">This is what every model is asked to do. Below is one real run from the PCFBench case study, replayed step by step.</p>
+    <p class="lede dark-lede">This is what every model is asked to do. The film follows one real agent run from the PCFBench case study, from the instruction to the re&#8209;simulated fibre. Below it, step through the same run yourself.</p>
+
+    <figure class="film">
+      <video id="film-video" muted playsinline controls preload="metadata" poster="assets/video/agent-run-poster.webp" width="1920" height="1080" aria-label="Film: a four-agent VLM pipeline perceives a photonic crystal fibre, proposes a design change, and the change is checked by FDTD re-simulation">
+        <source src="assets/video/agent-run.mp4" type="video/mp4">
+      </video>
+      <figcaption>Case 7 of the PCFBench case study: the Sequential Pipeline, four GPT-4o agents in cascaded mode. Before and after are simulated with the same 2D FDTD settings as the dataset. No sound, 69&nbsp;s.</figcaption>
+    </figure>
+    <h3 class="task-sub">Step through the same run</h3>
 
     <div class="task-grid">
       <div class="stage" id="stage" aria-hidden="true">
@@ -330,6 +338,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
 <script type="module" src="assets/js/main.js"></script>
 <script type="module" src="assets/js/hero-loop.js"></script>
+<script type="module" src="assets/js/film.js"></script>
 <script type="module" src="assets/js/animation.js"></script>
 <script type="module" src="assets/js/samples.js"></script>
 <script type="module" src="assets/js/families.js"></script>

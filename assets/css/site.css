@@ -183,6 +183,10 @@ h1, h2, h3, h4 { font-optical-sizing: auto; }
 .darkroom .kicker { color: var(--cream-mute); }
 .darkroom .sec-title { color: #f6f2e8; }
 .dark-lede { color: #cfc9bd; }
+.film { margin: 0 0 clamp(3rem, 6vw, 4.5rem); }
+.film video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; background: var(--dark); border: 1px solid rgba(236, 231, 220, .12); border-radius: 4px; }
+.film figcaption { font-size: .8rem; color: var(--cream-mute); margin-top: .8rem; line-height: 1.55; max-width: 80ch; }
+.task-sub { font: 500 clamp(1.3rem, 2.2vw, 1.6rem)/1.2 var(--serif); color: #f6f2e8; margin: 0 0 1.4rem; }
 .task-grid { display: grid; grid-template-columns: 1.45fr 1fr; gap: clamp(1.5rem, 3.5vw, 3rem); align-items: start; }
 
 .stage { position: relative; aspect-ratio: 16 / 12; border: 1px solid rgba(236, 231, 220, .12); border-radius: 4px; background: linear-gradient(180deg, rgba(255, 255, 255, .025), rgba(255, 255, 255, 0)); overflow: hidden; }

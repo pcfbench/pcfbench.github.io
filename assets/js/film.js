@@ -1,21 +1,15 @@
-// Agent-run film: play muted while it is on screen, pause when it scrolls away.
-// A pause from the viewer sticks, and reduced-motion visitors start it themselves.
+// Narrated film: browsers only allow sound after a click, so the film starts from its play button
+// and then uses the native controls. It pauses when scrolled out of view.
 
+const fig = document.getElementById('film');
 const video = document.getElementById('film-video');
-const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-let viewerPaused = false, autoPausing = false;
 
-video.addEventListener('pause', () => {
-  if (autoPausing) autoPausing = false;
-  else if (!video.ended) viewerPaused = true;
+fig.querySelector('.film-play').addEventListener('click', () => {
+  video.controls = true;
+  video.play();
 });
-video.addEventListener('play', () => { viewerPaused = false; });
+video.addEventListener('play', () => fig.classList.add('playing'));
 
 new IntersectionObserver(([e]) => {
-  if (e.isIntersecting) {
-    if (!reduced && !viewerPaused && !video.ended) video.play().catch(() => {});
-  } else if (!video.paused) {
-    autoPausing = true;
-    video.pause();
-  }
-}, { threshold: 0.5 }).observe(video);
+  if (!e.isIntersecting && !video.paused) video.pause();
+}, { threshold: 0.25 }).observe(video);

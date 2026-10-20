@@ -21,7 +21,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/site.css">
+  <link rel="stylesheet" href="assets/css/site.css?v=20261020">
   <script>document.documentElement.classList.add("js")</script>
 </head>
 <body>
@@ -91,6 +91,18 @@
 </header>
 
 <main>
+<!-- ============================== FILM ============================== -->
+<div class="film-band">
+  <div class="wrap">
+    <figure class="film" id="film">
+      <video id="film-video" playsinline preload="metadata" poster="assets/video/agent-run-poster.webp?v=20261020" width="1920" height="1080" aria-label="Narrated film: a four-agent vision-language pipeline perceives a photonic crystal fibre, proposes a design change, and FDTD re-simulation checks it">
+        <source src="assets/video/agent-run.mp4?v=20261020" type="video/mp4">
+      </video>
+      <button class="film-play" type="button"><span class="cta"><i aria-hidden="true"></i><span>Play with sound &middot; 1:50</span></span></button>
+    </figure>
+  </div>
+</div>
+
 <!-- ============================== OVERVIEW ============================== -->
 <section id="overview" class="sec">
   <div class="wrap">
@@ -125,15 +137,7 @@
   <div class="wrap">
     <p class="kicker">02 &middot; The task</p>
     <h2 class="sec-title">From an image to a better fibre.</h2>
-    <p class="lede dark-lede">This is what every model is asked to do. The film follows one real agent run from the PCFBench case study, from the instruction to the re&#8209;simulated fibre. Below it, step through the same run yourself.</p>
-
-    <figure class="film">
-      <video id="film-video" muted playsinline controls preload="metadata" poster="assets/video/agent-run-poster.webp" width="1920" height="1080" aria-label="Film: a four-agent VLM pipeline perceives a photonic crystal fibre, proposes a design change, and the change is checked by FDTD re-simulation">
-        <source src="assets/video/agent-run.mp4" type="video/mp4">
-      </video>
-      <figcaption>Case 7 of the PCFBench case study: the Sequential Pipeline, four GPT-4o agents in cascaded mode. Before and after are simulated with the same 2D FDTD settings as the dataset. No sound, 69&nbsp;s.</figcaption>
-    </figure>
-    <h3 class="task-sub">Step through the same run</h3>
+    <p class="lede dark-lede">This is what every model is asked to do. Below is one real run from the PCFBench case study, replayed step by step.</p>
 
     <div class="task-grid">
       <div class="stage" id="stage" aria-hidden="true">
@@ -336,12 +340,12 @@
 </dialog>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
-<script type="module" src="assets/js/main.js"></script>
-<script type="module" src="assets/js/hero-loop.js"></script>
-<script type="module" src="assets/js/film.js"></script>
-<script type="module" src="assets/js/animation.js"></script>
-<script type="module" src="assets/js/samples.js"></script>
-<script type="module" src="assets/js/families.js"></script>
-<script type="module" src="assets/js/leaderboard.js"></script>
+<script type="module" src="assets/js/main.js?v=20261020"></script>
+<script type="module" src="assets/js/hero-loop.js?v=20261020"></script>
+<script type="module" src="assets/js/film.js?v=20261020"></script>
+<script type="module" src="assets/js/animation.js?v=20261020"></script>
+<script type="module" src="assets/js/samples.js?v=20261020"></script>
+<script type="module" src="assets/js/families.js?v=20261020"></script>
+<script type="module" src="assets/js/leaderboard.js?v=20261020"></script>
 </body>
 </html>

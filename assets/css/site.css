@@ -52,6 +52,8 @@ h1, h2, h3, h4 { font-optical-sizing: auto; }
 .skip:focus { left: 1rem; top: 1rem; z-index: 100; background: var(--ink); color: #fff; padding: .5rem .8rem; }
 .is-soon { opacity: .5; cursor: default; }
 .is-soon:hover { text-decoration: none; }
+.ico { display: inline-block; width: 1.05em; height: 1.05em; fill: currentColor; vertical-align: -.17em; margin-right: .38em; }
+.ico-arxiv { fill: #b31b1b; }
 
 /* ---------- shared type ---------- */
 .kicker { font: 500 .72rem/1 var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--mute); margin: 0 0 1.1rem; }
@@ -412,6 +414,7 @@ table.lb { border-collapse: separate; border-spacing: 0; width: 100%; font-size:
 .foot p { margin: 0; font-size: .85rem; }
 .foot-links { display: flex; gap: 1.1rem; }
 .foot a { color: var(--cream); }
+.foot .ico-arxiv { fill: #e5534b; }
 .foot-small { grid-column: 1 / -1; font-size: .74rem; color: #8a857a; padding-top: 1rem; border-top: 1px solid rgba(236, 231, 220, .1); }
 @media (max-width: 720px) { .foot-in { grid-template-columns: 1fr; } }
 
